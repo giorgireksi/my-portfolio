@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coral Reef Bistro — Award-Winning Fine Dining</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ══════════════════════════════════════════
+   ROOT VARIABLES & RESET
+   ══════════════════════════════════════════ */
+:root {
+  --coral:#FF6F61; --coral-light:#FF9A8D; --coral-dark:#D94F43;
+  --teal:#008080; --teal-light:#2EC4B6; --teal-dark:#005F5F;
+  --gold:#C9A96E; --cream:#FDF8F4; --offwhite:#F7F3EF;
+  --dark:#0D0D0D; --dark2:#161616; --dark3:#1E1E1E;
+  --gray1:#2A2A2A; --gray2:#888; --gray3:#BBB;
+  --white:#FFFFFF;
+  --font-heading:'Cormorant Garamond', serif;
+  --font-body:'Montserrat', sans-serif;
+  --font-script:'Great Vibes', cursive;
+  --nav-h:80px;
+  --transition: cubic-bezier(0.23, 1, 0.32, 1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth; font-size:16px;}
+body{font-family:var(--font-body);background:var(--dark);color:var(--white);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+img{display:block;max-width:100%;object-fit:cover}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+button{cursor:pointer;border:none;outline:none;font-family:var(--font-body)}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--dark)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--coral),var(--teal));border-radius:10px}
+
+/* ══════════════════════════════════════════
+   PRELOADER
+   ══════════════════════════════════════════ */
+#preloader{
+  position:fixed;inset:0;background:var(--dark);z-index:100000;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:25px;
+  transition:opacity .8s ease,visibility .8s ease;
+}
+#preloader.done{opacity:0;visibility:hidden;pointer-events:none}
+.pre-ring{
+  width:70px;height:70px;border:3px solid rgba(255,255,255,.05);
+  border-top:3px solid var(--coral);border-right:3px solid var(--teal);
+  border-radius:50%;animation:preSpin 1s linear infinite;
+}
+@keyframes preSpin{to{transform:rotate(360deg)}}
+.pre-text{font-family:var(--font-script);font-size:1.6rem;color:var(--coral-light);letter-spacing:2px}
+
+/* ══════════════════════════════════════════
+   PAGE TRANSITION OVERLAY
+   ══════════════════════════════════════════ */
+.page-transition{
+  position:fixed;inset:0;z-index:9999;pointer-events:none;display:flex;
+}
+.page-transition .col{
+  flex:1;background:var(--dark2);
+  transform:scaleY(0);transform-origin:bottom;
+}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════════ */
+#navbar{
+  position:fixed;top:0;left:0;width:100%;height:var(--nav-h);z-index:5000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;transition:all .5s var(--transition);
+}
+#navbar.scrolled{
+  background:rgba(13,13,13,.92);backdrop-filter:blur(30px) saturate(180%);
+  box-shadow:0 1px 40px rgba(0,0,0,.4);height:70px;
+}
+.nav-logo{display:flex;align-items:center;gap:12px}
+.nav-logo-icon{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--coral),var(--teal));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-heading);font-weight:700;font-size:1.3rem;color:#fff;
+  box-shadow:0 4px 20px rgba(255,111,97,.3);
+  animation:logoPulse 3s ease-in-out infinite;
+}
+@keyframes logoPulse{
+  0%,100%{transform:perspective(400px) rotateY(0);box-shadow:0 4px 20px rgba(255,111,97,.3)}
+  50%{transform:perspective(400px) rotateY(10deg);box-shadow:0 4px 30px rgba(255,111,97,.5)}
+}
+.nav-logo-text{font-family:var(--font-heading);font-size:1.5rem;font-weight:600;color:#fff;letter-spacing:1px}
+.nav-logo-text span{color:var(--coral)}
+
+.nav-menu{display:flex;align-items:center;gap:8px}
+.nav-menu a{
+  padding:10px 22px;font-size:.82rem;font-weight:500;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--gray3);border-radius:6px;
+  transition:all .35s var(--transition);position:relative;
+}
+.nav-menu a::after{
+  content:'';position:absolute;bottom:6px;left:50%;width:0;height:2px;
+  background:linear-gradient(90deg,var(--coral),var(--teal));
+  transition:all .35s var(--transition);transform:translateX(-50%);border-radius:2px;
+}
+.nav-menu a:hover,.nav-menu a.active{color:#fff}
+.nav-menu a:hover::after,.nav-menu a.active::after{width:50%}
+.nav-cta{
+  padding:11px 28px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));
+  color:#fff;font-size:.8rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  border-radius:6px;margin-left:10px;
+  transition:all .4s var(--transition);
+  box-shadow:0 4px 20px rgba(255,111,97,.25);
+}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,111,97,.45)}
+
+/* Hamburger */
+.hamburger{display:none;width:30px;height:22px;position:relative;cursor:pointer;z-index:5001}
+.hamburger span{
+  position:absolute;left:0;width:100%;height:2px;background:#fff;border-radius:2px;
+  transition:all .35s var(--transition);
+}
+.hamburger span:nth-child(1){top:0}
+.hamburger span:nth-child(2){top:10px;width:70%}
+.hamburger span:nth-child(3){top:20px;width:85%}
+.hamburger.open span:nth-child(1){top:10px;transform:rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;width:0}
+.hamburger.open span:nth-child(3){top:10px;transform:rotate(-45deg);width:100%}
+
+/* Mobile Nav */
+.mobile-menu{
+  position:fixed;inset:0;background:rgba(13,13,13,.97);backdrop-filter:blur(30px);
+  z-index:4999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  opacity:0;visibility:hidden;transition:all .5s var(--transition);
+}
+.mobile-menu.open{opacity:1;visibility:visible}
+.mobile-menu a{
+  font-family:var(--font-heading);font-size:2.2rem;font-weight:300;
+  padding:10px 0;color:var(--gray3);transition:all .3s ease;letter-spacing:2px;
+}
+.mobile-menu a:hover,.mobile-menu a.active{color:var(--coral)}
+
+/* ══════════════════════════════════════════
+   PAGE CONTAINERS
+   ══════════════════════════════════════════ */
+.page{
+  display:none;min-height:100vh;opacity:0;
+  transform:translateY(40px);
+  transition:opacity .8s var(--transition),transform .8s var(--transition);
+}
+.page.active{display:block;opacity:1;transform:translateY(0)}
+.page.entering{display:block}
+
+/* ══════════════════════════════════════════
+   COMMON COMPONENTS
+   ══════════════════════════════════════════ */
+.container{max-width:1200px;margin:0 auto;padding:0 5%}
+
+/* Section Header */
+.sec-header{text-align:center;margin-bottom:70px}
+.sec-header .overline{
+  font-size:.75rem;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  color:var(--coral);margin-bottom:12px;display:flex;align-items:center;
+  justify-content:center;gap:12px;
+}
+.sec-header .overline::before,.sec-header .overline::after{
+  content:'';width:30px;height:1px;background:var(--coral);
+}
+.sec-header h2{
+  font-family:var(--font-heading);font-size:3.4rem;font-weight:300;
+  line-height:1.15;margin-bottom:18px;letter-spacing:1px;
+}
+.sec-header h2 strong{font-weight:700;color:var(--coral)}
+.sec-header h2 em{font-weight:700;color:var(--teal-light);font-style:normal}
+.sec-header .desc{
+  max-width:520px;margin:0 auto;font-size:.95rem;line-height:1.75;
+  color:var(--gray2);font-weight:300;
+}
+.sec-header .divider{
+  width:60px;height:3px;margin:20px auto 0;border-radius:3px;
+  background:linear-gradient(90deg,var(--coral),var(--teal));
+}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:15px 38px;font-size:.82rem;font-weight:600;letter-spacing:1.5px;
+  text-transform:uppercase;border-radius:6px;transition:all .45s var(--transition);
+  position:relative;overflow:hidden;
+}
+.btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);
+  transform:translateX(-100%);transition:transform .5s var(--transition);
+}
+.btn:hover::before{transform:translateX(100%)}
+.btn-coral{
+  background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:#fff;
+  box-shadow:0 6px 25px rgba(255,111,97,.3);
+}
+.btn-coral:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(255,111,97,.5)}
+.btn-teal{
+  background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:#fff;
+  box-shadow:0 6px 25px rgba(0,128,128,.3);
+}
+.btn-teal:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(0,128,128,.5)}
+.btn-outline{
+  background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.25);
+}
+.btn-outline:hover{border-color:var(--coral);color:var(--coral);transform:translateY(-3px)}
+.btn-ghost{
+  background:rgba(255,255,255,.06);color:#fff;backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.08);
+}
+.btn-ghost:hover{background:rgba(255,255,255,.12);transform:translateY(-3px)}
+
+/* Cards – 3D Tilt Base */
+.card-3d{
+  transform-style:preserve-3d;transition:all .5s var(--transition);
+  will-change:transform;
+}
+
+/* Reveal animation */
+[data-reveal]{opacity:0;transform:translateY(50px);transition:all .9s var(--transition)}
+[data-reveal="left"]{transform:translateX(-60px)}
+[data-reveal="right"]{transform:translateX(60px)}
+[data-reveal="scale"]{transform:scale(.85)}
+[data-reveal].revealed{opacity:1;transform:translate(0) scale(1)}
+
+/* ══════════════════════════════════════════
+   PAGE 1: HOME
+   ══════════════════════════════════════════ */
+.hero{
+  height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80') center/cover no-repeat;
+  filter:brightness(.25) saturate(1.2);
+  animation:heroSlow 25s ease-in-out infinite alternate;
+}
+@keyframes heroSlow{0%{transform:scale(1)}100%{transform:scale(1.08)}}
+.hero-gradient{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(135deg,rgba(255,111,97,.08) 0%,transparent 50%),
+    linear-gradient(225deg,rgba(0,128,128,.1) 0%,transparent 50%),
+    linear-gradient(180deg,transparent 60%,var(--dark) 100%);
+}
+.hero-content{position:relative;z-index:10;padding:0 5%;max-width:800px}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:8px 22px;border:1px solid rgba(255,111,97,.3);border-radius:50px;
+  font-size:.72rem;font-weight:500;letter-spacing:3px;text-transform:uppercase;
+  color:var(--coral-light);margin-bottom:30px;backdrop-filter:blur(10px);
+  background:rgba(255,111,97,.05);
+  animation:tagFloat 4s ease-in-out infinite;
+}
+@keyframes tagFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hero-title{
+  font-family:var(--font-heading);font-size:5.5rem;font-weight:300;
+  line-height:1.05;margin-bottom:25px;letter-spacing:-1px;
+}
+.hero-title strong{font-weight:700;display:block}
+.hero-title .highlight-coral{
+  background:linear-gradient(135deg,var(--coral),var(--coral-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-title .highlight-teal{
+  background:linear-gradient(135deg,var(--teal-light),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-desc{
+  font-size:1.05rem;line-height:1.8;color:var(--gray3);
+  max-width:480px;margin-bottom:45px;font-weight:300;
+}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+
+/* Hero scroll */
+.hero-scroll{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;z-index:10;
+}
+.hero-scroll span{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gray2)}
+.scroll-line{width:1px;height:50px;position:relative;overflow:hidden;background:rgba(255,255,255,.1)}
+.scroll-line::after{
+  content:'';position:absolute;top:-50px;left:0;width:100%;height:50px;
+  background:linear-gradient(180deg,transparent,var(--coral));
+  animation:scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine{0%{top:-50px}100%{top:50px}}
+
+/* Hero floating images */
+.hero-float-imgs{
+  position:absolute;right:5%;top:50%;transform:translateY(-50%);
+  width:450px;height:550px;z-index:5;
+}
+.hero-float-img{
+  position:absolute;border-radius:16px;overflow:hidden;
+  box-shadow:0 25px 60px rgba(0,0,0,.5);
+}
+.hero-float-img img{width:100%;height:100%;object-fit:cover}
+.hero-float-img:nth-child(1){
+  width:280px;height:350px;top:0;right:0;
+  border:2px solid rgba(255,111,97,.2);
+  animation:heroImg1 6s ease-in-out infinite;
+}
+.hero-float-img:nth-child(2){
+  width:200px;height:260px;bottom:0;left:0;
+  border:2px solid rgba(0,128,128,.2);
+  animation:heroImg2 6s ease-in-out infinite;
+}
+.hero-float-img:nth-child(3){
+  width:120px;height:120px;top:40%;left:30%;
+  border-radius:50%;border:2px solid var(--gold);
+  animation:heroImg3 4s ease-in-out infinite;
+}
+@keyframes heroImg1{0%,100%{transform:translateY(0) rotateY(0)}50%{transform:translateY(-15px) rotateY(3deg)}}
+@keyframes heroImg2{0%,100%{transform:translateY(0) rotateY(0)}50%{transform:translateY(12px) rotateY(-3deg)}}
+@keyframes heroImg3{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.05) rotate(5deg)}}
+
+/* Stats bar */
+.hero-stats{
+  position:absolute;bottom:0;left:0;width:100%;z-index:10;
+  background:rgba(13,13,13,.7);backdrop-filter:blur(30px);
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:30px 5%;
+  display:flex;justify-content:center;gap:60px;
+}
+.hero-stat{text-align:center}
+.hero-stat .num{
+  font-family:var(--font-heading);font-size:2.4rem;font-weight:700;
+  background:linear-gradient(135deg,var(--coral),var(--teal-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-stat .label{font-size:.72rem;color:var(--gray2);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+
+/* ══════════════════════════════════════════
+   PAGE 2: ABOUT
+   ══════════════════════════════════════════ */
+#about-page{padding-top:calc(var(--nav-h) + 50px)}
+
+/* About Hero Banner */
+.about-banner{
+  height:50vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;margin-bottom:100px;
+}
+.about-banner-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1920&q=80') center/cover;
+  filter:brightness(.2);
+}
+.about-banner-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,var(--dark) 0%,transparent 30%,transparent 70%,var(--dark) 100%),
+             linear-gradient(135deg,rgba(255,111,97,.1),rgba(0,128,128,.1));
+}
+.about-banner-content{position:relative;z-index:2;text-align:center}
+.about-banner-content h1{
+  font-family:var(--font-heading);font-size:4.5rem;font-weight:300;letter-spacing:3px;
+}
+.about-banner-content h1 strong{font-weight:700;color:var(--coral)}
+.about-breadcrumb{
+  margin-top:15px;font-size:.8rem;color:var(--gray2);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.about-breadcrumb a{color:var(--coral);transition:.3s}
+.about-breadcrumb a:hover{color:var(--coral-light)}
+
+/* Story Section */
+.about-story{padding:0 0 120px;overflow:hidden}
+.about-story-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.about-story-images{position:relative;height:620px;perspective:1200px}
+.about-simg{
+  position:absolute;border-radius:20px;overflow:hidden;
+  transition:all .6s var(--transition);
+}
+.about-simg img{width:100%;height:100%;object-fit:cover}
+.about-simg:nth-child(1){
+  width:320px;height:420px;top:0;left:0;z-index:2;
+  transform:perspective(1000px) rotateY(6deg) rotateX(-3deg);
+  box-shadow:0 30px 60px rgba(0,0,0,.5);
+  border:2px solid rgba(255,111,97,.15);
+}
+.about-simg:nth-child(1):hover{transform:perspective(1000px) rotateY(0) rotateX(0) scale(1.02)}
+.about-simg:nth-child(2){
+  width:260px;height:340px;bottom:0;right:0;z-index:1;
+  transform:perspective(1000px) rotateY(-6deg) rotateX(3deg);
+  box-shadow:0 30px 60px rgba(0,0,0,.5);
+  border:2px solid rgba(0,128,128,.15);
+}
+.about-simg:nth-child(2):hover{transform:perspective(1000px) rotateY(0) rotateX(0) scale(1.02)}
+.about-badge-float{
+  position:absolute;bottom:100px;left:50%;transform:translateX(-50%);z-index:3;
+  background:linear-gradient(135deg,var(--coral),var(--teal));
+  padding:28px 35px;border-radius:20px;text-align:center;
+  box-shadow:0 20px 50px rgba(255,111,97,.3);
+  animation:badgeFloat 4s ease-in-out infinite;
+}
+@keyframes badgeFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-10px)}}
+.about-badge-float .big{font-family:var(--font-heading);font-size:2.8rem;font-weight:700;display:block}
+.about-badge-float .small{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;opacity:.9}
+
+.about-story-text .overline-left{
+  font-size:.72rem;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  color:var(--coral);margin-bottom:15px;display:flex;align-items:center;gap:10px;
+}
+.about-story-text .overline-left::before{content:'';width:25px;height:1.5px;background:var(--coral)}
+.about-story-text h3{
+  font-family:var(--font-heading);font-size:2.8rem;font-weight:300;
+  line-height:1.2;margin-bottom:25px;
+}
+.about-story-text h3 strong{font-weight:700}
+.about-story-text p{font-size:.92rem;line-height:1.85;color:var(--gray2);margin-bottom:16px;font-weight:300}
+.about-story-text .sig{font-family:var(--font-script);font-size:1.8rem;color:var(--coral);margin-top:20px}
+
+/* Values */
+.about-values{padding:100px 0;background:var(--dark2);border-top:1px solid rgba(255,255,255,.03)}
+.values-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-top:60px}
+.value-card{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);
+  border-radius:20px;padding:40px 30px;text-align:center;
+  transition:all .5s var(--transition);position:relative;overflow:hidden;
+}
+.value-card::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:60%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--coral),var(--teal),transparent);
+  opacity:0;transition:opacity .5s ease;
+}
+.value-card:hover{transform:translateY(-10px);border-color:rgba(255,111,97,.15)}
+.value-card:hover::before{opacity:1}
+.value-card .icon{
+  width:65px;height:65px;border-radius:16px;margin:0 auto 22px;
+  background:linear-gradient(135deg,rgba(255,111,97,.1),rgba(0,128,128,.1));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;color:var(--coral);
+  transition:all .4s ease;
+}
+.value-card:hover .icon{background:linear-gradient(135deg,var(--coral),var(--teal));color:#fff;transform:rotateY(180deg)}
+.value-card h4{font-family:var(--font-heading);font-size:1.4rem;margin-bottom:10px;font-weight:600}
+.value-card p{font-size:.83rem;line-height:1.7;color:var(--gray2);font-weight:300}
+
+/* Team */
+.about-team{padding:100px 0}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:60px}
+.team-card{
+  border-radius:20px;overflow:hidden;position:relative;
+  background:var(--dark2);border:1px solid rgba(255,255,255,.04);
+  transition:all .5s var(--transition);
+}
+.team-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.team-card-img{height:320px;overflow:hidden;position:relative}
+.team-card-img img{width:100%;height:100%;object-fit:cover;transition:all .6s var(--transition)}
+.team-card:hover .team-card-img img{transform:scale(1.08)}
+.team-card-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 50%,var(--dark2));
+}
+.team-card-body{padding:25px 30px;position:relative}
+.team-card-body h4{font-family:var(--font-heading);font-size:1.4rem;font-weight:600;margin-bottom:4px}
+.team-card-body .role{font-size:.78rem;color:var(--coral);letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.team-card-body p{font-size:.82rem;line-height:1.7;color:var(--gray2);margin-top:10px;font-weight:300}
+
+/* ══════════════════════════════════════════
+   PAGE 3: MENU
+   ══════════════════════════════════════════ */
+#menu-page{padding-top:calc(var(--nav-h) + 50px)}
+
+.menu-banner{
+  height:50vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;margin-bottom:100px;
+}
+.menu-banner-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=80') center/cover;
+  filter:brightness(.18);
+}
+.menu-banner-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,var(--dark) 0%,transparent 30%,transparent 70%,var(--dark) 100%);
+}
+
+/* Menu filter */
+.menu-filter{
+  display:flex;justify-content:center;gap:10px;margin-bottom:60px;flex-wrap:wrap;
+}
+.menu-filter button{
+  padding:11px 28px;font-size:.78rem;font-weight:600;letter-spacing:1.5px;
+  text-transform:uppercase;border-radius:6px;color:var(--gray3);
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  transition:all .4s var(--transition);
+}
+.menu-filter button:hover,.menu-filter button.active{
+  background:linear-gradient(135deg,var(--coral),var(--teal));
+  color:#fff;border-color:transparent;
+  box-shadow:0 6px 20px rgba(255,111,97,.25);transform:translateY(-2px);
+}
+
+/* Menu Grid */
+.menu-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
+  gap:28px;padding-bottom:80px;
+}
+.menu-item{
+  display:flex;gap:20px;align-items:center;
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);
+  border-radius:18px;padding:18px;
+  transition:all .5s var(--transition);cursor:pointer;
+}
+.menu-item:hover{
+  transform:perspective(800px) rotateY(2deg) translateY(-5px);
+  border-color:rgba(255,111,97,.15);
+  box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+.menu-item-img{
+  width:100px;height:100px;min-width:100px;border-radius:14px;overflow:hidden;
+}
+.menu-item-img img{width:100%;height:100%;object-fit:cover;transition:.5s}
+.menu-item:hover .menu-item-img img{transform:scale(1.1)}
+.menu-item-info{flex:1}
+.menu-item-info .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.menu-item-info h4{font-family:var(--font-heading);font-size:1.2rem;font-weight:600}
+.menu-item-info .price{
+  font-family:var(--font-heading);font-size:1.3rem;font-weight:700;color:var(--coral);
+  white-space:nowrap;
+}
+.menu-item-info p{font-size:.8rem;color:var(--gray2);line-height:1.6;margin-top:6px;font-weight:300}
+.menu-item-info .tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.menu-item-info .tag{
+  font-size:.65rem;padding:3px 10px;border-radius:4px;
+  background:rgba(255,111,97,.08);color:var(--coral-light);
+  font-weight:500;letter-spacing:.5px;
+}
+.menu-item-info .tag.teal{background:rgba(0,128,128,.1);color:var(--teal-light)}
+
+/* Featured Dish */
+.featured-dish{
+  padding:80px 0;margin:0 0 80px;
+  background:linear-gradient(135deg,rgba(255,111,97,.04),rgba(0,128,128,.04));
+  border-top:1px solid rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.03);
+}
+.featured-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.featured-img{
+  border-radius:24px;overflow:hidden;position:relative;
+  box-shadow:0 30px 70px rgba(0,0,0,.4);
+  animation:featFloat 5s ease-in-out infinite;
+}
+@keyframes featFloat{0%,100%{transform:perspective(800px) rotateY(0)}50%{transform:perspective(800px) rotateY(3deg)}}
+.featured-img img{width:100%;height:400px;object-fit:cover}
+.featured-text .overline-left{
+  font-size:.72rem;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:15px;display:flex;align-items:center;gap:10px;
+}
+.featured-text .overline-left::before{content:'';width:25px;height:1.5px;background:var(--gold)}
+.featured-text h3{font-family:var(--font-heading);font-size:2.6rem;font-weight:300;margin-bottom:20px}
+.featured-text h3 strong{font-weight:700}
+.featured-text p{font-size:.9rem;line-height:1.8;color:var(--gray2);margin-bottom:15px;font-weight:300}
+.featured-text .price-big{
+  font-family:var(--font-heading);font-size:3rem;font-weight:700;
+  background:linear-gradient(135deg,var(--coral),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin:25px 0;
+}
+
+/* ══════════════════════════════════════════
+   PAGE 4: GALLERY
+   ══════════════════════════════════════════ */
+#gallery-page{padding-top:calc(var(--nav-h) + 50px)}
+.gallery-banner{
+  height:50vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;margin-bottom:100px;
+}
+.gallery-banner-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=1920&q=80') center/cover;
+  filter:brightness(.18);
+}
+
+.masonry{
+  columns:4;column-gap:16px;padding-bottom:80px;
+}
+.masonry-item{
+  break-inside:avoid;margin-bottom:16px;border-radius:14px;overflow:hidden;
+  position:relative;cursor:pointer;transition:all .5s var(--transition);
+}
+.masonry-item:hover{transform:scale(1.015);z-index:5}
+.masonry-item img{width:100%;display:block;transition:all .6s var(--transition)}
+.masonry-item:hover img{transform:scale(1.08)}
+.masonry-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 40%,rgba(255,111,97,.85) 100%);
+  opacity:0;transition:all .5s ease;
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
+  padding:25px;
+}
+.masonry-item:hover .masonry-overlay{opacity:1}
+.masonry-overlay h5{font-family:var(--font-heading);font-size:1.3rem;margin-bottom:4px}
+.masonry-overlay span{font-size:.78rem;opacity:.85}
+
+/* Lightbox */
+.lightbox{
+  position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:90000;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:all .4s ease;
+}
+.lightbox.open{opacity:1;visibility:visible}
+.lightbox img{max-width:85%;max-height:85vh;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);transform:scale(.9);transition:transform .5s var(--transition)}
+.lightbox.open img{transform:scale(1)}
+.lightbox-close{
+  position:absolute;top:30px;right:30px;
+  width:50px;height:50px;border-radius:50%;
+  background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;color:#fff;cursor:pointer;border:none;
+  transition:all .3s ease;
+}
+.lightbox-close:hover{background:var(--coral);transform:rotate(90deg)}
+
+/* ══════════════════════════════════════════
+   PAGE 5: RESERVATIONS
+   ══════════════════════════════════════════ */
+#reservation-page{padding-top:calc(var(--nav-h) + 50px)}
+.res-banner{
+  height:50vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;margin-bottom:100px;
+}
+.res-banner-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=1920&q=80') center/cover;
+  filter:brightness(.18);
+}
+
+.res-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:50px;padding-bottom:120px;align-items:start}
+
+/* Left column: Info */
+.res-info-card{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);
+  border-radius:24px;padding:50px 40px;
+}
+.res-info-card h3{font-family:var(--font-heading);font-size:2rem;font-weight:600;margin-bottom:8px}
+.res-info-card .tagline{font-size:.9rem;color:var(--gray2);margin-bottom:35px;font-weight:300;line-height:1.7}
+.res-info-item{display:flex;align-items:flex-start;gap:18px;margin-bottom:28px}
+.res-info-item .icon-box{
+  width:48px;height:48px;min-width:48px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(255,111,97,.1),rgba(0,128,128,.1));
+  display:flex;align-items:center;justify-content:center;
+  color:var(--coral);font-size:1rem;
+  transition:all .4s ease;
+}
+.res-info-item:hover .icon-box{background:linear-gradient(135deg,var(--coral),var(--teal));color:#fff;transform:rotateY(180deg)}
+.res-info-item h5{font-size:.95rem;font-weight:600;margin-bottom:3px}
+.res-info-item p{font-size:.82rem;color:var(--gray2);line-height:1.6;font-weight:300}
+
+.res-info-divider{width:100%;height:1px;background:rgba(255,255,255,.05);margin:15px 0 30px}
+
+/* Quick info strip */
+.res-quick-info{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:10px}
+.res-quick-box{
+  padding:20px;border-radius:14px;
+  background:rgba(255,111,97,.04);border:1px solid rgba(255,111,97,.08);
+  text-align:center;
+}
+.res-quick-box:nth-child(even){background:rgba(0,128,128,.04);border-color:rgba(0,128,128,.08)}
+.res-quick-box .num{font-family:var(--font-heading);font-size:1.6rem;font-weight:700;color:var(--coral)}
+.res-quick-box:nth-child(even) .num{color:var(--teal-light)}
+.res-quick-box .txt{font-size:.7rem;color:var(--gray2);letter-spacing:1px;text-transform:uppercase;margin-top:3px}
+
+/* Right column: Form */
+.res-form-card{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);
+  border-radius:24px;padding:50px 40px;
+}
+.res-form-card h3{font-family:var(--font-heading);font-size:1.8rem;font-weight:600;margin-bottom:30px}
+.form-grid{display:grid;gap:18px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:7px}
+.form-group label{font-size:.75rem;font-weight:500;color:var(--gray3);letter-spacing:.5px}
+.form-group input,.form-group select,.form-group textarea{
+  padding:13px 18px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);border-radius:10px;
+  color:#fff;font-family:var(--font-body);font-size:.88rem;
+  transition:all .3s ease;outline:none;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,111,97,.08);
+}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--gray2)}
+.form-group select{-webkit-appearance:none;appearance:none;cursor:pointer}
+.form-group select option{background:var(--dark2)}
+.form-group textarea{resize:none;min-height:90px}
+.form-submit{
+  width:100%;padding:16px;margin-top:10px;
+  background:linear-gradient(135deg,var(--coral),var(--teal));
+  color:#fff;font-size:.85rem;font-weight:600;letter-spacing:1.5px;
+  text-transform:uppercase;border-radius:10px;
+  transition:all .4s var(--transition);
+  box-shadow:0 8px 30px rgba(255,111,97,.25);
+}
+.form-submit:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,111,97,.45)}
+
+/* Success notification */
+.res-success{
+  display:none;text-align:center;padding:60px 20px;
+}
+.res-success.show{display:block;animation:fadeUp .6s ease}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(30px)}100%{opacity:1;transform:translateY(0)}}
+.res-success .check-circle{
+  width:80px;height:80px;border-radius:50%;margin:0 auto 25px;
+  background:linear-gradient(135deg,var(--teal),var(--teal-light));
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;color:#fff;
+}
+.res-success h3{font-family:var(--font-heading);font-size:2rem;margin-bottom:10px}
+.res-success p{font-size:.9rem;color:var(--gray2);line-height:1.7}
+
+/* ══════════════════════════════════════════
+   PAGE 6: CONTACT
+   ══════════════════════════════════════════ */
+#contact-page{padding-top:calc(var(--nav-h) + 50px)}
+.contact-banner{
+  height:50vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;margin-bottom:100px;
+}
+.contact-banner-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&q=80') center/cover;
+  filter:brightness(.18);
+}
+
+/* Contact Cards */
+.contact-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:25px;margin-bottom:80px}
+.c-card{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);
+  border-radius:20px;padding:35px 25px;text-align:center;
+  transition:all .5s var(--transition);
+}
+.c-card:hover{transform:perspective(600px) rotateY(5deg) translateY(-8px);border-color:rgba(255,111,97,.15);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.c-card .c-icon{
+  width:58px;height:58px;border-radius:14px;margin:0 auto 20px;
+  background:linear-gradient(135deg,rgba(255,111,97,.08),rgba(0,128,128,.08));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;color:var(--coral);transition:all .4s ease;
+}
+.c-card:hover .c-icon{background:linear-gradient(135deg,var(--coral),var(--teal));color:#fff;transform:rotateY(180deg)}
+.c-card h4{font-family:var(--font-heading);font-size:1.2rem;font-weight:600;margin-bottom:8px}
+.c-card p{font-size:.82rem;line-height:1.7;color:var(--gray2);font-weight:300}
+.c-card a{color:var(--teal-light);transition:.3s}
+.c-card a:hover{color:var(--coral)}
+
+/* Contact layout */
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:80px}
+.contact-form-box{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);
+  border-radius:24px;padding:45px;
+}
+.contact-form-box h3{font-family:var(--font-heading);font-size:1.8rem;font-weight:600;margin-bottom:25px}
+.contact-map{
+  border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,.04);
+  min-height:500px;
+}
+.contact-map iframe{width:100%;height:100%;border:none;filter:invert(90%) hue-rotate(180deg);min-height:500px}
+
+/* Hours table */
+.hours-table{width:100%;margin-top:12px;border-collapse:collapse}
+.hours-table tr{border-bottom:1px solid rgba(255,255,255,.04)}
+.hours-table td{padding:10px 0;font-size:.85rem;font-weight:300;color:var(--gray3)}
+.hours-table td:last-child{text-align:right;color:#fff;font-weight:500}
+
+/* ══════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════ */
+.site-footer{
+  background:var(--dark2);padding:80px 5% 30px;
+  border-top:1px solid rgba(255,255,255,.03);
+}
+.footer-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:50px;
+  max-width:1200px;margin:0 auto 50px;
+}
+.footer-brand-col .f-logo{
+  font-family:var(--font-heading);font-size:1.6rem;font-weight:600;
+  margin-bottom:15px;display:block;
+}
+.footer-brand-col .f-logo span{color:var(--coral)}
+.footer-brand-col p{font-size:.85rem;line-height:1.8;color:var(--gray2);font-weight:300;margin-bottom:20px}
+.f-social{display:flex;gap:10px}
+.f-social a{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;color:var(--gray3);transition:all .3s ease;
+}
+.f-social a:hover{
+  background:linear-gradient(135deg,var(--coral),var(--teal));color:#fff;border-color:transparent;
+  transform:translateY(-3px);
+}
+.footer-col h5{
+  font-family:var(--font-heading);font-size:1.1rem;font-weight:600;margin-bottom:22px;
+  position:relative;padding-bottom:12px;
+}
+.footer-col h5::after{
+  content:'';position:absolute;bottom:0;left:0;width:25px;height:2px;
+  background:linear-gradient(90deg,var(--coral),var(--teal));border-radius:2px;
+}
+.footer-col li{margin-bottom:10px}
+.footer-col li a{font-size:.83rem;color:var(--gray2);font-weight:300;transition:all .3s ease;display:inline-flex;align-items:center;gap:6px}
+.footer-col li a:hover{color:var(--coral);transform:translateX(4px)}
+.footer-col li a::before{content:'';width:0;height:1px;background:var(--coral);transition:width .3s ease}
+.footer-col li a:hover::before{width:12px}
+
+.footer-newsletter p{font-size:.83rem;color:var(--gray2);margin-bottom:15px;font-weight:300;line-height:1.7}
+.newsletter-form{display:flex;gap:8px}
+.newsletter-form input{
+  flex:1;padding:12px 16px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);border-radius:8px;
+  color:#fff;font-size:.85rem;outline:none;font-family:var(--font-body);
+  transition:.3s;
+}
+.newsletter-form input:focus{border-color:var(--coral)}
+.newsletter-form button{
+  padding:12px 20px;background:linear-gradient(135deg,var(--coral),var(--teal));
+  color:#fff;border-radius:8px;font-size:.8rem;font-weight:600;
+  transition:.3s;
+}
+.newsletter-form button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,111,97,.3)}
+
+.footer-bottom-bar{
+  max-width:1200px;margin:0 auto;padding-top:30px;
+  border-top:1px solid rgba(255,255,255,.04);
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:15px;
+}
+.footer-bottom-bar p{font-size:.78rem;color:var(--gray2);font-weight:300}
+.footer-bottom-bar p a{color:var(--coral);font-weight:500}
+.footer-bottom-links{display:flex;gap:20px}
+.footer-bottom-links a{font-size:.75rem;color:var(--gray2);font-weight:300;transition:.3s}
+.footer-bottom-links a:hover{color:var(--coral)}
+
+/* ══════════════════════════════════════════
+   BACK TO TOP
+   ══════════════════════════════════════════ */
+#topBtn{
+  position:fixed;bottom:30px;right:30px;z-index:6000;
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,var(--coral),var(--teal));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1rem;box-shadow:0 8px 25px rgba(255,111,97,.3);
+  opacity:0;visibility:hidden;transform:translateY(20px);
+  transition:all .4s var(--transition);
+}
+#topBtn.show{opacity:1;visibility:visible;transform:translateY(0)}
+#topBtn:hover{transform:translateY(-5px) scale(1.05)}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════ */
+@media(max-width:1024px){
+  .hamburger{display:block}
+  .nav-menu,.nav-cta-wrap{display:none}
+  .hero-float-imgs{display:none}
+  .hero-content{max-width:100%}
+  .hero-title{font-size:3.8rem}
+  .hero-stats{gap:30px}
+  .about-story-grid{grid-template-columns:1fr;gap:50px}
+  .about-story-images{height:450px;max-width:500px;margin:0 auto}
+  .values-grid{grid-template-columns:repeat(2,1fr)}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .featured-grid{grid-template-columns:1fr}
+  .masonry{columns:3}
+  .res-layout{grid-template-columns:1fr}
+  .contact-cards{grid-template-columns:repeat(2,1fr)}
+  .contact-layout{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  :root{--nav-h:65px}
+  .hero-title{font-size:2.8rem}
+  .hero-stats{gap:20px;flex-wrap:wrap;justify-content:center}
+  .sec-header h2,.about-banner-content h1{font-size:2.5rem}
+  .about-story-images{height:380px}
+  .about-simg:nth-child(1){width:240px;height:320px}
+  .about-simg:nth-child(2){width:200px;height:260px}
+  .values-grid{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:1fr}
+  .menu-grid{grid-template-columns:1fr}
+  .masonry{columns:2}
+  .contact-cards{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  .footer-bottom-bar{flex-direction:column;text-align:center}
+  .res-quick-info{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .hero-title{font-size:2.2rem}
+  .hero-btns{flex-direction:column;gap:12px}
+  .hero-btns .btn{width:100%;justify-content:center}
+  .masonry{columns:1}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ PRELOADER ═══ -->
+<div id="preloader">
+  <div class="pre-ring"></div>
+  <div class="pre-text">Coral Reef Bistro</div>
+</div>
+
+<!-- ═══ PAGE TRANSITION ═══ -->
+<div class="page-transition" id="pageTransition">
+  <div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div>
+</div>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo" onclick="navigateTo('home');return false;">
+    <div class="nav-logo-icon">CR</div>
+    <div class="nav-logo-text">Coral <span>Reef</span></div>
+  </a>
+  <div class="nav-menu" id="navMenu">
+    <a href="#" data-page="home" class="active" onclick="navigateTo('home');return false;">Home</a>
+    <a href="#" data-page="about" onclick="navigateTo('about');return false;">About</a>
+    <a href="#" data-page="menu" onclick="navigateTo('menu');return false;">Menu</a>
+    <a href="#" data-page="gallery" onclick="navigateTo('gallery');return false;">Gallery</a>
+    <a href="#" data-page="reservation" onclick="navigateTo('reservation');return false;">Reservations</a>
+    <a href="#" data-page="contact" onclick="navigateTo('contact');return false;">Contact</a>
+  </div>
+  <div class="nav-cta-wrap" style="display:flex;align-items:center;gap:10px">
+    <a href="#" class="nav-cta" onclick="navigateTo('reservation');return false;">Book a Table</a>
+  </div>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ═══ MOBILE MENU ═══ -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" data-page="home" class="active" onclick="navigateTo('home');return false;">Home</a>
+  <a href="#" data-page="about" onclick="navigateTo('about');return false;">About</a>
+  <a href="#" data-page="menu" onclick="navigateTo('menu');return false;">Menu</a>
+  <a href="#" data-page="gallery" onclick="navigateTo('gallery');return false;">Gallery</a>
+  <a href="#" data-page="reservation" onclick="navigateTo('reservation');return false;">Reservations</a>
+  <a href="#" data-page="contact" onclick="navigateTo('contact');return false;">Contact</a>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 1: HOME
+     ════════════════════════════════════════════════════════ -->
+<div class="page active" id="home-page">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-gradient"></div>
+    <div class="hero-content">
+      <div class="hero-tag" data-reveal>
+        <i class="fas fa-star" style="font-size:.6rem;color:var(--gold)"></i>
+        Michelin Recommended · Est. 2010
+      </div>
+      <h1 class="hero-title" data-reveal>
+        Experience<br>
+        <strong>
+          <span class="highlight-coral">Extraordinary</span>
+          <span class="highlight-teal">Cuisine</span>
+        </strong>
+      </h1>
+      <p class="hero-desc" data-reveal>
+        Where ocean-inspired artistry meets culinary mastery. Every dish is a symphony of flavor, crafted with passion and served with elegance.
+      </p>
+      <div class="hero-btns" data-reveal>
+        <a href="#" class="btn btn-coral" onclick="navigateTo('menu');return false;">
+          <i class="fas fa-utensils"></i> View Our Menu
+        </a>
+        <a href="#" class="btn btn-outline" onclick="navigateTo('reservation');return false;">
+          <i class="far fa-calendar-alt"></i> Reserve a Table
+        </a>
+      </div>
+    </div>
+    <div class="hero-float-imgs">
+      <div class="hero-float-img" data-reveal="right">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Fine Dining">
+      </div>
+      <div class="hero-float-img" data-reveal="right">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80" alt="Cuisine">
+      </div>
+      <div class="hero-float-img" data-reveal="scale">
+        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=300&q=80" alt="Chef">
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <div class="hero-stats">
+    <div class="hero-stat" data-reveal><div class="num" data-count="15">0</div><div class="label">Years of Excellence</div></div>
+    <div class="hero-stat" data-reveal><div class="num" data-count="50">0</div><div class="label">Master Chefs</div></div>
+    <div class="hero-stat" data-reveal><div class="num" data-count="200">0</div><div class="label">Signature Dishes</div></div>
+    <div class="hero-stat" data-reveal><div class="num" data-count="98">0</div><div class="label">% Satisfaction</div></div>
+  </div>
+
+  <!-- Quick About -->
+  <section style="padding:120px 5%">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center" class="home-about-grid">
+        <div data-reveal="left">
+          <div class="sec-header" style="text-align:left;margin-bottom:30px">
+            <div class="overline" style="justify-content:flex-start"><span></span>Welcome to Coral Reef</div>
+            <h2 style="font-size:2.8rem">A <strong>Culinary</strong><br>Masterpiece</h2>
+          </div>
+          <p style="font-size:.92rem;line-height:1.85;color:var(--gray2);font-weight:300;margin-bottom:30px">
+            Nestled on the waterfront, Coral Reef Bistro offers an unforgettable dining experience where every detail has been thoughtfully curated. From our hand-selected ingredients to our stunning ocean-view setting, we create moments that linger long after the last course.
+          </p>
+          <a href="#" class="btn btn-coral" onclick="navigateTo('about');return false;">
+            <i class="fas fa-arrow-right"></i> Discover Our Story
+          </a>
+        </div>
+        <div data-reveal="right" style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
+          <div style="border-radius:16px;overflow:hidden;height:280px">
+            <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80" alt="Food" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          <div style="border-radius:16px;overflow:hidden;height:280px;margin-top:40px">
+            <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=400&q=80" alt="Plating" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          <div style="border-radius:16px;overflow:hidden;height:280px;margin-top:-40px">
+            <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80" alt="Dish" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          <div style="border-radius:16px;overflow:hidden;height:280px">
+            <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&q=80" alt="Dessert" style="width:100%;height:100%;object-fit:cover">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Home CTA -->
+  <section style="padding:100px 5%;background:linear-gradient(135deg,rgba(255,111,97,.06),rgba(0,128,128,.06));border-top:1px solid rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.03)">
+    <div class="container" style="text-align:center" data-reveal>
+      <p style="font-family:var(--font-script);font-size:1.5rem;color:var(--coral);margin-bottom:15px">Ready to Dine?</p>
+      <h2 style="font-family:var(--font-heading);font-size:3rem;font-weight:300;margin-bottom:20px;letter-spacing:1px">
+        Reserve Your <strong style="font-weight:700;color:var(--teal-light)">Experience</strong> Today
+      </h2>
+      <p style="font-size:.95rem;color:var(--gray2);max-width:500px;margin:0 auto 40px;font-weight:300;line-height:1.7">
+        Limited tables available. Secure your spot for an evening of extraordinary dining.
+      </p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+        <a href="#" class="btn btn-coral" onclick="navigateTo('reservation');return false;">
+          <i class="far fa-calendar-alt"></i> Book a Table
+        </a>
+        <a href="#" class="btn btn-ghost" onclick="navigateTo('menu');return false;">
+          <i class="fas fa-utensils"></i> Browse Menu
+        </a>
+        <a href="#" class="btn btn-ghost" onclick="navigateTo('gallery');return false;">
+          <i class="fas fa-images"></i> View Gallery
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 2: ABOUT
+     ════════════════════════════════════════════════════════ -->
+<div class="page" id="about-page">
+  <div class="about-banner">
+    <div class="about-banner-bg"></div>
+    <div class="about-banner-overlay"></div>
+    <div class="about-banner-content" data-reveal>
+      <h1>Our <strong>Story</strong></h1>
+      <div class="about-breadcrumb">
+        <a href="#" onclick="navigateTo('home');return false;">Home</a>
+        <i class="fas fa-chevron-right" style="font-size:.5rem"></i>
+        <span>About</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="about-story">
+    <div class="container">
+      <div class="about-story-grid">
+        <div class="about-story-images" data-reveal="left">
+          <div class="about-simg"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Dining"></div>
+          <div class="about-simg"><img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&q=80" alt="Kitchen"></div>
+          <div class="about-badge-float"><span class="big">15+</span><span class="small">Years of Excellence</span></div>
+        </div>
+        <div class="about-story-text" data-reveal="right">
+          <div class="overline-left">Our Journey</div>
+          <h3>Crafted with <strong style="color:var(--coral)">Passion</strong>, Served with <strong style="color:var(--teal-light)">Elegance</strong></h3>
+          <p>Coral Reef Bistro was born from a dream — to create a dining destination that captures the beauty of the ocean and transforms it into an unforgettable culinary journey.</p>
+          <p>Founded in 2010 by Executive Chef Marcus Rivera, our restaurant has grown from a small waterfront eatery into one of the city's most celebrated fine dining establishments. Every dish reflects our commitment to quality, creativity, and the art of hospitality.</p>
+          <p>We source ingredients from local farms and sustainable fisheries, ensuring that every plate tells a story of freshness and ethical sourcing. Our team of master chefs brings decades of combined experience from Michelin-starred kitchens around the world.</p>
+          <div class="sig">— Chef Marcus Rivera</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-values">
+    <div class="container">
+      <div class="sec-header" data-reveal>
+        <div class="overline">Our Philosophy</div>
+        <h2>What We <strong>Stand</strong> For</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="values-grid">
+        <div class="value-card" data-reveal><div class="icon"><i class="fas fa-seedling"></i></div><h4>Farm to Table</h4><p>Locally sourced, seasonal ingredients from trusted farms and sustainable fisheries.</p></div>
+        <div class="value-card" data-reveal><div class="icon"><i class="fas fa-award"></i></div><h4>Excellence</h4><p>Unwavering commitment to culinary perfection in every dish we create.</p></div>
+        <div class="value-card" data-reveal><div class="icon"><i class="fas fa-heart"></i></div><h4>Warm Hospitality</h4><p>Every guest is family. We create personalized experiences that leave lasting impressions.</p></div>
+        <div class="value-card" data-reveal><div class="icon"><i class="fas fa-globe-americas"></i></div><h4>Sustainability</h4><p>Eco-conscious practices from sourcing to serving, honoring our ocean heritage.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-team">
+    <div class="container">
+      <div class="sec-header" data-reveal>
+        <div class="overline">The Team</div>
+        <h2>Meet Our <em>Masters</em></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="team-grid">
+        <div class="team-card" data-reveal>
+          <div class="team-card-img"><img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=500&q=80" alt="Chef"></div>
+          <div class="team-card-body"><h4>Marcus Rivera</h4><div class="role">Executive Chef & Founder</div><p>20+ years of culinary mastery. Formerly of Le Bernardin, New York. Michelin-trained visionary.</p></div>
+        </div>
+        <div class="team-card" data-reveal>
+          <div class="team-card-img"><img src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=500&q=80" alt="Sous Chef"></div>
+          <div class="team-card-body"><h4>Sophia Laurent</h4><div class="role">Head Pastry Chef</div><p>Classically trained in Paris. Creates edible art that delights all senses.</p></div>
+        </div>
+        <div class="team-card" data-reveal>
+          <div class="team-card-img"><img src="https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=500&q=80" alt="Sommelier"></div>
+          <div class="team-card-body"><h4>Daniel Okafor</h4><div class="role">Head Sommelier</div><p>Certified Master Sommelier with an encyclopedic knowledge of global wine regions.</p></div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:60px" data-reveal>
+        <a href="#" class="btn btn-teal" onclick="navigateTo('menu');return false;"><i class="fas fa-utensils"></i> Explore Our Menu</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 3: MENU
+     ════════════════════════════════════════════════════════ -->
+<div class="page" id="menu-page">
+  <div class="menu-banner">
+    <div class="menu-banner-bg"></div>
+    <div class="menu-banner-overlay"></div>
+    <div class="about-banner-content" data-reveal>
+      <h1>Our <strong>Menu</strong></h1>
+      <div class="about-breadcrumb">
+        <a href="#" onclick="navigateTo('home');return false;">Home</a>
+        <i class="fas fa-chevron-right" style="font-size:.5rem"></i>
+        <span>Menu</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="sec-header" data-reveal>
+      <div class="overline">Curated Selection</div>
+      <h2>Taste the <strong>Extraordinary</strong></h2>
+      <p class="desc">Each dish is a masterpiece crafted by our world-class chefs using only the finest seasonal ingredients.</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="menu-filter" data-reveal>
+      <button class="active" onclick="filterMenu('all',this)">All</button>
+      <button onclick="filterMenu('starter',this)">Starters</button>
+      <button onclick="filterMenu('main',this)">Main Course</button>
+      <button onclick="filterMenu('seafood',this)">Seafood</button>
+      <button onclick="filterMenu('dessert',this)">Desserts</button>
+      <button onclick="filterMenu('drink',this)">Cocktails</button>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+      <div class="menu-item card-3d" data-cat="starter" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1541014741259-de529411b96a?w=300&q=80" alt="Tuna"></div>
+        <div class="menu-item-info"><div class="top"><h4>Tuna Tartare Tower</h4><span class="price">$24</span></div><p>Ahi tuna, avocado mousse, sesame ginger dressing, wonton crisps</p><div class="tags"><span class="tag">Popular</span><span class="tag teal">Gluten-Free</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="starter" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=300&q=80" alt="Bruschetta"></div>
+        <div class="menu-item-info"><div class="top"><h4>Coral Bruschetta</h4><span class="price">$18</span></div><p>Heirloom tomatoes, burrata, basil pesto, aged balsamic on sourdough</p><div class="tags"><span class="tag">Vegetarian</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="starter" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=300&q=80" alt="Soup"></div>
+        <div class="menu-item-info"><div class="top"><h4>Lobster Bisque</h4><span class="price">$22</span></div><p>Creamy bisque, Maine lobster, crème fraîche, micro herbs, truffle oil</p><div class="tags"><span class="tag">Chef's Pick</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="main" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=300&q=80" alt="Steak"></div>
+        <div class="menu-item-info"><div class="top"><h4>A5 Wagyu Ribeye</h4><span class="price">$95</span></div><p>Japanese wagyu, truffle mash, roasted vegetables, red wine jus</p><div class="tags"><span class="tag">Premium</span><span class="tag teal">Signature</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="main" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=300&q=80" alt="Lamb"></div>
+        <div class="menu-item-info"><div class="top"><h4>Rack of Lamb</h4><span class="price">$68</span></div><p>NZ lamb, herb crust, sweet potato purée, root vegetables, rosemary jus</p><div class="tags"><span class="tag">Chef's Pick</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="main" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&q=80" alt="Chicken"></div>
+        <div class="menu-item-info"><div class="top"><h4>Sous Vide Duck Breast</h4><span class="price">$52</span></div><p>Moulard duck, cherry gastrique, fondant potato, wilted greens</p><div class="tags"><span class="tag teal">New</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="seafood" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=300&q=80" alt="Lobster"></div>
+        <div class="menu-item-info"><div class="top"><h4>Butter Poached Lobster</h4><span class="price">$58</span></div><p>Maine lobster tail, saffron risotto, asparagus, champagne beurre blanc</p><div class="tags"><span class="tag">Signature</span><span class="tag teal">Popular</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="seafood" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=300&q=80" alt="Salmon"></div>
+        <div class="menu-item-info"><div class="top"><h4>Pan-Seared Sea Bass</h4><span class="price">$46</span></div><p>Chilean sea bass, coconut curry, jasmine rice, pickled vegetables</p><div class="tags"><span class="tag teal">Gluten-Free</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="seafood" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1535140728325-a4d3707eee61?w=300&q=80" alt="Prawns"></div>
+        <div class="menu-item-info"><div class="top"><h4>Grilled King Prawns</h4><span class="price">$42</span></div><p>Tiger prawns, garlic herb butter, charred lemon, seasonal greens</p><div class="tags"><span class="tag">Popular</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="dessert" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&q=80" alt="Creme Brulee"></div>
+        <div class="menu-item-info"><div class="top"><h4>Crème Brûlée</h4><span class="price">$16</span></div><p>Tahitian vanilla custard, caramelized sugar, fresh berries, edible flowers</p><div class="tags"><span class="tag">Favorite</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="dessert" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&q=80" alt="Cake"></div>
+        <div class="menu-item-info"><div class="top"><h4>Chocolate Lava Cake</h4><span class="price">$18</span></div><p>Belgian chocolate, molten center, vanilla gelato, gold leaf, raspberry coulis</p><div class="tags"><span class="tag">Indulgent</span><span class="tag teal">Popular</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="drink" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=300&q=80" alt="Cocktail"></div>
+        <div class="menu-item-info"><div class="top"><h4>Coral Sunset Martini</h4><span class="price">$19</span></div><p>Premium vodka, blood orange, elderflower liqueur, coral sugar rim</p><div class="tags"><span class="tag">Signature</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="drink" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1536935338788-846bb9981813?w=300&q=80" alt="Wine"></div>
+        <div class="menu-item-info"><div class="top"><h4>Teal Lagoon Fizz</h4><span class="price">$22</span></div><p>Blue curaçao, prosecco, butterfly pea flower, lime, sparkling water</p><div class="tags"><span class="tag teal">Exotic</span></div></div>
+      </div>
+      <div class="menu-item card-3d" data-cat="drink" data-reveal>
+        <div class="menu-item-img"><img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=300&q=80" alt="Old Fashioned"></div>
+        <div class="menu-item-info"><div class="top"><h4>Smoked Old Fashioned</h4><span class="price">$21</span></div><p>Bourbon, smoked maple, Angostura bitters, orange peel, Luxardo cherry</p><div class="tags"><span class="tag">Classic</span></div></div>
+      </div>
+    </div>
+
+    <!-- Featured Dish -->
+    <section class="featured-dish">
+      <div class="container">
+        <div class="featured-grid">
+          <div class="featured-img" data-reveal="left">
+            <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=800&q=80" alt="Featured Dish">
+          </div>
+          <div class="featured-text" data-reveal="right">
+            <div class="overline-left"><span></span>Chef's Recommendation</div>
+            <h3><strong>Ocean's Treasure</strong> Platter</h3>
+            <p>An extraordinary seafood experience featuring the finest catches of the day. King crab legs, jumbo tiger prawns, freshly shucked oysters, and hand-sliced sashimi served on crushed ice with three signature sauces.</p>
+            <p>Perfect for sharing, this showstopping platter is the crown jewel of our menu — available by reservation only.</p>
+            <div class="price-big">$120</div>
+            <a href="#" class="btn btn-coral" onclick="navigateTo('reservation');return false;"><i class="fas fa-concierge-bell"></i> Reserve & Order</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="text-align:center;padding:0 0 100px" data-reveal>
+      <p style="font-family:var(--font-heading);font-size:1.5rem;color:var(--gray3);font-weight:300;margin-bottom:25px">Impressed? Let us serve you.</p>
+      <a href="#" class="btn btn-teal" onclick="navigateTo('reservation');return false;"><i class="far fa-calendar-alt"></i> Book Your Table</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 4: GALLERY
+     ════════════════════════════════════════════════════════ -->
+<div class="page" id="gallery-page">
+  <div class="gallery-banner">
+    <div class="gallery-banner-bg"></div>
+    <div class="about-banner-overlay"></div>
+    <div class="about-banner-content" data-reveal>
+      <h1>Our <strong>Gallery</strong></h1>
+      <div class="about-breadcrumb">
+        <a href="#" onclick="navigateTo('home');return false;">Home</a>
+        <i class="fas fa-chevron-right" style="font-size:.5rem"></i>
+        <span>Gallery</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="sec-header" data-reveal>
+      <div class="overline">Visual Journey</div>
+      <h2>A <em>Feast</em> for the <strong>Eyes</strong></h2>
+      <p class="desc">Step inside our world — from stunning interiors to masterful plating. Every image tells a story.</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="masonry">
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=700&q=80" alt="Interior">
+        <div class="masonry-overlay"><h5>Grand Dining Hall</h5><span>Interior Design</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80" alt="Dish">
+        <div class="masonry-overlay"><h5>Signature Plating</h5><span>Culinary Art</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Ambience">
+        <div class="masonry-overlay"><h5>Evening Service</h5><span>Atmosphere</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=80" alt="Bar">
+        <div class="masonry-overlay"><h5>Cocktail Lounge</h5><span>Bar Area</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80" alt="Salad">
+        <div class="masonry-overlay"><h5>Garden Fresh</h5><span>Seasonal Menu</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=600&q=80" alt="Plating">
+        <div class="masonry-overlay"><h5>Chef's Table</h5><span>Exclusive Experience</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" alt="Restaurant">
+        <div class="masonry-overlay"><h5>Terrace Dining</h5><span>Outdoor Seating</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=80" alt="Dessert">
+        <div class="masonry-overlay"><h5>Dessert Art</h5><span>Pastry Chef</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&q=80" alt="Cocktail">
+        <div class="masonry-overlay"><h5>Handcrafted Cocktails</h5><span>Mixology</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=600&q=80" alt="Table">
+        <div class="masonry-overlay"><h5>Private Dining</h5><span>Exclusive Events</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=600&q=80" alt="Fine Dining">
+        <div class="masonry-overlay"><h5>Candlelit Ambiance</h5><span>Romance</span></div>
+      </div>
+      <div class="masonry-item" data-reveal onclick="openLightbox(this)">
+        <img src="https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=600&q=80" alt="Sweets">
+        <div class="masonry-overlay"><h5>Sweet Endings</h5><span>Dessert Menu</span></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:60px 0 100px" data-reveal>
+      <a href="#" class="btn btn-coral" onclick="navigateTo('reservation');return false;"><i class="far fa-calendar-alt"></i> Experience It In Person</a>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close"><i class="fas fa-times"></i></button>
+  <img id="lightboxImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Gallery Image">
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 5: RESERVATIONS
+     ════════════════════════════════════════════════════════ -->
+<div class="page" id="reservation-page">
+  <div class="res-banner">
+    <div class="res-banner-bg"></div>
+    <div class="about-banner-overlay"></div>
+    <div class="about-banner-content" data-reveal>
+      <h1>Make a <strong>Reservation</strong></h1>
+      <div class="about-breadcrumb">
+        <a href="#" onclick="navigateTo('home');return false;">Home</a>
+        <i class="fas fa-chevron-right" style="font-size:.5rem"></i>
+        <span>Reservations</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="sec-header" data-reveal>
+      <div class="overline">Your Table Awaits</div>
+      <h2>Reserve Your <em>Experience</em></h2>
+      <p class="desc">Secure your table for an unforgettable evening of extraordinary dining and impeccable service.</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="res-layout">
+      <!-- Info Column -->
+      <div data-reveal="left">
+        <div class="res-info-card">
+          <h3>Dining Information</h3>
+          <p class="tagline">Everything you need to know for your visit to Coral Reef Bistro.</p>
+
+          <div class="res-info-item">
+            <div class="icon-box"><i class="fas fa-clock"></i></div>
+            <div><h5>Opening Hours</h5><p>Monday – Friday: 5:00 PM – 11:00 PM<br>Saturday – Sunday: 4:00 PM – 12:00 AM<br>Brunch: Sat–Sun 10:00 AM – 2:00 PM</p></div>
+          </div>
+          <div class="res-info-item">
+            <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
+            <div><h5>Location</h5><p>123 Ocean Drive, Coral Bay<br>Miami Beach, FL 33139</p></div>
+          </div>
+          <div class="res-info-item">
+            <div class="icon-box"><i class="fas fa-phone-alt"></i></div>
+            <div><h5>Direct Line</h5><p>(555) 123-4567<br>For parties of 8+, please call directly.</p></div>
+          </div>
+          <div class="res-info-item">
+            <div class="icon-box"><i class="fas fa-tshirt"></i></div>
+            <div><h5>Dress Code</h5><p>Smart casual to formal. Jackets suggested for gentlemen at dinner service.</p></div>
+          </div>
+
+          <div class="res-info-divider"></div>
+
+          <div class="res-quick-info">
+            <div class="res-quick-box"><div class="num">4.9★</div><div class="txt">Guest Rating</div></div>
+            <div class="res-quick-box"><div class="num">120</div><div class="txt">Seats Capacity</div></div>
+            <div class="res-quick-box"><div class="num">5</div><div class="txt">Private Rooms</div></div>
+            <div class="res-quick-box"><div class="num">30</div><div class="txt">Terrace Seats</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Column -->
+      <div data-reveal="right">
+        <div class="res-form-card" id="resFormCard">
+          <h3>Book Your Table</h3>
+          <form class="form-grid" id="resForm" onsubmit="submitReservation(event)">
+            <div class="form-row">
+              <div class="form-group"><label>First Name *</label><input type="text" placeholder="John" required></div>
+              <div class="form-group"><label>Last Name *</label><input type="text" placeholder="Doe" required></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Email *</label><input type="email" placeholder="john@email.com" required></div>
+              <div class="form-group"><label>Phone *</label><input type="tel" placeholder="(555) 000-0000" required></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Date *</label><input type="date" required></div>
+              <div class="form-group"><label>Time *</label>
+                <select required>
+                  <option value="">Select Time</option>
+                  <option>5:00 PM</option><option>5:30 PM</option><option>6:00 PM</option><option>6:30 PM</option>
+                  <option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option>
+                  <option>9:00 PM</option><option>9:30 PM</option><option>10:00 PM</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Guests *</label>
+                <select required>
+                  <option value="">Number of Guests</option>
+                  <option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4 Guests</option>
+                  <option>5 Guests</option><option>6 Guests</option><option>7 Guests</option><option>8+ Guests</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Dining Area</label>
+                <select>
+                  <option>Main Dining Room</option><option>Ocean Terrace</option><option>Private Room</option><option>Chef's Table</option><option>Bar Seating</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group"><label>Occasion</label>
+              <select>
+                <option>Regular Dining</option><option>Birthday</option><option>Anniversary</option>
+                <option>Business Dinner</option><option>Date Night</option><option>Celebration</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Special Requests</label><textarea placeholder="Dietary restrictions, allergies, celebrations, special arrangements..."></textarea></div>
+            <button type="submit" class="form-submit"><i class="fas fa-concierge-bell"></i> &nbsp;Confirm Reservation</button>
+          </form>
+          <div class="res-success" id="resSuccess">
+            <div class="check-circle"><i class="fas fa-check"></i></div>
+            <h3>Reservation Confirmed!</h3>
+            <p>Thank you for choosing Coral Reef Bistro. A confirmation email has been sent. We look forward to welcoming you!</p>
+            <br>
+            <button class="btn btn-coral" onclick="resetReservation()"><i class="fas fa-redo"></i> Make Another Reservation</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 6: CONTACT
+     ════════════════════════════════════════════════════════ -->
+<div class="page" id="contact-page">
+  <div class="contact-banner">
+    <div class="contact-banner-bg"></div>
+    <div class="about-banner-overlay"></div>
+    <div class="about-banner-content" data-reveal>
+      <h1>Get in <strong>Touch</strong></h1>
+      <div class="about-breadcrumb">
+        <a href="#" onclick="navigateTo('home');return false;">Home</a>
+        <i class="fas fa-chevron-right" style="font-size:.5rem"></i>
+        <span>Contact</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="sec-header" data-reveal>
+      <div class="overline">We'd Love to Hear from You</div>
+      <h2>Contact <strong>Us</strong></h2>
+      <p class="desc">Whether it's a question, feedback, or a private event inquiry — we're here to help.</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="contact-cards">
+      <div class="c-card" data-reveal>
+        <div class="c-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <h4>Visit Us</h4>
+        <p>123 Ocean Drive<br>Coral Bay, Miami Beach<br>FL 33139</p>
+      </div>
+      <div class="c-card" data-reveal>
+        <div class="c-icon"><i class="fas fa-phone-alt"></i></div>
+        <h4>Call Us</h4>
+        <p>Reservations:<br><a href="tel:+15551234567">(555) 123-4567</a><br>Events: <a href="tel:+15559876543">(555) 987-6543</a></p>
+      </div>
+      <div class="c-card" data-reveal>
+        <div class="c-icon"><i class="fas fa-envelope"></i></div>
+        <h4>Email Us</h4>
+        <p><a href="mailto:hello@coralreefbistro.com">hello@coralreefbistro.com</a><br><a href="mailto:events@coralreefbistro.com">events@coralreefbistro.com</a></p>
+      </div>
+      <div class="c-card" data-reveal>
+        <div class="c-icon"><i class="fas fa-clock"></i></div>
+        <h4>Hours</h4>
+        <p>Mon–Fri: 5PM – 11PM<br>Sat–Sun: 4PM – 12AM<br>Brunch: Sat–Sun 10AM–2PM</p>
+      </div>
+    </div>
+
+    <div class="contact-layout">
+      <div class="contact-form-box" data-reveal="left">
+        <h3>Send a Message</h3>
+        <form class="form-grid" onsubmit="submitContact(event)">
+          <div class="form-row">
+            <div class="form-group"><label>Full Name *</label><input type="text" placeholder="Your name" required></div>
+            <div class="form-group"><label>Email *</label><input type="email" placeholder="you@email.com" required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Phone</label><input type="tel" placeholder="(555) 000-0000"></div>
+            <div class="form-group"><label>Subject *</label>
+              <select required>
+                <option value="">Select Subject</option>
+                <option>General Inquiry</option><option>Reservation Question</option>
+                <option>Private Events</option><option>Catering</option><option>Feedback</option><option>Careers</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label>Message *</label><textarea placeholder="How can we help you?" style="min-height:130px" required></textarea></div>
+          <button type="submit" class="form-submit" id="contactSubmitBtn"><i class="fas fa-paper-plane"></i> &nbsp;Send Message</button>
+        </form>
+      </div>
+      <div class="contact-map" data-reveal="right">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3592.684!2d-80.130055!3d25.790654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b687e3947c91%3A0x1135e3a2812851b4!2sOcean%20Dr%2C%20Miami%20Beach%2C%20FL!5e0!3m2!1sen!2sus!4v1697000000000!5m2!1sen!2sus" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:80px 0 100px" data-reveal>
+      <p style="font-family:var(--font-heading);font-size:1.5rem;color:var(--gray3);font-weight:300;margin-bottom:25px">Follow our culinary journey</p>
+      <div style="display:flex;gap:14px;justify-content:center">
+        <a href="#" class="btn btn-ghost" style="padding:13px 22px"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="#" class="btn btn-ghost" style="padding:13px 22px"><i class="fab fa-facebook-f"></i> Facebook</a>
+        <a href="#" class="btn btn-ghost" style="padding:13px 22px"><i class="fab fa-tiktok"></i> TikTok</a>
+        <a href="#" class="btn btn-ghost" style="padding:13px 22px"><i class="fab fa-yelp"></i> Yelp</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER (shown on all pages) ═══ -->
+<footer class="site-footer" id="siteFooter">
+  <div class="footer-top">
+    <div class="footer-brand-col">
+      <span class="f-logo">Coral <span>Reef</span> Bistro</span>
+      <p>An award-winning fine dining destination where ocean-inspired artistry meets culinary mastery. Every dish tells a story of passion, creativity, and exceptional ingredients.</p>
+      <div class="f-social">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-yelp"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Navigation</h5>
+      <ul>
+        <li><a href="#" onclick="navigateTo('home');return false;">Home</a></li>
+        <li><a href="#" onclick="navigateTo('about');return false;">About Us</a></li>
+        <li><a href="#" onclick="navigateTo('menu');return false;">Our Menu</a></li>
+        <li><a href="#" onclick="navigateTo('gallery');return false;">Gallery</a></li>
+        <li><a href="#" onclick="navigateTo('reservation');return false;">Reservations</a></li>
+        <li><a href="#" onclick="navigateTo('contact');return false;">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Dining</h5>
+      <ul>
+        <li><a href="#">Private Events</a></li>
+        <li><a href="#">Gift Cards</a></li>
+        <li><a href="#">Catering Services</a></li>
+        <li><a href="#">Wine Club</a></li>
+        <li><a href="#">Chef's Table</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col footer-newsletter">
+      <h5>Newsletter</h5>
+      <p>Subscribe for exclusive offers, seasonal menus, and special event invitations.</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="Your email">
+        <button type="button" onclick="this.innerHTML='✓';this.style.background='var(--teal)'">→</button>
+      </div>
+      <br>
+      <h5>Hours</h5>
+      <table class="hours-table">
+        <tr><td>Mon – Fri</td><td>5 PM – 11 PM</td></tr>
+        <tr><td>Sat – Sun</td><td>4 PM – 12 AM</td></tr>
+        <tr><td>Brunch</td><td>10 AM – 2 PM</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="footer-bottom-bar">
+    <p>© 2025 Coral Reef Bistro. All rights reserved. Crafted with <span style="color:var(--coral)">♥</span> by <a href="#">Studio Coral</a></p>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Accessibility</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ BACK TO TOP ═══ -->
+<button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT ENGINE
+     ══════════════════════════════════════════════════════ -->
+<script>
+// =====================
+// PRELOADER
+// =====================
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('preloader').classList.add('done'), 1200);
+});
+
+// =====================
+// PAGE NAVIGATION SYSTEM
+// =====================
+let currentPage = 'home';
+const pages = ['home','about','menu','gallery','reservation','contact'];
+
+function navigateTo(page) {
+  if (page === currentPage) return;
+
+  // Close mobile menu
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.body.style.overflow = '';
+
+  // Run page transition
+  const overlay = document.getElementById('pageTransition');
+  const cols = overlay.querySelectorAll('.col');
+
+  // Animate columns in
+  cols.forEach((col, i) => {
+    col.style.transition = `transform 0.4s ${i * 0.06}s cubic-bezier(0.86, 0, 0.07, 1)`;
+    col.style.transformOrigin = 'bottom';
+    col.style.transform = 'scaleY(1)';
+  });
+
+  setTimeout(() => {
+    // Switch pages
+    document.getElementById(currentPage + '-page').classList.remove('active');
+    document.getElementById(page + '-page').classList.add('active');
+    currentPage = page;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // Update nav links
+    document.querySelectorAll('.nav-menu a, .mobile-menu a').forEach(a => {
+      a.classList.toggle('active', a.dataset.page === page);
+    });
+
+    // Re-trigger reveals
+    setTimeout(triggerReveals, 100);
+
+    // Animate columns out
+    cols.forEach((col, i) => {
+      col.style.transition = `transform 0.4s ${i * 0.06}s cubic-bezier(0.86, 0, 0.07, 1)`;
+      col.style.transformOrigin = 'top';
+      col.style.transform = 'scaleY(0)';
+    });
+
+    setTimeout(() => {
+      cols.forEach(col => { col.style.transformOrigin = 'bottom'; });
+    }, 700);
+  }, 550);
+}
+
+// =====================
+// HAMBURGER
+// =====================
+document.getElementById('hamburger').addEventListener('click', function() {
+  this.classList.toggle('open');
+  const mm = document.getElementById('mobileMenu');
+  mm.classList.toggle('open');
+  document.body.style.overflow = mm.classList.contains('open') ? 'hidden' : '';
+});
+
+// =====================
+// NAVBAR SCROLL
+// =====================
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  document.getElementById('topBtn').classList.toggle('show', window.scrollY > 400);
+});
+
+// =====================
+// SCROLL REVEAL
+// =====================
+function triggerReveals() {
+  const els = document.querySelectorAll('.page.active [data-reveal]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+  els.forEach(el => { el.classList.remove('revealed'); observer.observe(el); });
+}
+window.addEventListener('load', () => setTimeout(triggerReveals, 1300));
+window.addEventListener('scroll', triggerReveals);
+
+// =====================
+// 3D TILT ON CARDS
+// =====================
+function init3DTilt() {
+  document.querySelectorAll('.card-3d, .c-card, .value-card, .team-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const cx = r.width / 2, cy = r.height / 2;
+      const rx = (y - cy) / 18, ry = (cx - x) / 18;
+      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px)`;
+      card.style.transition = 'none';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+      card.style.transition = 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1)';
+    });
+  });
+}
+window.addEventListener('load', init3DTilt);
+
+// =====================
+// COUNTER ANIMATION
+// =====================
+let counted = false;
+window.addEventListener('scroll', () => {
+  if (counted) return;
+  const stats = document.querySelector('.hero-stats');
+  if (!stats) return;
+  const r = stats.getBoundingClientRect();
+  if (r.top < window.innerHeight) {
+    counted = true;
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const target = +el.dataset.count;
+      let n = 0;
+      const step = Math.max(1, Math.floor(target / 40));
+      const interval = setInterval(() => {
+        n += step;
+        if (n >= target) { n = target; clearInterval(interval); }
+        el.textContent = n + (el.dataset.count === '98' ? '%' : '+');
+      }, 40);
+    });
+  }
+});
+
+// =====================
+// MENU FILTER
+// =====================
+function filterMenu(cat, btn) {
+  document.querySelectorAll('.menu-filter button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.menu-item').forEach(item => {
+    const show = cat === 'all' || item.dataset.cat === cat;
+    item.style.display = show ? 'flex' : 'none';
+    if (show) { item.style.animation = 'none'; item.offsetHeight; item.style.animation = 'fadeUp .5s ease forwards'; }
+  });
+}
+
+// =====================
+// LIGHTBOX
+// =====================
+function openLightbox(el) {
+  const src = el.querySelector('img').src;
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// =====================
+// RESERVATION FORM
+// =====================
+function submitReservation(e) {
+  e.preventDefault();
+  document.getElementById('resForm').style.display = 'none';
+  document.querySelector('.res-form-card h3').style.display = 'none';
+  document.getElementById('resSuccess').classList.add('show');
+}
+function resetReservation() {
+  document.getElementById('resForm').style.display = 'grid';
+  document.getElementById('resForm').reset();
+  document.querySelector('.res-form-card h3').style.display = 'block';
+  document.getElementById('resSuccess').classList.remove('show');
+}
+
+// =====================
+// CONTACT FORM
+// =====================
+function submitContact(e) {
+  e.preventDefault();
+  const btn = document.getElementById('contactSubmitBtn');
+  btn.innerHTML = '<i class="fas fa-check"></i> &nbsp;Message Sent!';
+  btn.style.background = 'linear-gradient(135deg, var(--teal), var(--teal-dark))';
+  setTimeout(() => {
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> &nbsp;Send Message';
+    btn.style.background = '';
+    e.target.reset();
+  }, 3000);
+}
+
+// =====================
+// ADDITIONAL ANIMATION KEYFRAMES
+// =====================
+const extraStyles = document.createElement('style');
+extraStyles.textContent = `@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}`;
+document.head.appendChild(extraStyles);
+</script>
+</body>
+</html>

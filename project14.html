@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX AUTO — Premium Repair & Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════
+   TOKENS
+   ═══════════════════════════════════ */
+:root{
+  --bl:#0057FF;--bll:#3B82F6;--bx:#00C2FF;--bd:#0040CC;--bdd:#002E99;
+  --bg:rgba(0,87,255,.06);--bg2:rgba(0,87,255,.1);
+  --k:#050810;--k2:#080E1A;--k3:#0C1422;--k4:#111929;--k5:#182035;
+  --g1:#1E2840;--g2:#2A3550;--g3:#3A4A65;--g4:#4A5A75;--g5:#6A7A95;
+  --g6:#8A9AB5;--g7:#AAB5CA;--g8:#C5CDD8;--g9:#E0E5ED;
+  --w:#FFFFFF;--acc:#FFB700;
+  --h:'Orbitron',sans-serif;
+  --rj:'Rajdhani',sans-serif;
+  --body:'Inter',sans-serif;
+  --snap:cubic-bezier(.19,1,.22,1);
+  --pop:cubic-bezier(.34,1.56,.64,1);
+  --r1:6px;--r2:12px;--r3:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--body);background:var(--k);color:var(--w);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;object-fit:cover}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+button{cursor:pointer;border:none;outline:none;font-family:var(--body);background:none}
+::selection{background:var(--bl);color:var(--w)}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--k)}
+::-webkit-scrollbar-thumb{background:var(--bl);border-radius:4px}
+
+/* ═══════════════════════════════════
+   BLUEPRINT GRID BACKGROUND
+   ═══════════════════════════════════ */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,87,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,87,255,.03) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+/* ═══════════════════════════════════
+   PRELOADER — SPEEDOMETER
+   ═══════════════════════════════════ */
+#pre{
+  position:fixed;inset:0;z-index:999999;background:var(--k);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  transition:opacity .35s,visibility .35s;
+}
+#pre.done{opacity:0;visibility:hidden;pointer-events:none}
+
+/* Speedometer arc */
+.speedo{position:relative;width:180px;height:100px;overflow:hidden}
+.speedo-arc{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:180px;height:180px;border-radius:50%;
+  border:3px solid var(--g1);border-bottom-color:transparent;border-right-color:transparent;
+  transform:translateX(-50%) rotate(225deg);
+}
+.speedo-arc-fill{
+  position:absolute;bottom:0;left:50%;
+  width:180px;height:180px;border-radius:50%;
+  border:3px solid transparent;border-left-color:var(--bl);border-top-color:var(--bl);
+  transform:translateX(-50%) rotate(225deg);
+  transition:transform .05s linear;
+  filter:drop-shadow(0 0 6px rgba(0,87,255,.5));
+}
+/* Needle */
+.speedo-needle{
+  position:absolute;bottom:6px;left:50%;
+  width:2px;height:80px;background:linear-gradient(to top,var(--bl),transparent);
+  transform-origin:bottom center;transform:translateX(-50%) rotate(-90deg);
+  transition:transform .05s linear;
+  border-radius:2px;
+}
+.speedo-needle::after{
+  content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);
+  width:8px;height:8px;border-radius:50%;background:var(--bl);
+  box-shadow:0 0 10px var(--bl);
+}
+/* RPM marks */
+.speedo-marks{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:180px}
+.speedo-mark{
+  position:absolute;bottom:50%;left:50%;
+  width:1px;height:10px;background:var(--g2);transform-origin:bottom center;
+}
+
+.pre-rpm{
+  font-family:var(--h);font-size:2rem;font-weight:700;
+  color:var(--w);letter-spacing:3px;text-align:center;
+}
+.pre-rpm span{color:var(--bl);font-size:.85rem;font-weight:400;display:block;letter-spacing:5px;margin-top:2px}
+.pre-brand-line{
+  font-family:var(--rj);font-size:.78rem;font-weight:600;
+  letter-spacing:6px;text-transform:uppercase;color:var(--g5);
+  display:flex;align-items:center;gap:3px;
+}
+.pre-brand-line .dot{
+  display:inline-block;width:4px;height:4px;border-radius:50%;
+  background:var(--bl);animation:dPulse .7s ease infinite;margin:0 2px;
+}
+.pre-brand-line .dot:nth-child(2){animation-delay:.15s}
+.pre-brand-line .dot:nth-child(3){animation-delay:.3s}
+@keyframes dPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.3)}}
+
+/* ═══════════════════════════════════
+   PAGE TRANSITION — SCAN LINE
+   ═══════════════════════════════════ */
+#trans{
+  position:fixed;top:0;left:0;width:100%;height:2px;z-index:99998;
+  pointer-events:none;background:rgba(0,87,255,.08);
+}
+#trans-line{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,transparent,var(--bl),var(--bx),var(--bl),transparent);
+  box-shadow:0 0 12px var(--bl),0 0 24px rgba(0,87,255,.3);
+  transition:width .28s cubic-bezier(.4,0,.2,1);
+}
+
+/* ═══════════════════════════════════
+   NAV
+   ═══════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;width:100%;height:68px;z-index:9000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 4%;
+  transition:all .3s var(--snap);border-bottom:1px solid transparent;
+}
+#nav.scrolled{
+  background:rgba(5,8,16,.92);backdrop-filter:blur(24px);
+  border-bottom-color:rgba(0,87,255,.08);
+}
+.nb{display:flex;align-items:center;gap:12px}
+.nb-icon{
+  width:38px;height:38px;border:2px solid var(--bl);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;color:var(--bl);position:relative;overflow:hidden;
+  transition:all .25s var(--pop);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.nb-icon::before{
+  content:'';position:absolute;inset:0;background:var(--bl);
+  transform:translateY(100%);transition:transform .25s var(--snap);
+}
+.nb-icon i{position:relative;z-index:1;transition:color .25s}
+.nb:hover .nb-icon::before{transform:translateY(0)}
+.nb:hover .nb-icon i{color:var(--w)}
+.nb-text{display:flex;flex-direction:column;gap:0}
+.nb-text .t1{font-family:var(--h);font-size:1.1rem;font-weight:700;letter-spacing:3px;color:var(--w);line-height:1}
+.nb-text .t1 span{color:var(--bl)}
+.nb-text .t2{font-family:var(--rj);font-size:.6rem;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--g5)}
+
+.nl{display:flex;align-items:center;gap:2px}
+.nl a{
+  font-family:var(--rj);font-size:.82rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--g5);padding:8px 16px;
+  position:relative;transition:color .2s var(--snap);
+}
+.nl a::after{
+  content:'';position:absolute;bottom:4px;left:50%;width:0;height:1.5px;
+  background:var(--bl);transition:all .2s var(--snap);transform:translateX(-50%);
+  box-shadow:0 0 8px rgba(0,87,255,.4);
+}
+.nl a:hover{color:var(--w)}.nl a:hover::after{width:60%}
+.nl a.active{color:var(--bl)}.nl a.active::after{width:60%}
+
+.ncta{
+  font-family:var(--rj);font-size:.82rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  padding:10px 24px;
+  background:var(--bl);color:var(--w);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  transition:all .25s var(--pop);box-shadow:0 4px 20px rgba(0,87,255,.2);
+}
+.ncta:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 28px rgba(0,87,255,.35);background:var(--bll)}
+
+.hb{display:none;width:24px;height:16px;position:relative;cursor:pointer;z-index:9001}
+.hb span{position:absolute;left:0;width:100%;height:1.5px;background:var(--w);transition:.3s var(--pop)}
+.hb span:nth-child(1){top:0}.hb span:nth-child(2){top:7px;width:60%}.hb span:nth-child(3){top:14px;width:80%}
+.hb.open span:nth-child(1){top:7px;transform:rotate(45deg);width:100%}
+.hb.open span:nth-child(2){opacity:0}.hb.open span:nth-child(3){top:7px;transform:rotate(-45deg);width:100%}
+
+.mm{
+  position:fixed;inset:0;z-index:8999;background:var(--k2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  opacity:0;visibility:hidden;transition:.3s var(--snap);
+}
+.mm.open{opacity:1;visibility:visible}
+.mm a{font-family:var(--h);font-size:2.2rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--g2);padding:4px 0;transition:all .2s var(--pop)}
+.mm a:hover,.mm a.active{color:var(--bl);letter-spacing:8px}
+
+/* ═══════════════════════════════════
+   PAGES
+   ═══════════════════════════════════ */
+.pg{display:none;opacity:0;transition:opacity .3s var(--snap);position:relative;z-index:1}
+.pg.active{display:block;opacity:1}
+
+/* ═══════════════════════════════════
+   COMMON
+   ═══════════════════════════════════ */
+.ct{max-width:1260px;margin:0 auto;padding:0 4%}
+
+/* Reveal */
+[data-r]{opacity:0;transform:translateY(28px);transition:all .38s var(--snap)}
+[data-r="l"]{transform:translateX(-30px)}
+[data-r="r"]{transform:translateX(30px)}
+[data-r="z"]{transform:scale(.94)}
+[data-r].on{opacity:1;transform:translate(0) scale(1)}
+
+/* Label */
+.lb{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--rj);font-size:.7rem;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  color:var(--bl);margin-bottom:10px;
+}
+.lb::before{content:'';width:22px;height:1.5px;background:var(--bl);box-shadow:0 0 6px rgba(0,87,255,.4)}
+.lb i{font-size:.55rem}
+
+/* Headings */
+.hd{
+  font-family:var(--h);font-size:3.2rem;font-weight:800;
+  line-height:.95;letter-spacing:-0.5px;text-transform:uppercase;margin-bottom:14px;
+}
+.hd span{color:var(--bl)}
+.hd .str{-webkit-text-stroke:1.5px var(--w);color:transparent}
+.hd .str-b{-webkit-text-stroke:1.5px var(--bl);color:transparent}
+.hd em{font-style:normal;color:var(--bx)}
+.ds{font-size:.9rem;line-height:1.85;color:var(--g5);max-width:460px;font-weight:300}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--rj);font-size:.85rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:13px 30px;transition:all .25s var(--pop);position:relative;
+}
+.btn-bl{
+  background:var(--bl);color:var(--w);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  box-shadow:0 4px 18px rgba(0,87,255,.2);
+}
+.btn-bl:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 28px rgba(0,87,255,.35);background:var(--bll)}
+.btn-o{background:transparent;color:var(--w);border:1.5px solid var(--g2)}
+.btn-o:hover{border-color:var(--bl);color:var(--bl);transform:translateY(-2px)}
+.btn-dk{background:var(--k3);color:var(--w);border:1px solid var(--g1)}
+.btn-dk:hover{border-color:var(--bl);color:var(--bl);transform:translateY(-2px)}
+.btn-acc{background:var(--acc);color:var(--k)}
+.btn-acc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,183,0,.25)}
+
+/* Hex accent */
+.hex-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+}
+
+/* Blue glow line */
+.glow-sep{
+  width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,87,255,.2),var(--bl),rgba(0,87,255,.2),transparent);
+  box-shadow:0 0 10px rgba(0,87,255,.15);margin:0;
+}
+
+/* ═══════════════════════════════════
+   DARK / SECTION VARIANTS
+   ═══════════════════════════════════ */
+.sec-dark{background:var(--k2);border-top:1px solid rgba(0,87,255,.05);border-bottom:1px solid rgba(0,87,255,.05)}
+.sec-darker{background:var(--k3)}
+
+/* ═══════════════════════════════════
+   PAGE 1: HOME
+   ═══════════════════════════════════ */
+.hero{
+  min-height:100vh;display:flex;position:relative;overflow:hidden;
+}
+/* Left diagonal */
+.hero-left{
+  width:55%;display:flex;flex-direction:column;justify-content:center;
+  padding:100px 5% 80px 6%;position:relative;z-index:5;
+  clip-path:polygon(0 0,100% 0,88% 100%,0 100%);
+  background:var(--k);
+}
+/* Right panel */
+.hero-right{
+  position:absolute;right:0;top:0;width:55%;height:100%;overflow:hidden;
+  clip-path:polygon(12% 0,100% 0,100% 100%,0 100%);
+}
+.hero-right img{width:100%;height:100%;object-fit:cover;filter:brightness(.45) saturate(1.3)}
+.hero-right::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--k) 0%,rgba(5,8,16,.7) 30%,transparent 60%),
+             linear-gradient(180deg,var(--k) 0%,transparent 15%,transparent 85%,var(--k) 100%);
+}
+/* Blue diagonal slash */
+.hero-slash{
+  position:absolute;top:0;bottom:0;left:48.5%;width:40px;z-index:6;
+  background:var(--bl);
+  clip-path:polygon(30% 0,100% 0,70% 100%,0 100%);
+  box-shadow:0 0 40px rgba(0,87,255,.5);
+}
+
+/* Corner bracket decorations */
+.corner{position:absolute;width:20px;height:20px;pointer-events:none}
+.corner.tl{top:16px;left:16px;border-top:2px solid var(--bl);border-left:2px solid var(--bl)}
+.corner.tr{top:16px;right:16px;border-top:2px solid var(--bl);border-right:2px solid var(--bl)}
+.corner.bl{bottom:16px;left:16px;border-bottom:2px solid var(--bl);border-left:2px solid var(--bl)}
+.corner.br{bottom:16px;right:16px;border-bottom:2px solid var(--bl);border-right:2px solid var(--bl)}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:5px 16px;
+  background:rgba(0,87,255,.06);border:1px solid rgba(0,87,255,.12);
+  font-family:var(--rj);font-size:.65rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+  color:var(--bl);margin-bottom:20px;width:fit-content;
+}
+.hero-eyebrow .dot{
+  width:5px;height:5px;border-radius:50%;background:var(--bl);
+  animation:eyeDot 1.2s ease infinite;
+}
+@keyframes eyeDot{0%,100%{opacity:1}50%{opacity:.2}}
+
+.hero-h{
+  font-family:var(--h);font-size:5.2rem;font-weight:900;
+  text-transform:uppercase;line-height:.9;letter-spacing:-1px;margin-bottom:18px;
+}
+.hero-h .line{display:block}
+.hero-h .b{color:var(--bl);text-shadow:0 0 30px rgba(0,87,255,.4)}
+.hero-h .st{-webkit-text-stroke:1.5px var(--w);color:transparent}
+
+.hero-p{font-size:.93rem;line-height:1.85;color:var(--g5);max-width:370px;margin-bottom:30px;font-weight:300}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px}
+
+/* Stats row */
+.hero-stats{display:flex;gap:0}
+.hs{
+  padding:18px 24px 18px 0;border-right:1px solid var(--g1);margin-right:24px;
+  transition:border-color .2s;
+}
+.hs:hover{border-color:var(--bl)}
+.hs:last-child{border-right:none}
+.hs .n{
+  font-family:var(--h);font-size:1.6rem;font-weight:800;color:var(--bl);
+  display:block;line-height:1;text-shadow:0 0 20px rgba(0,87,255,.3);
+}
+.hs .l{font-family:var(--rj);font-size:.6rem;color:var(--g5);letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-top:3px}
+
+/* Hero floating diagnostic card */
+.diag-card{
+  position:absolute;bottom:50px;right:8%;z-index:10;
+  padding:16px 20px;
+  background:rgba(8,14,26,.85);backdrop-filter:blur(16px);
+  border:1px solid rgba(0,87,255,.12);
+  clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
+  box-shadow:0 8px 30px rgba(0,0,0,.4),inset 0 0 0 1px rgba(0,87,255,.06);
+  min-width:200px;
+}
+.diag-card .dc-label{font-family:var(--rj);font-size:.55rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--bl);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.diag-card .dc-label::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--bl);box-shadow:0 0 8px var(--bl);animation:eyeDot 1.2s ease infinite}
+.dc-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.dc-row .k{font-family:var(--rj);font-size:.72rem;color:var(--g6)}.dc-row .v{font-family:var(--h);font-size:.72rem;color:var(--w)}
+.dc-bar{height:3px;background:var(--g1);border-radius:3px;margin-top:10px;overflow:hidden}
+.dc-bar-fill{height:100%;background:linear-gradient(90deg,var(--bl),var(--bx));border-radius:3px;width:78%;box-shadow:0 0 8px rgba(0,87,255,.4)}
+
+/* ─── Ticker ─── */
+.ticker{
+  padding:22px 0;overflow:hidden;
+  background:var(--k2);border-top:1px solid rgba(0,87,255,.06);border-bottom:1px solid rgba(0,87,255,.06);
+}
+.tick-tr{display:flex;gap:60px;animation:tickS 22s linear infinite;width:max-content}
+@keyframes tickS{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick-item{
+  display:flex;align-items:center;gap:10px;white-space:nowrap;
+  font-family:var(--rj);font-size:1rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+  color:var(--g3);
+}
+.tick-item .tsep{width:6px;height:6px;border-radius:50%;background:var(--bl);opacity:.5}
+
+/* ─── Services Cards ─── */
+.svc-sec{padding:120px 0}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(0,87,255,.04)}
+.svc-card{
+  padding:36px 28px;
+  background:var(--k2);
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:all .25s var(--snap);
+  border:1px solid rgba(0,87,255,.05);
+}
+.svc-card::before{
+  content:'';position:absolute;top:0;left:0;width:3px;height:0;
+  background:linear-gradient(180deg,var(--bl),var(--bx));
+  transition:height .3s var(--snap);
+}
+.svc-card:hover{background:var(--k3);transform:translateY(-4px)}
+.svc-card:hover::before{height:100%}
+/* Top right corner decoration */
+.svc-card::after{
+  content:'';position:absolute;top:0;right:0;
+  width:30px;height:30px;
+  background:linear-gradient(225deg,rgba(0,87,255,.08) 50%,transparent 50%);
+}
+.svc-card .si{
+  width:50px;height:50px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;color:var(--bl);
+  background:rgba(0,87,255,.06);border:1px solid rgba(0,87,255,.08);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  transition:all .25s var(--pop);
+}
+.svc-card:hover .si{background:var(--bl);color:var(--w);transform:scale(1.08);box-shadow:0 0 20px rgba(0,87,255,.3)}
+.svc-card h4{font-family:var(--h);font-size:1.1rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.svc-card p{font-size:.78rem;line-height:1.7;color:var(--g5);margin-bottom:14px}
+.svc-card .sc-link{
+  font-family:var(--rj);font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--g3);display:inline-flex;align-items:center;gap:5px;transition:all .2s;
+}
+.svc-card:hover .sc-link{color:var(--bl);gap:10px}
+
+/* ─── Home CTA Strip ─── */
+.cta-strip{
+  padding:60px 6%;
+  background:linear-gradient(135deg,var(--bdd) 0%,var(--bl) 50%,var(--bll) 100%);
+  position:relative;overflow:hidden;margin:0 0 0;
+}
+.cta-strip::before{
+  content:'';position:absolute;top:-50%;right:-5%;width:400px;height:400px;
+  background:rgba(255,255,255,.04);border-radius:50%;
+}
+.cta-strip::after{
+  content:'APEX';position:absolute;right:-1%;bottom:-25%;
+  font-family:var(--h);font-size:11rem;font-weight:900;color:rgba(255,255,255,.04);
+  text-transform:uppercase;white-space:nowrap;
+}
+.cta-strip-inner{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;max-width:1260px;margin:0 auto}
+.cta-strip-inner h3{font-family:var(--h);font-size:2.2rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--w)}
+
+/* ═══════════════════════════════════
+   PAGE BANNERS
+   ═══════════════════════════════════ */
+.pb{height:42vh;min-height:300px;display:flex;align-items:flex-end;position:relative;overflow:hidden}
+.pb-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.15) saturate(.5)}
+.pb-ov{position:absolute;inset:0;background:linear-gradient(180deg,var(--k) 0%,transparent 30%,transparent 60%,var(--k) 100%)}
+.pb-bl{position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--bl),var(--bx),var(--bl),transparent);box-shadow:0 0 15px rgba(0,87,255,.3)}
+.pb-c{position:relative;z-index:2;padding:0 4% 40px;max-width:1260px;margin:0 auto;width:100%}
+.pb-c h1{font-family:var(--h);font-size:3.6rem;font-weight:900;text-transform:uppercase;letter-spacing:2px}
+.pb-c h1 span{color:var(--bl)}
+.pb-bc{display:flex;align-items:center;gap:8px;font-family:var(--rj);font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--g4);margin-top:8px}
+.pb-bc a{color:var(--bl);transition:.2s}
+
+/* ═══════════════════════════════════
+   PAGE 2: ABOUT
+   ═══════════════════════════════════ */
+.ab-sec{padding:120px 0}
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.ab-imgs{position:relative;height:540px}
+.ab-img{
+  position:absolute;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.4);
+  transition:transform .3s var(--snap);
+}
+.ab-img img{width:100%;height:100%;object-fit:cover}
+.ab-img:nth-child(1){
+  width:62%;height:65%;top:0;left:0;z-index:2;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);
+  border:1.5px solid rgba(0,87,255,.1);
+}
+.ab-img:nth-child(1):hover{transform:translate(4px,-4px)}
+.ab-img:nth-child(2){
+  width:50%;height:52%;bottom:0;right:0;z-index:1;
+  clip-path:polygon(12px 0,100% 0,100% 100%,0 100%,0 12px);
+  border:1.5px solid rgba(0,87,255,.06);
+}
+.ab-img:nth-child(2):hover{transform:translate(-4px,4px)}
+.ab-badge{
+  position:absolute;bottom:28%;left:44%;transform:translateX(-50%);z-index:3;
+  background:var(--bl);color:var(--w);padding:20px 26px;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  text-align:center;box-shadow:0 10px 28px rgba(0,87,255,.3);
+}
+.ab-badge .bg{font-family:var(--h);font-size:2.4rem;font-weight:900;display:block;letter-spacing:2px}
+.ab-badge .sm{font-family:var(--rj);font-size:.55rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:.85}
+
+.ab-text p{font-size:.88rem;line-height:1.85;color:var(--g5);margin-bottom:12px;font-weight:300}
+.ab-feats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:22px}
+.af{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;
+  background:rgba(0,87,255,.03);border:1px solid rgba(0,87,255,.06);
+  transition:all .2s var(--pop);
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);
+}
+.af:hover{transform:translateX(4px);border-color:var(--bl);background:rgba(0,87,255,.06)}
+.af i{color:var(--bl);font-size:.75rem}
+.af span{font-family:var(--rj);font-size:.82rem;font-weight:600;letter-spacing:.5px}
+
+/* Stats row */
+.st-bar{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid rgba(0,87,255,.06)}
+.st-cell{
+  padding:32px 20px;text-align:center;border-right:1px solid rgba(0,87,255,.06);
+  background:var(--k2);transition:background .25s;
+}
+.st-cell:last-child{border-right:none}
+.st-cell:hover{background:var(--k3)}
+.st-cell .sn{font-family:var(--h);font-size:2.6rem;font-weight:900;color:var(--bl);display:block;margin-bottom:4px;text-shadow:0 0 20px rgba(0,87,255,.2)}
+.st-cell .sl{font-family:var(--rj);font-size:.62rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--g5)}
+
+/* ═══════════════════════════════════
+   PAGE 3: SERVICES
+   ═══════════════════════════════════ */
+.sf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-bottom:60px}
+.sf{
+  border:1px solid rgba(0,87,255,.06);
+  background:var(--k2);overflow:hidden;
+  transition:all .25s var(--snap);cursor:pointer;position:relative;
+}
+.sf:hover{transform:translateY(-6px);border-color:rgba(0,87,255,.15);box-shadow:0 16px 40px rgba(0,0,0,.3),0 0 0 1px rgba(0,87,255,.08)}
+.sf-img{height:190px;overflow:hidden;position:relative}
+.sf-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s var(--snap);filter:brightness(.6) saturate(.9)}
+.sf:hover .sf-img img{transform:scale(1.05);filter:brightness(.75) saturate(1)}
+.sf-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,var(--k2))}
+.sf-tag{
+  position:absolute;top:10px;left:10px;z-index:2;
+  padding:3px 10px;
+  background:var(--bl);color:var(--w);
+  font-family:var(--rj);font-size:.55rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);
+}
+.sf-body{padding:20px}
+.sf-body h4{font-family:var(--h);font-size:1.05rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.sf-body p{font-size:.75rem;line-height:1.7;color:var(--g5);margin-bottom:12px}
+.sf-foot{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid rgba(0,87,255,.05)}
+.sf-price{font-family:var(--h);font-size:1.15rem;font-weight:900;color:var(--bl);letter-spacing:1px}
+.sf-book{
+  padding:6px 14px;
+  background:rgba(0,87,255,.06);border:1px solid rgba(0,87,255,.1);color:var(--bl);
+  font-family:var(--rj);font-size:.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);
+  transition:all .2s var(--pop);
+}
+.sf-book:hover{background:var(--bl);color:var(--w)}
+
+/* ─── Process Steps ─── */
+.proc-sec{padding:80px 0 100px;background:var(--k2);border-top:1px solid rgba(0,87,255,.04)}
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.proc-grid::before{
+  content:'';position:absolute;top:38px;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,87,255,.2),rgba(0,87,255,.2),transparent);
+}
+.proc-step{text-align:center;padding:0 20px}
+.proc-num{
+  width:76px;height:76px;border-radius:50%;margin:0 auto 18px;
+  border:2px solid rgba(0,87,255,.15);background:var(--k3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--h);font-size:1.6rem;font-weight:900;color:var(--bl);
+  position:relative;z-index:2;transition:all .25s var(--pop);
+  box-shadow:0 0 0 4px var(--k2);
+}
+.proc-step:hover .proc-num{background:var(--bl);color:var(--w);transform:scale(1.1);box-shadow:0 0 20px rgba(0,87,255,.3),0 0 0 4px var(--k2)}
+.proc-step h5{font-family:var(--h);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.proc-step p{font-size:.75rem;line-height:1.65;color:var(--g5)}
+
+/* ═══════════════════════════════════
+   PAGE 4: TEAM
+   ═══════════════════════════════════ */
+.tm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-bottom:60px}
+.tc{
+  background:var(--k2);border:1px solid rgba(0,87,255,.05);
+  overflow:hidden;transition:all .25s var(--snap);position:relative;
+}
+.tc:hover{transform:translateY(-6px);border-color:rgba(0,87,255,.12);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.tc-img{height:300px;overflow:hidden;position:relative}
+.tc-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.7) saturate(.7);transition:all .3s var(--snap)}
+.tc:hover .tc-img img{transform:scale(1.04);filter:brightness(.8) saturate(1)}
+.tc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,var(--k2))}
+.tc-soc{
+  position:absolute;top:10px;right:10px;z-index:2;
+  display:flex;flex-direction:column;gap:4px;
+  opacity:0;transform:translateX(8px);transition:all .2s var(--pop);
+}
+.tc:hover .tc-soc{opacity:1;transform:translateX(0)}
+.tc-soc a{
+  width:28px;height:28px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+  border:1px solid rgba(0,87,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--w);font-size:.6rem;transition:all .2s var(--pop);
+}
+.tc-soc a:hover{background:var(--bl);border-color:var(--bl)}
+.tc-body{padding:18px 20px}
+.tc-body h4{font-family:var(--h);font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.tc-body .role{font-family:var(--rj);font-size:.6rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--bl);margin-bottom:6px;display:block}
+.tc-body p{font-size:.72rem;line-height:1.6;color:var(--g5)}
+.tc-cert{
+  display:inline-flex;align-items:center;gap:5px;margin-top:8px;
+  padding:3px 10px;background:rgba(0,87,255,.05);border:1px solid rgba(0,87,255,.08);
+  font-family:var(--rj);font-size:.58rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--bll);
+}
+
+/* ═══════════════════════════════════
+   PAGE 5: GALLERY & REVIEWS
+   ═══════════════════════════════════ */
+.gal-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:8px;padding-bottom:80px}
+.gi{overflow:hidden;position:relative;cursor:pointer;transition:all .25s var(--pop)}
+.gi:hover{transform:scale(1.02);z-index:5;box-shadow:0 10px 25px rgba(0,0,0,.4)}
+.gi img{width:100%;height:100%;object-fit:cover;transition:transform .3s var(--snap);filter:brightness(.6) saturate(.7)}
+.gi:hover img{transform:scale(1.06);filter:brightness(.8) saturate(1)}
+.gi-ov{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 50%,rgba(0,87,255,.8));
+  opacity:0;transition:opacity .2s;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;
+}
+.gi:hover .gi-ov{opacity:1}
+.gi-ov h5{font-family:var(--h);font-size:.9rem;text-transform:uppercase;letter-spacing:1px;color:var(--w)}
+.gi-ov span{font-family:var(--rj);font-size:.6rem;color:rgba(255,255,255,.7);letter-spacing:1px}
+.gi:nth-child(1){grid-column:span 2;grid-row:span 2}
+.gi:nth-child(5){grid-column:span 2}
+
+/* Reviews */
+.rv-sec{padding:70px 0 100px;background:var(--k2);border-top:1px solid rgba(0,87,255,.04)}
+.rv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.rv{
+  padding:26px;background:var(--k3);border:1px solid rgba(0,87,255,.05);
+  position:relative;overflow:hidden;transition:all .25s var(--pop);
+}
+.rv::after{
+  content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;
+  background:linear-gradient(90deg,var(--bl),var(--bx));
+  box-shadow:0 0 8px rgba(0,87,255,.3);
+  transition:width .25s var(--snap);
+}
+.rv:hover{transform:translateY(-4px);border-color:rgba(0,87,255,.1)}
+.rv:hover::after{width:100%}
+.rv-stars{color:var(--acc);font-size:.68rem;margin-bottom:10px}
+.rv-q{font-size:.84rem;line-height:1.8;color:var(--g6);font-style:italic;margin-bottom:14px;font-weight:300}
+.rv-auth{display:flex;align-items:center;gap:10px}
+.rv-auth img{width:36px;height:36px;object-fit:cover;border:1.5px solid rgba(0,87,255,.1)}
+.rv-auth .rn{font-family:var(--rj);font-weight:700;font-size:.82rem;letter-spacing:.5px}
+.rv-auth .ri{font-size:.62rem;color:var(--g5)}
+
+/* ═══════════════════════════════════
+   PAGE 6: CONTACT / QUOTE
+   ═══════════════════════════════════ */
+.ci-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:50px}
+.ci{
+  padding:24px 16px;text-align:center;background:var(--k2);
+  border:1px solid rgba(0,87,255,.05);transition:all .25s var(--pop);
+}
+.ci:hover{transform:translateY(-5px);border-color:rgba(0,87,255,.1);box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.ci .cii{
+  width:42px;height:42px;margin:0 auto 12px;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  background:rgba(0,87,255,.06);border:1px solid rgba(0,87,255,.08);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--bl);
+  transition:all .25s var(--pop);
+}
+.ci:hover .cii{background:var(--bl);color:var(--w);transform:scale(1.08)}
+.ci h5{font-family:var(--h);font-size:.88rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.ci p{font-size:.72rem;line-height:1.6;color:var(--g5)}
+.ci a{color:var(--bl)}
+
+.cl{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;padding-bottom:80px}
+.cf{padding:32px;background:var(--k2);border:1px solid rgba(0,87,255,.05)}
+.cf h3{font-family:var(--h);font-size:1.4rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fg label{font-family:var(--rj);font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g5)}
+.fg input,.fg select,.fg textarea{
+  padding:11px 14px;background:var(--k3);border:1px solid rgba(0,87,255,.06);
+  font-family:var(--body);font-size:.84rem;color:var(--w);outline:none;transition:border-color .2s;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(0,87,255,.05)}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--g3)}
+.fg select{-webkit-appearance:none;cursor:pointer}
+.fg select option{background:var(--k3)}
+.fg textarea{resize:none;min-height:80px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fsub{
+  width:100%;padding:13px;margin-top:4px;
+  background:var(--bl);color:var(--w);
+  font-family:var(--rj);font-size:.88rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  transition:all .25s var(--pop);box-shadow:0 4px 16px rgba(0,87,255,.18);
+}
+.fsub:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,87,255,.3);background:var(--bll)}
+.cmap{border:1px solid rgba(0,87,255,.05);overflow:hidden;min-height:450px}
+.cmap iframe{width:100%;height:100%;border:none;min-height:450px;filter:invert(92%) hue-rotate(180deg) brightness(.75) saturate(.8)}
+
+/* ═══════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════ */
+.ft{background:var(--k2);padding:60px 4% 24px;border-top:1px solid rgba(0,87,255,.06)}
+.ft-grid{max-width:1260px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(0,87,255,.05)}
+.ft-br .fl{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ft-br .fl-ico{
+  width:32px;height:32px;background:var(--bl);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--w);
+}
+.ft-br .fl-t1{font-family:var(--h);font-size:1.1rem;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.ft-br .fl-t1 span{color:var(--bl)}
+.ft-br p{font-size:.76rem;line-height:1.75;color:var(--g4);margin-bottom:14px;font-weight:300}
+.fts{display:flex;gap:6px}
+.fts a{
+  width:30px;height:30px;background:rgba(0,87,255,.04);border:1px solid rgba(0,87,255,.08);
+  display:flex;align-items:center;justify-content:center;font-size:.68rem;color:var(--g5);
+  transition:all .2s var(--pop);
+}
+.fts a:hover{background:var(--bl);color:var(--w);border-color:var(--bl);transform:translateY(-2px)}
+.fc h5{font-family:var(--h);font-size:.88rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;color:var(--w)}
+.fc li{margin-bottom:6px}
+.fc li a{font-size:.74rem;color:var(--g5);transition:all .2s;display:inline-flex;align-items:center;gap:0}
+.fc li a:hover{color:var(--bl);gap:4px}
+.fc li a::before{content:'';width:0;height:1px;background:var(--bl);transition:width .2s}
+.fc li a:hover::before{width:8px}
+.ft-nl p{font-size:.74rem;color:var(--g5);margin-bottom:10px;line-height:1.6}
+.ft-nlf{display:flex;border:1px solid rgba(0,87,255,.08)}
+.ft-nlf input{flex:1;padding:10px 14px;background:var(--k3);border:none;color:var(--w);font-size:.78rem;font-family:var(--body);outline:none}
+.ft-nlf button{padding:10px 18px;background:var(--bl);color:var(--w);font-family:var(--rj);font-size:.65rem;font-weight:700;letter-spacing:1px;transition:.2s}
+.ft-nlf button:hover{background:var(--bll)}
+.ftb{max-width:1260px;margin:0 auto;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.ftb p{font-size:.64rem;color:var(--g4)}
+.ftb a{color:var(--bl)}
+.fbl{display:flex;gap:14px}
+.fbl a{font-size:.6rem;color:var(--g4);transition:.2s}
+.fbl a:hover{color:var(--bl)}
+
+#top{
+  position:fixed;bottom:20px;right:20px;z-index:8000;
+  width:38px;height:38px;
+  background:var(--bl);color:var(--w);
+  clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;
+  opacity:0;visibility:hidden;transform:translateY(10px);transition:all .25s var(--pop);
+  box-shadow:0 4px 16px rgba(0,87,255,.2);
+}
+#top.show{opacity:1;visibility:visible;transform:translateY(0)}
+#top:hover{transform:translateY(-3px) scale(1.06)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1024px){
+  .hb{display:block}.nl,.ncta{display:none!important}
+  .hero{flex-direction:column}
+  .hero-left{width:100%;clip-path:none;padding:90px 4% 40px;text-align:center}
+  .hero-right{position:relative;width:100%;height:320px;clip-path:none}
+  .hero-slash{display:none}
+  .hero-p{margin:0 auto 30px}
+  .hero-btns,.hero-stats{justify-content:center}
+  .diag-card{display:none}
+  .svc-grid,.sf-grid,.tm-grid{grid-template-columns:1fr 1fr}
+  .ab-grid,.cl{grid-template-columns:1fr;gap:50px}
+  .ab-imgs{height:380px;max-width:420px;margin:0 auto}
+  .st-bar,.ci-strip{grid-template-columns:1fr 1fr}
+  .proc-grid{grid-template-columns:1fr 1fr}
+  .proc-grid::before{display:none}
+  .gal-grid{grid-template-columns:1fr 1fr;grid-auto-rows:180px}
+  .gi:nth-child(1){grid-column:span 2;grid-row:span 1}
+  .gi:nth-child(5){grid-column:span 2}
+  .rv-grid{grid-template-columns:1fr}
+  .ft-grid{grid-template-columns:1fr 1fr}
+  .pb-c h1{font-size:2.8rem}
+}
+@media(max-width:768px){
+  #nav{height:56px}
+  .hero-h{font-size:3rem}
+  .hd{font-size:2.2rem}
+  .svc-grid,.sf-grid,.tm-grid,.gal-grid,.ci-strip,.st-bar,.proc-grid{grid-template-columns:1fr}
+  .gi:nth-child(1){grid-column:span 1}
+  .gi:nth-child(5){grid-column:span 1}
+  .ab-feats,.fr{grid-template-columns:1fr}
+  .ft-grid{grid-template-columns:1fr}
+  .ftb{flex-direction:column;text-align:center}
+  .hero-stats{flex-wrap:wrap;gap:12px}
+  .pb-c h1{font-size:2.2rem}
+}
+@media(max-width:480px){
+  .hero-h{font-size:2.4rem}
+  .hero-btns{flex-direction:column}.hero-btns .btn{width:100%;justify-content:center}
+  .cta-strip{padding:40px 5%}
+  .cta-strip-inner{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ PRELOADER — SPEEDOMETER ═══ -->
+<div id="pre">
+  <div class="speedo">
+    <div class="speedo-arc"></div>
+    <div class="speedo-arc-fill" id="saFill"></div>
+    <div class="speedo-needle" id="sNeedle"></div>
+  </div>
+  <div class="pre-rpm" id="preRpm">0 <span>RPM</span></div>
+  <div class="pre-brand-line">APEX AUTO <span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+</div>
+
+<!-- ═══ TRANSITION — SCAN LINE ═══ -->
+<div id="trans"><div id="trans-line"></div></div>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+  <a href="#" class="nb" onclick="go('home');return false">
+    <div class="nb-icon"><i class="fas fa-car-side"></i></div>
+    <div class="nb-text"><span class="t1">APEX<span> AUTO</span></span><span class="t2">Repair & Service</span></div>
+  </a>
+  <div class="nl">
+    <a href="#" data-p="home" class="active" onclick="go('home');return false">Home</a>
+    <a href="#" data-p="about" onclick="go('about');return false">About</a>
+    <a href="#" data-p="services" onclick="go('services');return false">Services</a>
+    <a href="#" data-p="team" onclick="go('team');return false">Team</a>
+    <a href="#" data-p="gallery" onclick="go('gallery');return false">Gallery</a>
+    <a href="#" data-p="contact" onclick="go('contact');return false">Contact</a>
+  </div>
+  <a href="#" class="ncta" onclick="go('contact');return false"><i class="fas fa-wrench"></i> &nbsp;Get a Quote</a>
+  <div class="hb" id="hb"><span></span><span></span><span></span></div>
+</nav>
+<div class="mm" id="mm">
+  <a href="#" data-p="home" class="active" onclick="go('home');return false">Home</a>
+  <a href="#" data-p="about" onclick="go('about');return false">About</a>
+  <a href="#" data-p="services" onclick="go('services');return false">Services</a>
+  <a href="#" data-p="team" onclick="go('team');return false">Team</a>
+  <a href="#" data-p="gallery" onclick="go('gallery');return false">Gallery</a>
+  <a href="#" data-p="contact" onclick="go('contact');return false">Contact</a>
+</div>
+
+<!-- ══════════════════════
+     PAGE 1 — HOME
+     ══════════════════════ -->
+<div class="pg active" id="pg-home">
+
+  <section class="hero">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="hero-left">
+      <div class="hero-eyebrow" data-r><span class="dot"></span> Brooklyn's #1 Auto Repair Shop</div>
+      <h1 class="hero-h" data-r>
+        <span class="line st">PRECISION</span>
+        <span class="line">AUTO <span class="b">REPAIR</span></span>
+        <span class="line"><span class="str-b">EXPERTS</span></span>
+      </h1>
+      <p class="hero-p" data-r>Certified technicians. Genuine parts. Transparent pricing. We fix it right the first time — guaranteed.</p>
+      <div class="hero-btns" data-r>
+        <a href="#" class="btn btn-bl" onclick="go('contact');return false"><i class="fas fa-wrench"></i> Get a Free Quote</a>
+        <a href="#" class="btn btn-o" onclick="go('services');return false"><i class="fas fa-tools"></i> Our Services</a>
+      </div>
+      <div class="hero-stats" data-r>
+        <div class="hs"><span class="n" data-count="20">0</span><span class="l">Years in Business</span></div>
+        <div class="hs"><span class="n" data-count="15">0</span><span class="l">Certified Techs</span></div>
+        <div class="hs"><span class="n">10K+</span><span class="l">Vehicles Serviced</span></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=1200&q=80" alt="Auto Repair">
+    </div>
+    <div class="hero-slash"></div>
+    <div class="diag-card">
+      <div class="dc-label">LIVE DIAGNOSTICS</div>
+      <div class="dc-row"><span class="k">Engine</span><span class="v">OPTIMAL</span></div>
+      <div class="dc-row"><span class="k">Transmission</span><span class="v">CHECKED</span></div>
+      <div class="dc-row"><span class="k">Brake System</span><span class="v">100%</span></div>
+      <div class="dc-bar"><div class="dc-bar-fill"></div></div>
+    </div>
+  </section>
+
+  <div class="ticker">
+    <div class="tick-tr">
+      <div class="tick-item">Engine Repair<span class="tsep"></span></div>
+      <div class="tick-item">Brake Service<span class="tsep"></span></div>
+      <div class="tick-item">Oil Changes<span class="tsep"></span></div>
+      <div class="tick-item">Transmission<span class="tsep"></span></div>
+      <div class="tick-item">AC Service<span class="tsep"></span></div>
+      <div class="tick-item">Tire Service<span class="tsep"></span></div>
+      <div class="tick-item">Diagnostics<span class="tsep"></span></div>
+      <div class="tick-item">Collision Repair<span class="tsep"></span></div>
+      <div class="tick-item">Engine Repair<span class="tsep"></span></div>
+      <div class="tick-item">Brake Service<span class="tsep"></span></div>
+      <div class="tick-item">Oil Changes<span class="tsep"></span></div>
+      <div class="tick-item">Transmission<span class="tsep"></span></div>
+      <div class="tick-item">AC Service<span class="tsep"></span></div>
+      <div class="tick-item">Tire Service<span class="tsep"></span></div>
+      <div class="tick-item">Diagnostics<span class="tsep"></span></div>
+      <div class="tick-item">Collision Repair<span class="tsep"></span></div>
+    </div>
+  </div>
+
+  <section class="svc-sec"><div class="ct">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:40px">
+      <div data-r><div class="lb"><i class="fas fa-tools"></i> What We Do</div><div class="hd">CORE <span>SERVICES</span></div></div>
+      <a href="#" class="btn btn-o" data-r onclick="go('services');return false"><span>All Services</span> <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="svc-grid">
+      <div class="svc-card" data-r onclick="go('services')"><div class="si"><i class="fas fa-engine"></i></div><h4>Engine Repair</h4><p>Full diagnostics, rebuilds, and repairs for all makes and models with OEM parts.</p><span class="sc-link">Learn More <i class="fas fa-arrow-right"></i></span></div>
+      <div class="svc-card" data-r onclick="go('services')"><div class="si"><i class="fas fa-brake-warning"></i></div><h4>Brake Service</h4><p>Pad replacements, rotor resurfacing, caliper repair, and full brake system checks.</p><span class="sc-link">Learn More <i class="fas fa-arrow-right"></i></span></div>
+      <div class="svc-card" data-r onclick="go('services')"><div class="si"><i class="fas fa-oil-can"></i></div><h4>Oil & Fluids</h4><p>Conventional and synthetic oil changes with full fluid top-up and inspection.</p><span class="sc-link">Learn More <i class="fas fa-arrow-right"></i></span></div>
+      <div class="svc-card" data-r onclick="go('services')"><div class="si"><i class="fas fa-car-battery"></i></div><h4>Electrical & AC</h4><p>Battery, alternator, AC recharge, and complete electrical system diagnostics.</p><span class="sc-link">Learn More <i class="fas fa-arrow-right"></i></span></div>
+      <div class="svc-card" data-r onclick="go('services')"><div class="si"><i class="fas fa-gears"></i></div><h4>Transmission</h4><p>Automatic and manual transmission service, fluid change, and full rebuilds.</p><span class="sc-link">Learn More <i class="fas fa-arrow-right"></i></span></div>
+      <div class="svc-card" data-r onclick="go('services')"><div class="si"><i class="fas fa-magnifying-glass-chart"></i></div><h4>Diagnostics</h4><p>Computer diagnostics and check engine light analysis with 200+ point inspection.</p><span class="sc-link">Learn More <i class="fas fa-arrow-right"></i></span></div>
+    </div>
+  </div></section>
+
+  <div class="glow-sep"></div>
+
+  <div class="cta-strip" data-r="z">
+    <div class="cta-strip-inner">
+      <h3>SAME-DAY SERVICE<br>AVAILABLE NOW</h3>
+      <a href="#" class="btn btn-acc" onclick="go('contact');return false" style="font-family:var(--rj);font-size:.88rem;font-weight:700;letter-spacing:1.5px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)"><i class="fas fa-calendar-check"></i> Book Online</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     PAGE 2 — ABOUT
+     ══════════════════════ -->
+<div class="pg" id="pg-about">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.pexels.com/photos/7019365/pexels-photo-7019365.jpeg?auto=compress&cs=tinysrgb&w=1400')"></div><div class="pb-ov"></div><div class="pb-bl"></div><div class="pb-c" data-r><h1>ABOUT <span>APEX</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>About</span></div></div></div>
+
+  <section class="ab-sec"><div class="ct"><div class="ab-grid">
+    <div class="ab-imgs" data-r="l">
+      <div class="ab-img"><img src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=600&q=80" alt="Shop"></div>
+      <div class="ab-img"><img src="https://images.pexels.com/photos/7019365/pexels-photo-7019365.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Tech"></div>
+      <div class="ab-badge"><span class="bg">20+</span><span class="sm">Years of Trust</span></div>
+    </div>
+    <div data-r="r">
+      <div class="lb"><i class="fas fa-shield-halved"></i> Our Story</div>
+      <div class="hd" style="font-size:2.6rem">BUILT ON <span>TRUST</span>,<br>DRIVEN BY <span class="str-b">EXCELLENCE</span></div>
+      <div style="margin-top:14px">
+        <p style="font-size:.88rem;line-height:1.85;color:var(--g5);margin-bottom:12px;font-weight:300">Founded in 2004 by master technician Ray Kowalski, APEX AUTO has grown from a 2-bay neighborhood shop into Brooklyn's most trusted full-service repair center — without ever losing the personal touch.</p>
+        <p style="font-size:.88rem;line-height:1.85;color:var(--g5);margin-bottom:12px;font-weight:300">Every technician on our team is ASE-certified with a minimum of 8 years hands-on experience. We work on all makes and models — from daily drivers to high-performance vehicles — with OEM and premium aftermarket parts.</p>
+      </div>
+      <div class="ab-feats">
+        <div class="af"><i class="fas fa-certificate"></i><span>ASE Certified</span></div>
+        <div class="af"><i class="fas fa-check-double"></i><span>2-Year Warranty</span></div>
+        <div class="af"><i class="fas fa-car"></i><span>All Makes & Models</span></div>
+        <div class="af"><i class="fas fa-clock"></i><span>Same-Day Service</span></div>
+        <div class="af"><i class="fas fa-dollar-sign"></i><span>Price Match Guarantee</span></div>
+        <div class="af"><i class="fas fa-shuttle-van"></i><span>Free Shuttle Service</span></div>
+      </div>
+      <div style="margin-top:22px"><a href="#" class="btn btn-bl" onclick="go('team');return false"><i class="fas fa-users"></i> Meet Our Technicians</a></div>
+    </div>
+  </div></div></section>
+
+  <div class="glow-sep"></div>
+
+  <section style="padding:0"><div class="ct">
+    <div class="st-bar">
+      <div class="st-cell" data-r><span class="sn">10K+</span><span class="sl">Vehicles Serviced</span></div>
+      <div class="st-cell" data-r><span class="sn">98%</span><span class="sl">Customer Satisfaction</span></div>
+      <div class="st-cell" data-r><span class="sn">15</span><span class="sl">ASE-Certified Techs</span></div>
+      <div class="st-cell" data-r><span class="sn">4.9★</span><span class="sl">Google Rating</span></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════
+     PAGE 3 — SERVICES
+     ══════════════════════ -->
+<div class="pg" id="pg-services">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=1400&q=80')"></div><div class="pb-ov"></div><div class="pb-bl"></div><div class="pb-c" data-r><h1>OUR <span>SERVICES</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>Services</span></div></div></div>
+
+  <section style="padding:100px 0"><div class="ct">
+    <div style="text-align:center;margin-bottom:40px" data-r>
+      <div class="lb" style="justify-content:center"><i class="fas fa-tools"></i> Complete Service Menu</div>
+      <div class="hd">FULL <span>SERVICE</span> CENTER</div>
+      <p class="ds" style="margin:0 auto;text-align:center">From routine maintenance to complex rebuilds — one shop handles it all.</p>
+    </div>
+    <div class="sf-grid">
+      <div class="sf" data-r><div class="sf-img"><img src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=600&q=80" alt="Engine"><span class="sf-tag">Most Requested</span></div><div class="sf-body"><h4>Engine Diagnostics & Repair</h4><p>Full engine scans, rebuild, replacement, and tune-ups for all vehicle types.</p><div class="sf-foot"><span class="sf-price">From $89</span><button class="sf-book" onclick="go('contact')">Book</button></div></div></div>
+      <div class="sf" data-r><div class="sf-img"><img src="https://images.pexels.com/photos/6870304/pexels-photo-6870304.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Brakes"><span class="sf-tag">Safety First</span></div><div class="sf-body"><h4>Brake System Service</h4><p>Pads, rotors, calipers, brake lines, and hydraulic fluid inspection & replacement.</p><div class="sf-foot"><span class="sf-price">From $65</span><button class="sf-book" onclick="go('contact')">Book</button></div></div></div>
+      <div class="sf" data-r><div class="sf-img"><img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=600&q=80" alt="Oil"><span class="sf-tag">Quick Service</span></div><div class="sf-body"><h4>Oil Change & Fluids</h4><p>Conventional, synthetic, and high-mileage oil with 16-point inspection.</p><div class="sf-foot"><span class="sf-price">From $39</span><button class="sf-book" onclick="go('contact')">Book</button></div></div></div>
+      <div class="sf" data-r><div class="sf-img"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&q=80" alt="Tires"><span class="sf-tag">All Brands</span></div><div class="sf-body"><h4>Tire Service & Alignment</h4><p>Tire rotation, balancing, mounting, TPMS service, and 4-wheel alignment.</p><div class="sf-foot"><span class="sf-price">From $25</span><button class="sf-book" onclick="go('contact')">Book</button></div></div></div>
+      <div class="sf" data-r><div class="sf-img"><img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&q=80" alt="AC"><span class="sf-tag">Climate</span></div><div class="sf-body"><h4>AC & Electrical</h4><p>AC recharge, compressor replacement, battery, alternator, and wiring diagnostics.</p><div class="sf-foot"><span class="sf-price">From $79</span><button class="sf-book" onclick="go('contact')">Book</button></div></div></div>
+      <div class="sf" data-r><div class="sf-img"><img src="https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=600&q=80" alt="Transmission"><span class="sf-tag">Complex</span></div><div class="sf-body"><h4>Transmission Service</h4><p>Fluid flush, filter change, solenoid repair, and full automatic/manual rebuilds.</p><div class="sf-foot"><span class="sf-price">From $149</span><button class="sf-book" onclick="go('contact')">Book</button></div></div></div>
+    </div>
+  </div></section>
+
+  <section class="proc-sec"><div class="ct">
+    <div style="text-align:center;margin-bottom:46px" data-r>
+      <div class="lb" style="justify-content:center"><i class="fas fa-route"></i> How It Works</div>
+      <div class="hd">OUR <span>PROCESS</span></div>
+    </div>
+    <div class="proc-grid">
+      <div class="proc-step" data-r><div class="proc-num">1</div><h5>Book Online</h5><p>Schedule via our website, phone, or walk in anytime. Same-day slots often available.</p></div>
+      <div class="proc-step" data-r><div class="proc-num">2</div><h5>Drop-Off</h5><p>Leave your vehicle and relax. Free shuttle or loaner car available on request.</p></div>
+      <div class="proc-step" data-r><div class="proc-num">3</div><h5>Diagnose & Quote</h5><p>We inspect and send you a transparent quote. Zero work starts without your approval.</p></div>
+      <div class="proc-step" data-r><div class="proc-num">4</div><h5>Pick Up & Drive</h5><p>Vehicle returned clean, serviced, and with a full report. 2-year parts & labor warranty.</p></div>
+    </div>
+    <div style="text-align:center;margin-top:48px" data-r><a href="#" class="btn btn-bl" onclick="go('contact');return false"><i class="fas fa-calendar-check"></i> Book Your Service</a></div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════
+     PAGE 4 — TEAM
+     ══════════════════════ -->
+<div class="pg" id="pg-team">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80')"></div><div class="pb-ov"></div><div class="pb-bl"></div><div class="pb-c" data-r><h1>OUR <span>TECHNICIANS</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>Team</span></div></div></div>
+
+  <section style="padding:100px 0"><div class="ct">
+    <div style="text-align:center;margin-bottom:40px" data-r>
+      <div class="lb" style="justify-content:center"><i class="fas fa-user-gear"></i> Certified Experts</div>
+      <div class="hd">THE <span>TEAM</span> BEHIND<br>YOUR <span class="str-b">VEHICLE</span></div>
+      <p class="ds" style="margin:0 auto;text-align:center">Every technician is ASE-certified with 8+ years experience and a passion for getting it right.</p>
+    </div>
+    <div class="tm-grid">
+      <div class="tc" data-r><div class="tc-img"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Tech"><div class="tc-soc"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div><div class="tc-body"><h4>Ray Kowalski</h4><span class="role">Master Tech & Founder</span><p>20+ years. Former NASCAR team technician. Specialty: high-performance engines.</p><div class="tc-cert"><i class="fas fa-certificate"></i> ASE Master Certified</div></div></div>
+      <div class="tc" data-r><div class="tc-img"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt="Tech"><div class="tc-soc"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div><div class="tc-body"><h4>Marcus Webb</h4><span class="role">Transmission Specialist</span><p>12+ years. Certified in Allison, ZF, and CVT transmissions. European car expert.</p><div class="tc-cert"><i class="fas fa-certificate"></i> ASE Certified — T1</div></div></div>
+      <div class="tc" data-r><div class="tc-img"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=80" alt="Tech"><div class="tc-soc"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div><div class="tc-body"><h4>David Chen</h4><span class="role">Electrical & Diagnostics</span><p>10+ years. Hybrid and EV specialist. OEM-certified for Toyota, Honda, and BMW.</p><div class="tc-cert"><i class="fas fa-certificate"></i> EV Certified</div></div></div>
+      <div class="tc" data-r><div class="tc-img"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80" alt="Tech"><div class="tc-soc"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div><div class="tc-body"><h4>Sara Lindqvist</h4><span class="role">Brakes & Suspension</span><p>8+ years. Air suspension and performance brake systems specialist. Track-day certified.</p><div class="tc-cert"><i class="fas fa-certificate"></i> ASE Certified — A5</div></div></div>
+      <div class="tc" data-r><div class="tc-img"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&q=80" alt="Tech"><div class="tc-soc"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div><div class="tc-body"><h4>Jerome Battle</h4><span class="role">AC & Climate Systems</span><p>10+ years. EPA 609 certified. Specializes in compressor replacement and climate control.</p><div class="tc-cert"><i class="fas fa-certificate"></i> EPA 609 Certified</div></div></div>
+      <div class="tc" data-r><div class="tc-img"><img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=600&q=80" alt="Tech"><div class="tc-soc"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div><div class="tc-body"><h4>Nina Torres</h4><span class="role">Service Advisor</span><p>10+ years customer service. Fluent in Spanish. Expert at translating tech into clear explanations.</p><div class="tc-cert"><i class="fas fa-certificate"></i> ASE Service Advisor</div></div></div>
+    </div>
+    <div style="text-align:center;margin-top:20px" data-r><a href="#" class="btn btn-bl" onclick="go('contact');return false"><i class="fas fa-phone"></i> Talk to Our Team</a></div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════
+     PAGE 5 — GALLERY
+     ══════════════════════ -->
+<div class="pg" id="pg-gallery">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1400&q=80')"></div><div class="pb-ov"></div><div class="pb-bl"></div><div class="pb-c" data-r><h1>OUR <span>WORK</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>Gallery</span></div></div></div>
+
+  <section style="padding:100px 0"><div class="ct">
+    <div style="text-align:center;margin-bottom:40px" data-r>
+      <div class="lb" style="justify-content:center"><i class="fas fa-images"></i> Shop Gallery</div>
+      <div class="hd">PROOF IN <span>EVERY</span> JOB</div>
+    </div>
+    <div class="gal-grid">
+      <div class="gi" data-r><img src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=800&q=80" alt="Shop"><div class="gi-ov"><h5>Engine Bay Rebuild</h5><span>2023 BMW M3</span></div></div>
+      <div class="gi" data-r><img src="https://images.pexels.com/photos/6870304/pexels-photo-6870304.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Tech"><div class="gi-ov"><h5>Full Brake Overhaul</h5><span>2022 Audi S5</span></div></div>
+      <div class="gi" data-r><img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=500&q=80" alt="Bay"><div class="gi-ov"><h5>Lift Bay Service</h5><span>Multi-point Inspection</span></div></div>
+      <div class="gi" data-r><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80" alt="Team"><div class="gi-ov"><h5>Team at Work</h5><span>Our Certified Techs</span></div></div>
+      <div class="gi" data-r><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=700&q=80" alt="Tires"><div class="gi-ov"><h5>Tire & Wheel Fitment</h5><span>Performance Setup</span></div></div>
+      <div class="gi" data-r><img src="https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=500&q=80" alt="Interior"><div class="gi-ov"><h5>Electronics Diagnostics</h5><span>OBD-II System Scan</span></div></div>
+      <div class="gi" data-r><img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=500&q=80" alt="AC"><div class="gi-ov"><h5>AC Compressor Swap</h5><span>2021 Tesla Model 3</span></div></div>
+    </div>
+  </div></section>
+
+  <section class="rv-sec"><div class="ct">
+    <div style="text-align:center;margin-bottom:36px" data-r>
+      <div class="lb" style="justify-content:center"><i class="fas fa-star"></i> 4.9 / 5.0 Rating</div>
+      <div class="hd">CUSTOMER <span>REVIEWS</span></div>
+    </div>
+    <div class="rv-grid">
+      <div class="rv" data-r><div class="rv-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="rv-q">"Brought my BMW in for a mysterious knock — they diagnosed it within an hour, found a cracked engine mount other shops missed, and had it fixed the same day. Pricing was completely transparent."</p><div class="rv-auth"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&q=80" alt=""><div><div class="rn">Tom Reilly</div><div class="ri">2022 BMW 540i Owner</div></div></div></div>
+      <div class="rv" data-r><div class="rv-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="rv-q">"APEX fixed a transmission issue that two other shops gave up on. Ray personally explained every step. Car shifts perfectly now. This is the only shop I'll ever use going forward."</p><div class="rv-auth"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80" alt=""><div><div class="rn">Marissa Okafor</div><div class="ri">2019 Toyota Camry Owner</div></div></div></div>
+      <div class="rv" data-r><div class="rv-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="rv-q">"My AC went out in July — APEX had me in within 2 hours, diagnosed a failed compressor, and had it blowing cold by 4pm. Price was $200 less than the dealer. Fantastic experience."</p><div class="rv-auth"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80" alt=""><div><div class="rn">Chris Yamamoto</div><div class="ri">2020 Honda Accord Owner</div></div></div></div>
+      <div class="rv" data-r><div class="rv-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><p class="rv-q">"As a woman who knows nothing about cars, I was nervous about being taken advantage of. Nina walked me through everything with photos. No upsells, no BS. Finally found a shop I trust 100%."</p><div class="rv-auth"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80" alt=""><div><div class="rn">Diane Sorenson</div><div class="ri">2018 Subaru Outback Owner</div></div></div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════
+     PAGE 6 — CONTACT
+     ══════════════════════ -->
+<div class="pg" id="pg-contact">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1400&q=80')"></div><div class="pb-ov"></div><div class="pb-bl"></div><div class="pb-c" data-r><h1>GET A <span>QUOTE</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>Contact</span></div></div></div>
+
+  <section style="padding:100px 0"><div class="ct">
+    <div style="text-align:center;margin-bottom:40px" data-r>
+      <div class="lb" style="justify-content:center"><i class="fas fa-phone"></i> Reach Us</div>
+      <div class="hd">SCHEDULE <span>SERVICE</span></div>
+      <p class="ds" style="margin:0 auto;text-align:center">Request a quote online or call us directly. We'll confirm your appointment within 1 hour.</p>
+    </div>
+
+    <div class="ci-strip">
+      <div class="ci" data-r><div class="cii"><i class="fas fa-map-marker-alt"></i></div><h5>Location</h5><p>189 Atlantic Ave<br>Brooklyn, NY 11201</p></div>
+      <div class="ci" data-r><div class="cii"><i class="fas fa-phone-alt"></i></div><h5>Call Us</h5><p><a href="tel:+17185550000">(718) 555-0000</a><br>Mon–Sat 7AM–7PM</p></div>
+      <div class="ci" data-r><div class="cii"><i class="fas fa-envelope"></i></div><h5>Email</h5><p><a href="mailto:service@apexauto.com">service@apexauto.com</a><br>Reply within 1 hour</p></div>
+      <div class="ci" data-r><div class="cii"><i class="fas fa-clock"></i></div><h5>Hours</h5><p>Mon–Fri: 7AM–7PM<br>Sat: 8AM–5PM<br>Sun: Emergency Only</p></div>
+    </div>
+
+    <div class="cl">
+      <div class="cf" data-r="l">
+        <h3>Request a Quote</h3>
+        <form id="qForm" onsubmit="subQ(event)">
+          <div class="fr"><div class="fg"><label>Full Name *</label><input type="text" placeholder="John Smith" required></div><div class="fg"><label>Phone *</label><input type="tel" placeholder="(718) 000-0000" required></div></div>
+          <div class="fr"><div class="fg"><label>Email *</label><input type="email" placeholder="john@email.com" required></div><div class="fg"><label>Service Needed *</label>
+            <select required>
+              <option value="">Select Service</option>
+              <option>Engine Diagnostics & Repair</option>
+              <option>Brake System Service</option>
+              <option>Oil Change & Fluids</option>
+              <option>Tire Service & Alignment</option>
+              <option>AC & Electrical</option>
+              <option>Transmission Service</option>
+              <option>Collision Repair</option>
+              <option>General Maintenance</option>
+              <option>Other</option>
+            </select>
+          </div></div>
+          <div class="fr"><div class="fg"><label>Year & Make *</label><input type="text" placeholder="2020 Toyota Camry" required></div><div class="fg"><label>Mileage</label><input type="text" placeholder="e.g. 48,000 miles"></div></div>
+          <div class="fr"><div class="fg"><label>Preferred Date</label><input type="date"></div><div class="fg"><label>Preferred Time</label>
+            <select>
+              <option>7:00 AM</option><option>8:00 AM</option><option>9:00 AM</option>
+              <option>10:00 AM</option><option>11:00 AM</option><option>12:00 PM</option>
+              <option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option>
+              <option>4:00 PM</option><option>5:00 PM</option>
+            </select>
+          </div></div>
+          <div class="fg"><label>Describe the Issue</label><textarea placeholder="Describe any symptoms, warning lights, noises, or specific concerns..."></textarea></div>
+          <button type="submit" class="fsub" id="qBtn"><i class="fas fa-paper-plane"></i> &nbsp;SUBMIT QUOTE REQUEST</button>
+        </form>
+      </div>
+      <div class="cmap" data-r="r">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.5!2d-73.99!3d40.69!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sBrooklyn!5e0!3m2!1sen!2sus!4v1697000000000!5m2!1sen!2sus" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="ft">
+  <div class="ft-grid">
+    <div class="ft-br">
+      <div class="fl"><div class="fl-ico"><i class="fas fa-car-side"></i></div><div><div class="fl-t1">APEX <span>AUTO</span></div></div></div>
+      <p>Brooklyn's most trusted auto repair center since 2004. ASE-certified technicians, transparent pricing, and a 2-year warranty on all repairs.</p>
+      <div class="fts"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-google"></i></a><a href="#"><i class="fab fa-yelp"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+    </div>
+    <div class="fc"><h5>Navigation</h5><ul><li><a href="#" onclick="go('home');return false">Home</a></li><li><a href="#" onclick="go('about');return false">About Us</a></li><li><a href="#" onclick="go('services');return false">Services</a></li><li><a href="#" onclick="go('team');return false">Our Team</a></li><li><a href="#" onclick="go('gallery');return false">Gallery</a></li><li><a href="#" onclick="go('contact');return false">Contact</a></li></ul></div>
+    <div class="fc"><h5>Services</h5><ul><li><a href="#" onclick="go('services');return false">Engine Repair</a></li><li><a href="#" onclick="go('services');return false">Brake Service</a></li><li><a href="#" onclick="go('services');return false">Oil Changes</a></li><li><a href="#" onclick="go('services');return false">Tire Service</a></li><li><a href="#" onclick="go('services');return false">AC & Electrical</a></li><li><a href="#" onclick="go('services');return false">Transmission</a></li></ul></div>
+    <div class="fc ft-nl"><h5>Stay Updated</h5><p>Get service reminders, seasonal maintenance tips, and exclusive discount offers.</p><div class="ft-nlf"><input type="email" placeholder="Your email"><button onclick="this.textContent='✓'">Subscribe</button></div></div>
+  </div>
+  <div class="ftb">
+    <p>© 2025 APEX AUTO. All rights reserved. <a href="#">NYS Registered Repair Shop #7A4321</a></p>
+    <div class="fbl"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Accessibility</a></div>
+  </div>
+</footer>
+
+<button id="top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
+
+<script>
+/* ═══ SPEEDOMETER PRELOADER ═══ */
+(function(){
+  const needle = document.getElementById('sNeedle');
+  const fill = document.getElementById('saFill');
+  const rpm = document.getElementById('preRpm');
+  // Needle starts at -90deg (0 RPM) and goes to +90deg (max)
+  let angle = -90; // css rotation offset
+  let currentRPM = 0;
+  const maxRPM = 7000;
+  const steps = 60;
+  const stepRPM = maxRPM / steps;
+  const stepAngle = 180 / steps;
+  let step = 0;
+
+  const iv = setInterval(()=>{
+    step++;
+    // Ease in-out curve
+    const t = step / steps;
+    const ease = t < .5 ? 2*t*t : -1+(4-2*t)*t;
+    currentRPM = Math.round(maxRPM * ease);
+    const deg = -90 + (180 * ease);
+
+    needle.style.transform = `translateX(-50%) rotate(${deg}deg)`;
+    // Arc fill mirrors needle angle (the border-left covers 0-180 of the 225-deg arc)
+    fill.style.transform = `translateX(-50%) rotate(${225 + (135 * ease)}deg)`;
+    rpm.innerHTML = `${currentRPM.toLocaleString()} <span>RPM</span>`;
+
+    if(step >= steps){
+      clearInterval(iv);
+      rpm.innerHTML = `<span style="color:var(--bl)">READY</span>`;
+      setTimeout(()=>{
+        document.getElementById('pre').classList.add('done');
+        initR();
+      }, 350);
+    }
+  }, 28);
+})();
+
+/* ═══ PAGE TRANSITION — SCAN LINE ═══ */
+let cur = 'home';
+const tLine = document.getElementById('trans-line');
+
+function go(p){
+  if(p === cur) return; closeMob();
+  tLine.style.transition = 'width .28s cubic-bezier(.4,0,.2,1)';
+  tLine.style.width = '100%';
+  setTimeout(()=>{
+    document.getElementById('pg-'+cur).classList.remove('active');
+    document.getElementById('pg-'+p).classList.add('active');
+    cur = p; window.scrollTo({top:0,behavior:'instant'});
+    document.querySelectorAll('[data-p]').forEach(a=>a.classList.toggle('active',a.dataset.p===p));
+    setTimeout(initR, 60);
+    tLine.style.transition = 'width .22s cubic-bezier(.4,0,.2,1)';
+    tLine.style.width = '0%';
+  }, 300);
+}
+
+/* ═══ HAMBURGER ═══ */
+const hbEl = document.getElementById('hb'), mmEl = document.getElementById('mm');
+hbEl.addEventListener('click',()=>{
+  hbEl.classList.toggle('open'); mmEl.classList.toggle('open');
+  document.body.style.overflow = mmEl.classList.contains('open') ? 'hidden' : '';
+});
+function closeMob(){ hbEl.classList.remove('open'); mmEl.classList.remove('open'); document.body.style.overflow = '' }
+
+/* ═══ SCROLL ═══ */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled', scrollY > 40);
+  document.getElementById('top').classList.toggle('show', scrollY > 300);
+});
+
+/* ═══ REVEAL ═══ */
+function initR(){
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('on'), i*38); obs.unobserve(e.target) }
+    });
+  },{threshold:.07, rootMargin:'0px 0px -15px 0px'});
+  document.querySelectorAll('.pg.active [data-r]').forEach(el=>{el.classList.remove('on'); obs.observe(el)});
+}
+
+/* ═══ SNAP 3D TILT ═══ */
+document.querySelectorAll('.svc-card,.sf,.tc,.rv,.ci,.gi,.proc-step,.st-cell,.af').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r = c.getBoundingClientRect();
+    const x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5;
+    c.style.transform = `perspective(500px) rotateY(${x*5}deg) rotateX(${-y*5}deg) translateY(-6px)`;
+    c.style.transition = 'none';
+  });
+  c.addEventListener('mouseleave',()=>{
+    c.style.transform = ''; c.style.transition = 'all .25s cubic-bezier(.34,1.56,.64,1)';
+  });
+});
+
+/* ═══ FORM ═══ */
+function subQ(e){
+  e.preventDefault();
+  const b = document.getElementById('qBtn');
+  b.innerHTML = '<i class="fas fa-check"></i> &nbsp;QUOTE REQUEST RECEIVED';
+  b.style.background = '#0040CC';
+  setTimeout(()=>{ b.innerHTML = '<i class="fas fa-paper-plane"></i> &nbsp;SUBMIT QUOTE REQUEST'; b.style.background = ''; e.target.reset() }, 2500);
+}
+</script>
+</body>
+</html>

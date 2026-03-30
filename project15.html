@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRONCLAD GYM — Forge Your Best Self</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Inter:wght@300;400;500;600;700&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --y:#FFE135;--yl:#FFF176;--yd:#F9C00A;--ya:rgba(255,225,53,.08);--yg:rgba(255,225,53,.14);
+  --b:#000;--b2:#0A0A0A;--b3:#111;--b4:#161616;--b5:#1C1C1C;
+  --g1:#242424;--g2:#2E2E2E;--g3:#3A3A3A;--g4:#555;--g5:#777;--g6:#999;--g7:#BBB;--g8:#DDD;
+  --w:#FFF;--r:#FF3B30;
+  --h:'Barlow Condensed',sans-serif;
+  --b2f:'Barlow',sans-serif;
+  --body:'Inter',sans-serif;
+  --snap:cubic-bezier(.19,1,.22,1);
+  --pop:cubic-bezier(.34,1.56,.64,1);
+  --r1:8px;--r2:14px;--r3:20px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--body);background:var(--b);color:var(--w);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;object-fit:cover}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+button{cursor:pointer;border:none;outline:none;font-family:var(--body);background:none}
+::selection{background:var(--y);color:var(--b)}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--b)}
+::-webkit-scrollbar-thumb{background:var(--y);border-radius:4px}
+
+/* ═══════════════════════════════════════════════
+   PRELOADER — BARBELL ASSEMBLY
+   ═══════════════════════════════════════════════ */
+#pre{
+  position:fixed;inset:0;z-index:999999;
+  background:var(--b);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:28px;
+  transition:opacity .4s,visibility .4s;
+}
+#pre.done{opacity:0;visibility:hidden;pointer-events:none}
+.barbell{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;position:relative;width:340px;height:56px;
+}
+.bb-bar{
+  width:0;height:8px;background:var(--g3);border-radius:4px;
+  transition:width .5s var(--snap);position:relative;z-index:2;
+}
+.bb-bar.grow{width:160px}
+.bb-bar::before,.bb-bar::after{
+  content:'';position:absolute;top:50%;transform:translateY(-50%);
+  width:14px;height:14px;background:var(--g4);border-radius:3px;
+}
+.bb-bar::before{left:-14px}
+.bb-bar::after{right:-14px}
+.bb-plates{display:flex;align-items:center;gap:3px}
+.bb-plate{
+  border-radius:4px;background:var(--g2);border:2px solid var(--g3);
+  transform:scaleX(0);transform-origin:center;
+  transition:transform .3s var(--pop);
+}
+.bb-plate.show{transform:scaleX(1)}
+.bb-plate.p45{width:18px;height:52px;background:var(--y);border-color:var(--yd)}
+.bb-plate.p35{width:15px;height:44px;background:var(--g3);border-color:var(--g4)}
+.bb-plate.p25{width:12px;height:36px;background:var(--g2);border-color:var(--g3)}
+.bb-plate.p10{width:9px;height:28px;background:var(--g2);border-color:var(--g3)}
+.bb-plate.p5{width:7px;height:22px;background:var(--g1);border-color:var(--g2)}
+.bb-collar{
+  width:10px;height:20px;background:var(--g5);border-radius:3px;
+  transform:scaleX(0);transition:transform .25s var(--pop);z-index:3;
+}
+.bb-collar.show{transform:scaleX(1)}
+.pre-weight{
+  font-family:var(--h);font-size:1rem;font-weight:700;
+  color:var(--y);letter-spacing:3px;text-transform:uppercase;
+  min-width:100px;text-align:center;
+}
+.pre-label{
+  font-family:var(--h);font-size:.75rem;font-weight:600;
+  letter-spacing:6px;text-transform:uppercase;color:var(--g5);
+  display:flex;align-items:center;gap:2px;
+}
+.pre-label .dot{
+  display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--g5);animation:dotPop .8s ease infinite;
+  margin-left:4px;
+}
+.pre-label .dot:nth-child(2){animation-delay:.15s}
+.pre-label .dot:nth-child(3){animation-delay:.3s}
+@keyframes dotPop{0%,100%{transform:translateY(0);background:var(--g5)}50%{transform:translateY(-4px);background:var(--y)}}
+.pre-rep{
+  font-family:var(--h);font-size:3.5rem;font-weight:900;
+  color:var(--w);letter-spacing:2px;line-height:1;
+  transition:opacity .1s;
+}
+.pre-rep span{color:var(--y)}
+.pre-rep.flash{animation:repFlash .15s ease}
+@keyframes repFlash{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ═══════════════════════════════════════════════
+   PAGE TRANSITION — MINIMAL TOP BAR ONLY
+   ═══════════════════════════════════════════════ */
+#trans{
+  position:fixed;top:0;left:0;width:100%;height:3px;
+  z-index:99998;pointer-events:none;
+  background:var(--g1);
+}
+#trans-bar{
+  height:100%;width:0%;
+  background:var(--y);
+  box-shadow:0 0 8px rgba(255,225,53,.4);
+  transition:width .25s var(--snap);
+}
+
+/* ═══════════════════════════════════
+   NAV
+   ═══════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;width:100%;height:70px;z-index:9000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 4%;transition:all .3s var(--snap);
+}
+#nav.scrolled{background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,225,53,.06)}
+.nb{display:flex;align-items:center;gap:10px}
+.nb-icon{
+  width:38px;height:38px;background:var(--y);border-radius:var(--r1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;color:var(--b);font-weight:900;
+  transition:transform .25s var(--pop);
+}
+.nb:hover .nb-icon{transform:scale(1.1) rotate(-5deg)}
+.nb-txt{font-family:var(--h);font-size:1.5rem;font-weight:900;letter-spacing:3px;color:var(--w)}
+.nb-txt span{color:var(--y)}
+.nl{display:flex;align-items:center;gap:2px}
+.nl a{
+  font-family:var(--h);font-size:.85rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--g5);padding:8px 16px;border-radius:var(--r1);
+  transition:all .2s var(--snap);
+}
+.nl a:hover{color:var(--w);background:rgba(255,255,255,.04)}
+.nl a.active{color:var(--y)}
+.ncta{
+  font-family:var(--h);font-size:.85rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:10px 24px;border-radius:var(--r1);
+  background:var(--y);color:var(--b);
+  transition:all .25s var(--pop);box-shadow:0 3px 16px rgba(255,225,53,.18);
+}
+.ncta:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 24px rgba(255,225,53,.3)}
+.hb{display:none;width:24px;height:16px;position:relative;cursor:pointer;z-index:9001}
+.hb span{position:absolute;left:0;width:100%;height:2px;background:var(--w);border-radius:2px;transition:.3s var(--pop)}
+.hb span:nth-child(1){top:0}.hb span:nth-child(2){top:7px;width:60%}.hb span:nth-child(3){top:14px;width:80%}
+.hb.open span:nth-child(1){top:7px;transform:rotate(45deg);width:100%}
+.hb.open span:nth-child(2){opacity:0}
+.hb.open span:nth-child(3){top:7px;transform:rotate(-45deg);width:100%}
+.mm{position:fixed;inset:0;z-index:8999;background:var(--b2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;opacity:0;visibility:hidden;transition:.3s var(--snap)}
+.mm.open{opacity:1;visibility:visible}
+.mm a{font-family:var(--h);font-size:3rem;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:var(--g3);padding:4px 0;transition:all .2s var(--pop)}
+.mm a:hover,.mm a.active{color:var(--y);letter-spacing:8px}
+
+/* ═══════════════════════════════════
+   PAGES
+   ═══════════════════════════════════ */
+.pg{display:none;opacity:0;transition:opacity .25s var(--snap)}
+.pg.active{display:block;opacity:1}
+
+/* ═══════════════════════════════════
+   COMMON
+   ═══════════════════════════════════ */
+.ct{max-width:1240px;margin:0 auto;padding:0 4%}
+[data-v]{opacity:0;transform:translateY(35px);transition:all .35s var(--snap)}
+[data-v="l"]{transform:translateX(-35px)}
+[data-v="r"]{transform:translateX(35px)}
+[data-v="z"]{transform:scale(.93)}
+[data-v="diag"]{transform:translate(-20px,20px) rotate(-2deg)}
+[data-v].on{opacity:1;transform:translate(0) scale(1) rotate(0)}
+.lb{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--h);font-size:.72rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--y);margin-bottom:10px;
+}
+.lb::before{content:'';width:24px;height:2px;background:var(--y);border-radius:2px}
+.hd{
+  font-family:var(--h);font-size:4rem;font-weight:900;
+  line-height:.92;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;
+}
+.hd span{color:var(--y)}
+.hd em{font-style:italic;color:var(--g4)}
+.hd .stroke{-webkit-text-stroke:2px var(--w);color:transparent}
+.hd .stroke-y{-webkit-text-stroke:2px var(--y);color:transparent}
+.ds{font-size:.9rem;line-height:1.85;color:var(--g6);max-width:480px;font-weight:300}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 30px;border-radius:var(--r1);font-family:var(--h);font-size:.9rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:all .25s var(--pop)}
+.btn-y{background:var(--y);color:var(--b);box-shadow:0 4px 18px rgba(255,225,53,.18)}
+.btn-y:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 28px rgba(255,225,53,.32)}
+.btn-o{background:transparent;color:var(--w);border:2px solid var(--g2)}
+.btn-o:hover{border-color:var(--y);color:var(--y);transform:translateY(-2px)}
+.btn-w{background:var(--w);color:var(--b)}
+.btn-w:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,255,255,.12)}
+.btn-dk{background:var(--b4);color:var(--w);border:1px solid var(--g1)}
+.btn-dk:hover{border-color:var(--y);color:var(--y);transform:translateY(-2px)}
+.gc{
+  border-radius:var(--r2);background:var(--b3);border:1px solid var(--g1);
+  transition:all .25s var(--snap);cursor:pointer;position:relative;overflow:hidden;
+}
+.gc::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,225,53,.04),transparent 50%);
+  opacity:0;transition:opacity .25s;
+}
+.gc:hover{transform:translateY(-8px);border-color:rgba(255,225,53,.15);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.gc:hover::before{opacity:1}
+.gc::after{
+  content:'';position:absolute;top:0;left:0;width:100%;height:2px;
+  background:var(--y);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--snap);
+}
+.gc:hover::after{transform:scaleX(1)}
+.dark-sec{background:var(--b3);border-top:1px solid var(--g1);border-bottom:1px solid var(--g1)}
+
+/* ═══════════════════════════════════
+   PAGE 1: HOME
+   ═══════════════════════════════════ */
+.hero{
+  min-height:100vh;display:grid;grid-template-columns:1fr 1fr;
+  position:relative;overflow:hidden;
+}
+.hero-left{
+  background:var(--b);display:flex;flex-direction:column;justify-content:center;
+  padding:110px 5% 80px 6%;position:relative;z-index:5;
+}
+.hero-right{
+  position:relative;overflow:hidden;
+  clip-path:polygon(8% 0,100% 0,100% 100%,0 100%);
+}
+.hero-right img{width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(1.2)}
+.hero-right::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--b) 0%,transparent 30%);
+}
+.hero-diag{
+  position:absolute;top:0;bottom:0;left:47.5%;width:5px;
+  background:var(--y);z-index:10;
+  box-shadow:0 0 30px rgba(255,225,53,.4);
+  clip-path:polygon(20% 0,100% 0,80% 100%,0 100%);width:30px;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:4px;
+  background:rgba(255,225,53,.06);border:1px solid rgba(255,225,53,.12);
+  font-family:var(--h);font-size:.72rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--y);margin-bottom:22px;width:fit-content;
+}
+.hero-tag .pulse{width:6px;height:6px;border-radius:50%;background:var(--y);animation:pulse .8s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+.hero-h{
+  font-family:var(--h);font-size:6rem;font-weight:900;text-transform:uppercase;
+  line-height:.88;letter-spacing:-1px;margin-bottom:22px;
+}
+.hero-h .line{display:block}
+.hero-h .y{color:var(--y)}
+.hero-h .sk{-webkit-text-stroke:2px var(--w);color:transparent}
+.hero-p{font-size:.95rem;line-height:1.85;color:var(--g6);max-width:380px;margin-bottom:34px;font-weight:300}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:46px}
+.hero-stats{display:flex;gap:28px}
+.hs{border-left:2px solid var(--g2);padding-left:16px;transition:border-color .2s}
+.hs:hover{border-color:var(--y)}
+.hs .n{font-family:var(--h);font-size:1.8rem;font-weight:900;color:var(--y);display:block;line-height:1}
+.hs .l{font-size:.6rem;color:var(--g6);letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-top:2px}
+.hero-badge{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-30%);z-index:10;
+  padding:14px 20px;border-radius:var(--r2);
+  background:rgba(0,0,0,.75);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,225,53,.1);display:flex;align-items:center;gap:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.hb-ico{width:38px;height:38px;border-radius:var(--r1);background:var(--y);display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--b)}
+.hb-t{font-size:.68rem;color:var(--g6)}.hb-t strong{color:var(--w);font-size:.85rem;display:block}
+
+/* ─── Ticker ─── */
+.ticker{padding:28px 0;background:var(--y);overflow:hidden}
+.tick-tr{display:flex;gap:60px;animation:tickScr 18s linear infinite;width:max-content}
+@keyframes tickScr{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick-item{
+  display:flex;align-items:center;gap:12px;white-space:nowrap;
+  font-family:var(--h);font-size:1.2rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--b);
+}
+.tick-item .sep{font-size:.5rem;opacity:.4}
+
+/* ─── Programs Home ─── */
+.prog-sec{padding:120px 0}
+.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.prog-card{
+  padding:32px 26px;border-radius:var(--r2);
+  background:var(--b3);border:1px solid var(--g1);
+  transition:all .25s var(--snap);position:relative;overflow:hidden;cursor:pointer;
+}
+.prog-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--y);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--snap)}
+.prog-card:hover{transform:translateY(-8px);border-color:rgba(255,225,53,.12);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.prog-card:hover::before{transform:scaleX(1)}
+.pc-icon{
+  width:52px;height:52px;border-radius:var(--r1);
+  background:rgba(255,225,53,.06);border:1px solid rgba(255,225,53,.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;color:var(--y);margin-bottom:20px;
+  transition:all .25s var(--pop);
+}
+.prog-card:hover .pc-icon{background:var(--y);color:var(--b);transform:scale(1.08) rotate(-6deg)}
+.prog-card h4{font-family:var(--h);font-size:1.5rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.prog-card p{font-size:.78rem;line-height:1.7;color:var(--g5);margin-bottom:14px}
+.prog-card .pc-tag{display:inline-block;padding:3px 10px;border-radius:4px;background:rgba(255,225,53,.08);color:var(--y);font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.prog-card .pc-link{font-family:var(--h);font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g4);display:inline-flex;align-items:center;gap:5px;transition:all .2s var(--snap);margin-top:12px}
+.prog-card:hover .pc-link{color:var(--y);gap:10px}
+
+/* ─── Home CTA ─── */
+.hcta{
+  padding:80px 6%;margin:0 4% 100px;border-radius:var(--r3);
+  background:var(--y);position:relative;overflow:hidden;
+}
+.hcta::before{content:'';position:absolute;top:-50%;right:-10%;width:400px;height:400px;background:rgba(0,0,0,.06);border-radius:50%}
+.hcta::after{content:'IRONCLAD';position:absolute;right:-2%;bottom:-15%;font-family:var(--h);font-size:9rem;font-weight:900;color:rgba(0,0,0,.05);text-transform:uppercase;white-space:nowrap}
+.hcta-inner{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.hcta-inner h3{font-family:var(--h);font-size:2.8rem;font-weight:900;text-transform:uppercase;color:var(--b);letter-spacing:1px}
+
+/* ═══════════════════════════════════
+   PAGE BANNERS
+   ═══════════════════════════════════ */
+.pb{height:44vh;min-height:330px;display:flex;align-items:flex-end;position:relative;overflow:hidden}
+.pb-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.2) saturate(.6)}
+.pb-ov{position:absolute;inset:0;background:linear-gradient(180deg,var(--b) 0%,transparent 30%,transparent 55%,var(--b) 100%)}
+.pb-ya{position:absolute;bottom:0;left:0;width:100%;height:3px;background:var(--y);box-shadow:0 0 20px rgba(255,225,53,.3)}
+.pb-c{position:relative;z-index:2;padding:0 4% 44px;max-width:1240px;margin:0 auto;width:100%}
+.pb-c h1{font-family:var(--h);font-size:4rem;font-weight:900;text-transform:uppercase;letter-spacing:2px}
+.pb-c h1 span{color:var(--y)}
+.pb-bc{display:flex;align-items:center;gap:8px;font-family:var(--h);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--g4);margin-top:8px}
+.pb-bc a{color:var(--y);transition:.2s}
+
+/* ═══════════════════════════════════
+   PAGE 2: ABOUT
+   ═══════════════════════════════════ */
+.ab-sec{padding:120px 0}
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.ab-imgs{position:relative;height:560px}
+.ab-img{position:absolute;border-radius:var(--r2);overflow:hidden;box-shadow:0 20px 45px rgba(0,0,0,.4);transition:transform .3s var(--snap)}
+.ab-img img{width:100%;height:100%;object-fit:cover}
+.ab-img:nth-child(1){width:62%;height:68%;top:0;left:0;z-index:2;border:2px solid rgba(255,225,53,.1)}
+.ab-img:nth-child(1):hover{transform:translate(4px,-4px)}
+.ab-img:nth-child(2){width:52%;height:55%;bottom:0;right:0;z-index:1;border:2px solid var(--g1)}
+.ab-img:nth-child(2):hover{transform:translate(-4px,4px)}
+.ab-badge{
+  position:absolute;bottom:26%;left:46%;transform:translateX(-50%);z-index:3;
+  background:var(--y);color:var(--b);padding:20px 28px;border-radius:var(--r2);
+  text-align:center;box-shadow:0 10px 28px rgba(255,225,53,.3);
+}
+.ab-badge .bg{font-family:var(--h);font-size:2.6rem;font-weight:900;display:block;letter-spacing:1px}
+.ab-badge .sm{font-size:.55rem;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.ab-text p{font-size:.88rem;line-height:1.85;color:var(--g5);margin-bottom:12px;font-weight:300}
+.ab-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+.af{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;border-radius:var(--r1);
+  background:rgba(255,225,53,.03);border:1px solid rgba(255,225,53,.06);
+  transition:all .2s var(--pop);
+}
+.af:hover{transform:translateX(4px);border-color:var(--y);background:rgba(255,225,53,.05)}
+.af i{color:var(--y);font-size:.8rem}
+.af span{font-family:var(--h);font-size:.85rem;font-weight:700;letter-spacing:.5px}
+.aw-sec{padding:80px 0;background:var(--b3);border-top:1px solid var(--g1);border-bottom:1px solid var(--g1)}
+.aw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.aw{text-align:center;padding:34px 20px;border-right:1px solid var(--g1);transition:background .25s}
+.aw:last-child{border-right:none}
+.aw:hover{background:rgba(255,225,53,.03)}
+.aw .an{font-family:var(--h);font-size:3rem;font-weight:900;color:var(--y);display:block;margin-bottom:4px;letter-spacing:1px}
+.aw .al{font-family:var(--h);font-size:.68rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--g5)}
+
+/* ═══════════════════════════════════
+   PAGE 3: PROGRAMS
+   ═══════════════════════════════════ */
+.pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding-bottom:60px}
+.pr-card{
+  border-radius:var(--r2);overflow:hidden;
+  background:var(--b3);border:1px solid var(--g1);
+  transition:all .25s var(--snap);cursor:pointer;
+}
+.pr-card:hover{transform:translateY(-10px);border-color:rgba(255,225,53,.12);box-shadow:0 20px 45px rgba(0,0,0,.4)}
+.pr-card-img{height:220px;overflow:hidden;position:relative}
+.pr-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s var(--snap);filter:brightness(.7)}
+.pr-card:hover .pr-card-img img{transform:scale(1.06);filter:brightness(.85)}
+.pr-card-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,var(--b3))}
+.pr-tag{
+  position:absolute;top:12px;left:12px;z-index:2;
+  padding:4px 12px;border-radius:4px;background:var(--y);color:var(--b);
+  font-family:var(--h);font-size:.62rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+}
+.pr-tag.red{background:var(--r);color:var(--w)}
+.pr-card-body{padding:22px}
+.pr-card-body h4{font-family:var(--h);font-size:1.4rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.pr-card-body p{font-size:.76rem;line-height:1.7;color:var(--g5);margin-bottom:14px}
+.pr-card-body .pr-foot{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--g1)}
+.pr-card-body .pr-price{font-family:var(--h);font-size:1.3rem;font-weight:900;color:var(--y);letter-spacing:1px}
+.pr-book{padding:7px 16px;border-radius:var(--r1);background:rgba(255,225,53,.06);border:1px solid rgba(255,225,53,.1);color:var(--y);font-family:var(--h);font-size:.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:all .2s var(--pop)}
+.pr-book:hover{background:var(--y);color:var(--b)}
+.sch-sec{padding:80px 0 100px;background:var(--b3);border-top:1px solid var(--g1)}
+.sch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sch-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-radius:var(--r1);
+  background:var(--b4);border:1px solid var(--g1);
+  transition:all .2s var(--pop);
+}
+.sch-row:hover{border-color:rgba(255,225,53,.1);transform:translateX(3px)}
+.sch-row .sc-name{font-family:var(--h);font-weight:700;font-size:.95rem;letter-spacing:.5px}
+.sch-row .sc-time{font-size:.72rem;color:var(--g5);margin-left:8px}
+.sch-row .sc-type{font-family:var(--h);font-size:.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--y)}
+
+/* ═══════════════════════════════════
+   PAGE 4: TRAINERS
+   ═══════════════════════════════════ */
+.tr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding-bottom:60px}
+.tr-card{
+  border-radius:var(--r2);overflow:hidden;
+  background:var(--b3);border:1px solid var(--g1);
+  transition:all .25s var(--snap);
+}
+.tr-card:hover{transform:translateY(-10px);border-color:rgba(255,225,53,.12);box-shadow:0 20px 45px rgba(0,0,0,.4)}
+.tr-card-img{height:320px;overflow:hidden;position:relative}
+.tr-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s var(--snap);filter:brightness(.75) grayscale(20%)}
+.tr-card:hover .tr-card-img img{transform:scale(1.04);filter:brightness(.85) grayscale(0)}
+.tr-card-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,var(--b3))}
+.tr-soc{
+  position:absolute;top:12px;right:12px;z-index:2;
+  display:flex;flex-direction:column;gap:4px;
+  opacity:0;transform:translateX(8px);transition:all .2s var(--pop);
+}
+.tr-card:hover .tr-soc{opacity:1;transform:translateX(0)}
+.tr-soc a{
+  width:30px;height:30px;border-radius:var(--r1);
+  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);border:1px solid var(--g1);
+  display:flex;align-items:center;justify-content:center;color:var(--w);font-size:.65rem;transition:all .2s var(--pop);
+}
+.tr-soc a:hover{background:var(--y);color:var(--b);border-color:var(--y)}
+.tr-card-body{padding:20px}
+.tr-card-body h4{font-family:var(--h);font-size:1.3rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.tr-card-body .role{font-family:var(--h);font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--y);margin-bottom:6px;display:block}
+.tr-card-body p{font-size:.74rem;line-height:1.65;color:var(--g5)}
+
+/* ═══════════════════════════════════
+   PAGE 5: RESULTS
+   ═══════════════════════════════════ */
+.res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-bottom:80px}
+.res-card{
+  border-radius:var(--r2);overflow:hidden;position:relative;
+  height:260px;cursor:pointer;transition:all .25s var(--pop);
+}
+.res-card:hover{transform:scale(1.03);box-shadow:0 14px 30px rgba(0,0,0,.4);z-index:5}
+.res-card img{width:100%;height:100%;object-fit:cover;transition:transform .3s var(--snap);filter:brightness(.65) grayscale(20%)}
+.res-card:hover img{transform:scale(1.06);filter:brightness(.8) grayscale(0)}
+.res-card-ov{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 50%,rgba(255,225,53,.8));
+  opacity:0;transition:opacity .2s;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;
+}
+.res-card:hover .res-card-ov{opacity:1}
+.res-card-ov h5{font-family:var(--h);font-size:1rem;font-weight:800;text-transform:uppercase;color:var(--b);letter-spacing:1px}
+.res-card-ov span{font-size:.62rem;color:rgba(0,0,0,.7);font-weight:600}
+.res-card:nth-child(1){grid-column:span 2;height:350px}
+.rv-sec{padding:80px 0 100px;background:var(--b3);border-top:1px solid var(--g1)}
+.rv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.rv{
+  padding:28px;border-radius:var(--r2);
+  background:var(--b4);border:1px solid var(--g1);
+  transition:all .25s var(--pop);position:relative;overflow:hidden;
+}
+.rv::before{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:var(--y);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--snap)}
+.rv:hover{transform:translateY(-5px);border-color:rgba(255,225,53,.08)}
+.rv:hover::before{transform:scaleX(1)}
+.rv-stars{color:var(--y);font-size:.72rem;margin-bottom:10px}
+.rv-q{font-size:.86rem;line-height:1.8;color:var(--g7);font-style:italic;margin-bottom:16px;font-weight:300}
+.rv-auth{display:flex;align-items:center;gap:10px}
+.rv-auth img{width:38px;height:38px;border-radius:var(--r1);object-fit:cover;border:2px solid var(--g1)}
+.rv-auth .rn{font-family:var(--h);font-weight:700;font-size:.88rem;letter-spacing:.5px}
+.rv-auth .ri{font-size:.65rem;color:var(--g5)}
+
+/* ═══════════════════════════════════
+   PAGE 6: MEMBERSHIP
+   ═══════════════════════════════════ */
+.mem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:70px}
+.mem-card{
+  border-radius:var(--r2);padding:36px 28px;
+  background:var(--b3);border:2px solid var(--g1);
+  transition:all .25s var(--pop);position:relative;overflow:hidden;
+}
+.mem-card.featured{background:var(--y);border-color:var(--y)}
+.mem-card:not(.featured):hover{transform:translateY(-8px);border-color:rgba(255,225,53,.15);box-shadow:0 18px 40px rgba(0,0,0,.3)}
+.mem-card.featured:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(255,225,53,.2)}
+.mem-best{position:absolute;top:16px;right:16px;padding:4px 12px;border-radius:4px;background:var(--b);color:var(--y);font-family:var(--h);font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.mem-card h4{font-family:var(--h);font-size:1.4rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.mem-card.featured h4{color:var(--b)}
+.mem-card .mem-price{font-family:var(--h);font-size:3rem;font-weight:900;line-height:1;margin:14px 0 6px;letter-spacing:1px}
+.mem-card.featured .mem-price{color:var(--b)}
+.mem-card .mem-period{font-size:.7rem;color:var(--g5);letter-spacing:1px;margin-bottom:20px}
+.mem-card.featured .mem-period{color:rgba(0,0,0,.5)}
+.mem-card ul{margin-bottom:24px}
+.mem-card ul li{display:flex;align-items:center;gap:8px;font-size:.8rem;margin-bottom:8px;color:var(--g7)}
+.mem-card.featured ul li{color:var(--b3)}
+.mem-card ul li i{color:var(--y);font-size:.7rem}
+.mem-card.featured ul li i{color:var(--b)}
+.mem-card ul li.no{color:var(--g3)}
+.mem-card ul li.no i{color:var(--g3)}
+.ci-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:50px}
+.ci{padding:24px 18px;text-align:center;border-radius:var(--r2);background:var(--b3);border:1px solid var(--g1);transition:all .25s var(--pop)}
+.ci:hover{transform:translateY(-5px);border-color:rgba(255,225,53,.1)}
+.ci .cii{width:42px;height:42px;border-radius:var(--r1);margin:0 auto 12px;background:rgba(255,225,53,.06);border:1px solid rgba(255,225,53,.08);display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--y);transition:all .25s var(--pop)}
+.ci:hover .cii{background:var(--y);color:var(--b);transform:scale(1.08)}
+.ci h5{font-family:var(--h);font-size:.95rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.ci p{font-size:.74rem;line-height:1.6;color:var(--g5)}
+.ci a{color:var(--y)}
+.cl{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;padding-bottom:80px}
+.cf{padding:34px;border-radius:var(--r2);background:var(--b3);border:1px solid var(--g1)}
+.cf h3{font-family:var(--h);font-size:1.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:18px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fg label{font-family:var(--h);font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g5)}
+.fg input,.fg select,.fg textarea{
+  padding:12px 14px;background:var(--b4);border:1px solid var(--g1);border-radius:var(--r1);
+  font-family:var(--body);font-size:.84rem;color:var(--w);outline:none;transition:border-color .2s;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--y);box-shadow:0 0 0 3px rgba(255,225,53,.05)}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--g3)}
+.fg select{-webkit-appearance:none;cursor:pointer}
+.fg select option{background:var(--b3)}
+.fg textarea{resize:none;min-height:80px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fsub{
+  width:100%;padding:14px;border-radius:var(--r1);margin-top:4px;
+  background:var(--y);color:var(--b);font-family:var(--h);font-size:.9rem;font-weight:800;
+  letter-spacing:1.5px;text-transform:uppercase;transition:all .25s var(--pop);
+  box-shadow:0 4px 16px rgba(255,225,53,.18);
+}
+.fsub:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,225,53,.3)}
+.cmap{border-radius:var(--r2);overflow:hidden;border:1px solid var(--g1);min-height:460px}
+.cmap iframe{width:100%;height:100%;border:none;min-height:460px;filter:invert(92%) hue-rotate(180deg) brightness(.75)}
+
+/* ═══════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════ */
+.ft{background:var(--b2);padding:60px 4% 24px;border-top:1px solid var(--g1)}
+.ft-grid{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:40px;padding-bottom:40px;border-bottom:1px solid var(--g1)}
+.ft-br .ft-logo{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.ft-br .ft-logo-ic{width:30px;height:30px;background:var(--y);border-radius:var(--r1);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--b);font-weight:900}
+.ft-br .ft-logo-nm{font-family:var(--h);font-size:1.2rem;font-weight:900;letter-spacing:2px;text-transform:uppercase}
+.ft-br .ft-logo-nm span{color:var(--y)}
+.ft-br p{font-size:.78rem;line-height:1.75;color:var(--g4);margin-bottom:14px;font-weight:300}
+.fts{display:flex;gap:6px}
+.fts a{width:32px;height:32px;border-radius:var(--r1);background:var(--g1);border:1px solid var(--g2);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--g5);transition:all .2s var(--pop)}
+.fts a:hover{background:var(--y);color:var(--b);border-color:var(--y);transform:translateY(-2px)}
+.fc h5{font-family:var(--h);font-size:1rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;color:var(--w)}
+.fc li{margin-bottom:6px}
+.fc li a{font-size:.76rem;color:var(--g5);transition:all .2s;display:inline-flex;align-items:center;gap:0}
+.fc li a:hover{color:var(--y);gap:4px}
+.fc li a::before{content:'';width:0;height:1px;background:var(--y);transition:width .2s}
+.fc li a:hover::before{width:8px}
+.ft-nl p{font-size:.76rem;color:var(--g5);margin-bottom:10px;line-height:1.6}
+.ft-nlf{display:flex;border-radius:var(--r1);overflow:hidden;border:1px solid var(--g1)}
+.ft-nlf input{flex:1;padding:11px 14px;background:var(--g1);border:none;color:var(--w);font-size:.78rem;font-family:var(--body);outline:none}
+.ft-nlf button{padding:11px 18px;background:var(--y);color:var(--b);font-family:var(--h);font-size:.68rem;font-weight:800;letter-spacing:1px;transition:.2s}
+.ft-nlf button:hover{background:var(--yd)}
+.ftb{max-width:1240px;margin:0 auto;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.ftb p{font-size:.65rem;color:var(--g4)}
+.ftb a{color:var(--y)}
+.fbl{display:flex;gap:14px}
+.fbl a{font-size:.62rem;color:var(--g4);transition:.2s}
+.fbl a:hover{color:var(--y)}
+#top{
+  position:fixed;bottom:20px;right:20px;z-index:8000;
+  width:40px;height:40px;border-radius:var(--r1);background:var(--y);color:var(--b);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;
+  opacity:0;visibility:hidden;transform:translateY(10px);transition:all .25s var(--pop);
+  box-shadow:0 4px 14px rgba(255,225,53,.2);
+}
+#top.show{opacity:1;visibility:visible;transform:translateY(0)}
+#top:hover{transform:translateY(-3px) scale(1.08)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1024px){
+  .hb{display:block}.nl,.ncta{display:none!important}
+  .hero{grid-template-columns:1fr}
+  .hero-right{height:380px;clip-path:none}
+  .hero-diag{display:none}
+  .hero-left{text-align:center;padding:100px 4% 40px}
+  .hero-p{margin:0 auto 34px}
+  .hero-btns,.hero-stats{justify-content:center}
+  .hero-badge{display:none}
+  .prog-grid,.pr-grid,.tr-grid{grid-template-columns:1fr 1fr}
+  .ab-grid,.cl{grid-template-columns:1fr;gap:50px}
+  .ab-imgs{height:400px;max-width:420px;margin:0 auto}
+  .aw-grid,.mem-grid{grid-template-columns:1fr 1fr}
+  .res-grid,.ci-strip{grid-template-columns:1fr 1fr}
+  .res-card:nth-child(1){grid-column:span 2}
+  .rv-grid,.sch-grid{grid-template-columns:1fr}
+  .ft-grid{grid-template-columns:1fr 1fr}
+  .pb-c h1{font-size:3rem}
+}
+@media(max-width:768px){
+  #nav{height:58px}
+  .hero-h{font-size:3.5rem}
+  .hd{font-size:2.4rem}
+  .prog-grid,.pr-grid,.tr-grid,.res-grid,.ci-strip,.aw-grid,.mem-grid{grid-template-columns:1fr}
+  .res-card:nth-child(1){grid-column:span 1;height:260px}
+  .ab-feats,.fr{grid-template-columns:1fr}
+  .ft-grid{grid-template-columns:1fr}
+  .ftb{flex-direction:column;text-align:center}
+  .hero-stats{flex-direction:column;align-items:center}
+  .pb-c h1{font-size:2.4rem}
+}
+@media(max-width:480px){
+  .hero-h{font-size:2.8rem}
+  .hero-btns{flex-direction:column}.hero-btns .btn{width:100%;justify-content:center}
+  .hcta{margin:0 3% 60px;padding:40px 20px}
+  .hcta-inner{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ PRELOADER — BARBELL ASSEMBLY ═══ -->
+<div id="pre">
+  <div class="pre-rep" id="preRep">0 <span>REPS</span></div>
+  <div class="barbell">
+    <div class="bb-plates" id="plL" style="flex-direction:row-reverse">
+      <div class="bb-plate p5" id="pl5a"></div>
+      <div class="bb-plate p10" id="pl10a"></div>
+      <div class="bb-plate p25" id="pl25a"></div>
+      <div class="bb-plate p35" id="pl35a"></div>
+      <div class="bb-plate p45" id="pl45a"></div>
+    </div>
+    <div class="bb-collar" id="colL"></div>
+    <div class="bb-bar" id="bbBar"></div>
+    <div class="bb-collar" id="colR"></div>
+    <div class="bb-plates" id="plR">
+      <div class="bb-plate p5" id="pr5a"></div>
+      <div class="bb-plate p10" id="pr10a"></div>
+      <div class="bb-plate p25" id="pr25a"></div>
+      <div class="bb-plate p35" id="pr35a"></div>
+      <div class="bb-plate p45" id="pr45a"></div>
+    </div>
+  </div>
+  <div class="pre-weight" id="preWt">LOADING BAR</div>
+  <div class="pre-label">IRONCLAD GYM <span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+</div>
+
+<!-- ═══ PAGE TRANSITION — MINIMAL TOP BAR ═══ -->
+<div id="trans"><div id="trans-bar"></div></div>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+  <a href="#" class="nb" onclick="go('home');return false"><div class="nb-icon"><i class="fas fa-dumbbell"></i></div><div class="nb-txt">IRON<span>CLAD</span></div></a>
+  <div class="nl">
+    <a href="#" data-p="home" class="active" onclick="go('home');return false">Home</a>
+    <a href="#" data-p="about" onclick="go('about');return false">About</a>
+    <a href="#" data-p="programs" onclick="go('programs');return false">Programs</a>
+    <a href="#" data-p="trainers" onclick="go('trainers');return false">Trainers</a>
+    <a href="#" data-p="results" onclick="go('results');return false">Results</a>
+    <a href="#" data-p="contact" onclick="go('contact');return false">Membership</a>
+  </div>
+  <a href="#" class="ncta" onclick="go('contact');return false"><i class="fas fa-bolt"></i> &nbsp;Join Now</a>
+  <div class="hb" id="hb"><span></span><span></span><span></span></div>
+</nav>
+<div class="mm" id="mm">
+  <a href="#" data-p="home" class="active" onclick="go('home');return false">Home</a>
+  <a href="#" data-p="about" onclick="go('about');return false">About</a>
+  <a href="#" data-p="programs" onclick="go('programs');return false">Programs</a>
+  <a href="#" data-p="trainers" onclick="go('trainers');return false">Trainers</a>
+  <a href="#" data-p="results" onclick="go('results');return false">Results</a>
+  <a href="#" data-p="contact" onclick="go('contact');return false">Membership</a>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 1 — HOME
+     ══════════════════════════════════ -->
+<div class="pg active" id="pg-home">
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-tag" data-v><span class="pulse"></span> #1 Rated Gym — Brooklyn, NY</div>
+      <h1 class="hero-h" data-v>
+        <span class="line sk">FORGE</span>
+        <span class="line">YOUR <span class="y">BEST</span></span>
+        <span class="line">SELF</span>
+      </h1>
+      <p class="hero-p" data-v>Elite training. World-class coaches. State-of-the-art equipment. No excuses — only results.</p>
+      <div class="hero-btns" data-v>
+        <a href="#" class="btn btn-y" onclick="go('contact');return false"><i class="fas fa-bolt"></i> Start Today</a>
+        <a href="#" class="btn btn-o" onclick="go('programs');return false"><i class="fas fa-dumbbell"></i> Programs</a>
+      </div>
+      <div class="hero-stats" data-v>
+        <div class="hs"><span class="n">2,000+</span><span class="l">Active Members</span></div>
+        <div class="hs"><span class="n">15+</span><span class="l">Elite Coaches</span></div>
+        <div class="hs"><span class="n">98%</span><span class="l">Goal Achievement</span></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=900&q=80" alt="Gym">
+      <div class="hero-badge"><div class="hb-ico"><i class="fas fa-fire"></i></div><div class="hb-t"><strong>500+ Members</strong>Joined This Month</div></div>
+    </div>
+    <div class="hero-diag"></div>
+  </section>
+
+  <div class="ticker">
+    <div class="tick-tr">
+      <div class="tick-item">Strength Training <span class="sep">✦</span></div>
+      <div class="tick-item">HIIT Classes <span class="sep">✦</span></div>
+      <div class="tick-item">Personal Training <span class="sep">✦</span></div>
+      <div class="tick-item">Nutrition Plans <span class="sep">✦</span></div>
+      <div class="tick-item">Open 24/7 <span class="sep">✦</span></div>
+      <div class="tick-item">CrossFit <span class="sep">✦</span></div>
+      <div class="tick-item">Yoga & Mobility <span class="sep">✦</span></div>
+      <div class="tick-item">Boxing <span class="sep">✦</span></div>
+      <div class="tick-item">Strength Training <span class="sep">✦</span></div>
+      <div class="tick-item">HIIT Classes <span class="sep">✦</span></div>
+      <div class="tick-item">Personal Training <span class="sep">✦</span></div>
+      <div class="tick-item">Nutrition Plans <span class="sep">✦</span></div>
+      <div class="tick-item">Open 24/7 <span class="sep">✦</span></div>
+      <div class="tick-item">CrossFit <span class="sep">✦</span></div>
+      <div class="tick-item">Yoga & Mobility <span class="sep">✦</span></div>
+      <div class="tick-item">Boxing <span class="sep">✦</span></div>
+    </div>
+  </div>
+
+  <section class="prog-sec"><div class="ct">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:40px">
+      <div data-v><div class="lb"><i class="fas fa-fire"></i> Our Programs</div><div class="hd">TRAIN <span>SMARTER</span><br><span class="stroke-y">LIFT</span> HARDER</div></div>
+      <a href="#" class="btn btn-o" data-v onclick="go('programs');return false"><span>All Programs</span> <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="prog-grid">
+      <div class="prog-card" data-v onclick="go('programs')"><div class="pc-icon"><i class="fas fa-dumbbell"></i></div><h4>Powerlifting</h4><p>Build raw strength with progressive overload programs designed by elite powerlifters.</p><div class="pc-tag">Strength</div><div class="pc-link">Learn More <i class="fas fa-arrow-right"></i></div></div>
+      <div class="prog-card" data-v onclick="go('programs')"><div class="pc-icon"><i class="fas fa-fire-flame-curved"></i></div><h4>HIIT Burn</h4><p>High-intensity intervals that torch fat and build endurance in 45-minute sessions.</p><div class="pc-tag">Cardio</div><div class="pc-link">Learn More <i class="fas fa-arrow-right"></i></div></div>
+      <div class="prog-card" data-v onclick="go('programs')"><div class="pc-icon"><i class="fas fa-person-running"></i></div><h4>CrossFit WOD</h4><p>Daily workouts that combine Olympic lifting, gymnastics, and metabolic conditioning.</p><div class="pc-tag">Functional</div><div class="pc-link">Learn More <i class="fas fa-arrow-right"></i></div></div>
+    </div>
+  </div></section>
+
+  <div class="hcta" data-v="z"><div class="ct"><div class="hcta-inner">
+    <h3>FIRST WEEK <strong>FREE —</strong><br>NO COMMITMENT</h3>
+    <a href="#" class="btn btn-dk" onclick="go('contact');return false" style="background:var(--b);color:var(--y);border:2px solid var(--b);font-size:.9rem;font-family:var(--h);font-weight:800;letter-spacing:1.5px"><i class="fas fa-bolt"></i> Claim Free Week</a>
+  </div></div></div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 2 — ABOUT
+     ══════════════════════════════════ -->
+<div class="pg" id="pg-about">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1400&q=80')"></div><div class="pb-ov"></div><div class="pb-ya"></div><div class="pb-c" data-v><h1>ABOUT <span>US</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>About</span></div></div></div>
+
+  <section class="ab-sec"><div class="ct"><div class="ab-grid">
+    <div class="ab-imgs" data-v="l">
+      <div class="ab-img"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80" alt="Gym"></div>
+      <div class="ab-img"><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500&q=80" alt="Training"></div>
+      <div class="ab-badge"><span class="bg">10+</span><span class="sm">Years Forging Champions</span></div>
+    </div>
+    <div data-v="r">
+      <div class="lb"><i class="fas fa-dumbbell"></i> Our Story</div>
+      <div class="hd" style="font-size:2.8rem">BUILT BY <span>ATHLETES</span>,<br>FOR <span class="stroke">ATHLETES</span></div>
+      <div class="ab-text">
+        <p>IRONCLAD was founded in 2014 by former competitive powerlifter Marcus Drake. After years of training in subpar facilities, he built the gym he always wanted — equipped with the best gear, staffed by the best coaches.</p>
+        <p>Today, we're home to 2,000+ members ranging from first-timers to professional athletes. Our philosophy is simple: hard work, smart programming, and relentless support.</p>
+      </div>
+      <div class="ab-feats">
+        <div class="af"><i class="fas fa-check"></i><span>20,000 sq ft Facility</span></div>
+        <div class="af"><i class="fas fa-check"></i><span>Open 24 Hours</span></div>
+        <div class="af"><i class="fas fa-check"></i><span>Olympic Lifting Platform</span></div>
+        <div class="af"><i class="fas fa-check"></i><span>Recovery & Sauna</span></div>
+        <div class="af"><i class="fas fa-check"></i><span>Nutrition Coaching</span></div>
+        <div class="af"><i class="fas fa-check"></i><span>Free Parking</span></div>
+      </div>
+      <div style="margin-top:22px"><a href="#" class="btn btn-y" onclick="go('trainers');return false"><i class="fas fa-users"></i> Meet The Coaches</a></div>
+    </div>
+  </div></div></section>
+
+  <section class="aw-sec"><div class="ct">
+    <div class="aw-grid">
+      <div class="aw" data-v><span class="an">2,000+</span><span class="al">Active Members</span></div>
+      <div class="aw" data-v><span class="an">15+</span><span class="al">Expert Coaches</span></div>
+      <div class="aw" data-v><span class="an">98%</span><span class="al">Goal Achievement</span></div>
+      <div class="aw" data-v><span class="an">24/7</span><span class="al">Open Every Day</span></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 3 — PROGRAMS
+     ══════════════════════════════════ -->
+<div class="pg" id="pg-programs">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1400&q=80')"></div><div class="pb-ov"></div><div class="pb-ya"></div><div class="pb-c" data-v><h1>OUR <span>PROGRAMS</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>Programs</span></div></div></div>
+
+  <section style="padding:100px 0"><div class="ct">
+    <div style="text-align:center;margin-bottom:40px" data-v><div class="lb" style="justify-content:center"><i class="fas fa-fire"></i> Full Program Menu</div><div class="hd">FIND YOUR <span>PROGRAM</span></div><p class="ds" style="margin:0 auto;text-align:center">From beginner to elite — we have a program that matches your goals and schedule.</p></div>
+    <div class="pr-grid">
+      <div class="pr-card" data-v><div class="pr-card-img"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80" alt="Strength"><span class="pr-tag">Most Popular</span></div><div class="pr-card-body"><h4>Powerlifting</h4><p>Progressive strength program focused on squat, bench, and deadlift maximums.</p><div class="pr-foot"><span class="pr-price">$89/mo</span><button class="pr-book" onclick="go('contact')">Join</button></div></div></div>
+      <div class="pr-card" data-v><div class="pr-card-img"><img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80" alt="HIIT"><span class="pr-tag red">Intense</span></div><div class="pr-card-body"><h4>HIIT Burn</h4><p>45-minute fat-burning intervals combining cardio and bodyweight movements.</p><div class="pr-foot"><span class="pr-price">$79/mo</span><button class="pr-book" onclick="go('contact')">Join</button></div></div></div>
+      <div class="pr-card" data-v><div class="pr-card-img"><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80" alt="CrossFit"><span class="pr-tag">All Levels</span></div><div class="pr-card-body"><h4>CrossFit WOD</h4><p>Daily programmed workouts that build total-body fitness and community.</p><div class="pr-foot"><span class="pr-price">$99/mo</span><button class="pr-book" onclick="go('contact')">Join</button></div></div></div>
+      <div class="pr-card" data-v><div class="pr-card-img"><img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80" alt="Boxing"><span class="pr-tag">New</span></div><div class="pr-card-body"><h4>Boxing & MMA</h4><p>Technical striking, pad work, and conditioning for fighters and fitness enthusiasts.</p><div class="pr-foot"><span class="pr-price">$109/mo</span><button class="pr-book" onclick="go('contact')">Join</button></div></div></div>
+      <div class="pr-card" data-v><div class="pr-card-img"><img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=600&q=80" alt="Yoga"><span class="pr-tag">Recovery</span></div><div class="pr-card-body"><h4>Yoga & Mobility</h4><p>Improve flexibility, reduce injury risk, and enhance recovery with guided sessions.</p><div class="pr-foot"><span class="pr-price">$69/mo</span><button class="pr-book" onclick="go('contact')">Join</button></div></div></div>
+      <div class="pr-card" data-v><div class="pr-card-img"><img src="https://images.unsplash.com/photo-1607962837359-5e7e89f86776?w=600&q=80" alt="Personal"><span class="pr-tag red">Premium</span></div><div class="pr-card-body"><h4>1-on-1 Coaching</h4><p>Personalized programming, nutrition guidance, and private sessions with elite coaches.</p><div class="pr-foot"><span class="pr-price">$249/mo</span><button class="pr-book" onclick="go('contact')">Join</button></div></div></div>
+    </div>
+  </div></section>
+
+  <section class="sch-sec"><div class="ct">
+    <div style="text-align:center;margin-bottom:36px" data-v><div class="lb" style="justify-content:center"><i class="fas fa-calendar"></i> Weekly Schedule</div><div class="hd">CLASS <span>SCHEDULE</span></div></div>
+    <div class="sch-grid">
+      <div class="sch-row" data-v><div><span class="sc-name">Powerlifting</span><span class="sc-time">· 6AM, 12PM, 6PM</span></div><span class="sc-type">Mon / Wed / Fri</span></div>
+      <div class="sch-row" data-v><div><span class="sc-name">HIIT Burn</span><span class="sc-time">· 7AM, 5PM, 7PM</span></div><span class="sc-type">Tue / Thu / Sat</span></div>
+      <div class="sch-row" data-v><div><span class="sc-name">CrossFit WOD</span><span class="sc-time">· 6AM, 12PM, 5PM</span></div><span class="sc-type">Mon – Sat</span></div>
+      <div class="sch-row" data-v><div><span class="sc-name">Boxing</span><span class="sc-time">· 7PM</span></div><span class="sc-type">Tue / Thu</span></div>
+      <div class="sch-row" data-v><div><span class="sc-name">Yoga & Mobility</span><span class="sc-time">· 8AM</span></div><span class="sc-type">Sat / Sun</span></div>
+      <div class="sch-row" data-v><div><span class="sc-name">1-on-1 Coaching</span><span class="sc-time">· By Appointment</span></div><span class="sc-type">Every Day</span></div>
+    </div>
+    <div style="text-align:center;margin-top:30px" data-v><a href="#" class="btn btn-y" onclick="go('contact');return false"><i class="fas fa-bolt"></i> Join a Class Today</a></div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 4 — TRAINERS
+     ══════════════════════════════════ -->
+<div class="pg" id="pg-trainers">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1400&q=80')"></div><div class="pb-ov"></div><div class="pb-ya"></div><div class="pb-c" data-v><h1>OUR <span>COACHES</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>Trainers</span></div></div></div>
+
+  <section style="padding:100px 0"><div class="ct">
+    <div style="text-align:center;margin-bottom:40px" data-v><div class="lb" style="justify-content:center"><i class="fas fa-medal"></i> Elite Coaches</div><div class="hd">TRAINED BY THE <span>BEST</span></div><p class="ds" style="margin:0 auto;text-align:center">Certified, experienced, and relentlessly dedicated to your success.</p></div>
+    <div class="tr-grid">
+      <div class="tr-card" data-v><div class="tr-card-img"><img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&q=80" alt="Coach"><div class="tr-soc"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-tiktok"></i></a></div></div><div class="tr-card-body"><h4>Marcus Drake</h4><span class="role">Head Coach & Founder</span><p>IPF World-level powerlifter. 15+ years coaching elite athletes across strength sports.</p></div></div>
+      <div class="tr-card" data-v><div class="tr-card-img"><img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=600&q=80" alt="Coach"><div class="tr-soc"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-tiktok"></i></a></div></div><div class="tr-card-body"><h4>Keisha Monroe</h4><span class="role">HIIT & Conditioning</span><p>NSCA certified. Former D1 sprinter. Specializes in metabolic conditioning and fat loss.</p></div></div>
+      <div class="tr-card" data-v><div class="tr-card-img"><img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=600&q=80" alt="Coach"><div class="tr-soc"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-tiktok"></i></a></div></div><div class="tr-card-body"><h4>Jake Torres</h4><span class="role">CrossFit & Olympic Lifting</span><p>CF-L3 certified. National Olympic lifting competitor. 8+ years coaching WODs.</p></div></div>
+      <div class="tr-card" data-v><div class="tr-card-img"><img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80" alt="Coach"><div class="tr-soc"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-tiktok"></i></a></div></div><div class="tr-card-body"><h4>Aisha Okonkwo</h4><span class="role">Yoga & Mobility</span><p>500-hr RYT. Certified nutritionist. Builds resilience from the inside out.</p></div></div>
+      <div class="tr-card" data-v><div class="tr-card-img"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=80" alt="Coach"><div class="tr-soc"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-tiktok"></i></a></div></div><div class="tr-card-body"><h4>Ryan Kozlowski</h4><span class="role">Boxing & MMA</span><p>Former professional boxer. 10+ years coaching competitive fighters and beginners alike.</p></div></div>
+      <div class="tr-card" data-v><div class="tr-card-img"><img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=600&q=80" alt="Coach"><div class="tr-soc"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-tiktok"></i></a></div></div><div class="tr-card-body"><h4>Priya Nair</h4><span class="role">Personal Training</span><p>ACSM certified. Specializes in body recomposition and injury rehabilitation protocols.</p></div></div>
+    </div>
+    <div style="text-align:center;margin-top:20px" data-v><a href="#" class="btn btn-y" onclick="go('contact');return false"><i class="fas fa-bolt"></i> Train With a Coach</a></div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 5 — RESULTS
+     ══════════════════════════════════ -->
+<div class="pg" id="pg-results">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1400&q=80')"></div><div class="pb-ov"></div><div class="pb-ya"></div><div class="pb-c" data-v><h1>REAL <span>RESULTS</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>Results</span></div></div></div>
+
+  <section style="padding:100px 0"><div class="ct">
+    <div style="text-align:center;margin-bottom:40px" data-v><div class="lb" style="justify-content:center"><i class="fas fa-trophy"></i> Transformations</div><div class="hd">PROOF IN THE <span>IRON</span></div></div>
+    <div class="res-grid">
+      <div class="res-card" data-v><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&q=80" alt="Result"><div class="res-card-ov"><h5>+45 LBS ADDED TO SQUAT</h5><span>12-week powerlifting block</span></div></div>
+      <div class="res-card" data-v><img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=500&q=80" alt="Result"><div class="res-card-ov"><h5>-28 LBS FAT LOSS</h5><span>16-week HIIT program</span></div></div>
+      <div class="res-card" data-v><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500&q=80" alt="Result"><div class="res-card-ov"><h5>FIRST COMPETITION WIN</h5><span>6 months of CrossFit</span></div></div>
+      <div class="res-card" data-v><img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80" alt="Result"><div class="res-card-ov"><h5>ZERO CHRONIC PAIN</h5><span>8 weeks mobility coaching</span></div></div>
+      <div class="res-card" data-v><img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500&q=80" alt="Result"><div class="res-card-ov"><h5>500 LB DEADLIFT PR</h5><span>20-week strength block</span></div></div>
+    </div>
+  </div></section>
+
+  <section class="rv-sec"><div class="ct">
+    <div style="text-align:center;margin-bottom:36px" data-v><div class="lb" style="justify-content:center"><i class="fas fa-star"></i> Member Reviews</div><div class="hd">WHAT MEMBERS <span>SAY</span></div></div>
+    <div class="rv-grid">
+      <div class="rv" data-v><div class="rv-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="rv-q">"IRONCLAD completely changed my life. In 6 months I went from never lifting to hitting a 315lb squat. Marcus and the coaching team are unreal. This isn't just a gym — it's a community."</p><div class="rv-auth"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&q=80" alt="Member"><div><div class="rn">Tyler Brooks</div><div class="ri">Powerlifting Member</div></div></div></div>
+      <div class="rv" data-v><div class="rv-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="rv-q">"Keisha's HIIT classes are no joke — I lost 30 pounds in 4 months. The facility is immaculate, the coaches actually care, and the energy in this gym every morning is electric."</p><div class="rv-auth"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80" alt="Member"><div><div class="rn">Destiny Carter</div><div class="ri">HIIT Program Member</div></div></div></div>
+      <div class="rv" data-v><div class="rv-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="rv-q">"Best investment I've ever made. The 1-on-1 coaching completely fixed my form and my numbers shot through the roof. Worth every penny — professional athletes train here and now so do I."</p><div class="rv-auth"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80" alt="Member"><div><div class="rn">Carlos Vega</div><div class="ri">Personal Training Client</div></div></div></div>
+      <div class="rv" data-v><div class="rv-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><p class="rv-q">"I came in with chronic back pain and left pain-free after 8 weeks with Aisha. The yoga and mobility program is a hidden gem. I can now train harder than I ever have in my twenties."</p><div class="rv-auth"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80" alt="Member"><div><div class="rn">Sandra Liu</div><div class="ri">Mobility Program Member</div></div></div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 6 — MEMBERSHIP
+     ══════════════════════════════════ -->
+<div class="pg" id="pg-contact">
+  <div class="pb"><div class="pb-bg" style="background-image:url('https://images.unsplash.com/photo-1607962837359-5e7e89f86776?w=1400&q=80')"></div><div class="pb-ov"></div><div class="pb-ya"></div><div class="pb-c" data-v><h1>MEMBERSHIP <span>PLANS</span></h1><div class="pb-bc"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.35rem"></i><span>Membership</span></div></div></div>
+
+  <section style="padding:100px 0"><div class="ct">
+    <div style="text-align:center;margin-bottom:40px" data-v><div class="lb" style="justify-content:center"><i class="fas fa-bolt"></i> Pricing</div><div class="hd">CHOOSE YOUR <span>PLAN</span></div></div>
+    <div class="mem-grid">
+      <div class="mem-card" data-v>
+        <h4>Starter</h4><div class="mem-price">$49</div><div class="mem-period">per month</div>
+        <ul>
+          <li><i class="fas fa-check"></i> Full Gym Access</li>
+          <li><i class="fas fa-check"></i> Locker Rooms</li>
+          <li><i class="fas fa-check"></i> Basic Equipment</li>
+          <li class="no"><i class="fas fa-times"></i> Group Classes</li>
+          <li class="no"><i class="fas fa-times"></i> Nutrition Plan</li>
+          <li class="no"><i class="fas fa-times"></i> Coaching Sessions</li>
+        </ul>
+        <a href="#" class="btn btn-o" style="width:100%;justify-content:center">Get Started</a>
+      </div>
+      <div class="mem-card featured" data-v>
+        <div class="mem-best">Best Value</div>
+        <h4>Elite</h4><div class="mem-price">$89</div><div class="mem-period">per month</div>
+        <ul>
+          <li><i class="fas fa-check"></i> Full Gym Access 24/7</li>
+          <li><i class="fas fa-check"></i> All Group Classes</li>
+          <li><i class="fas fa-check"></i> Nutrition Plan</li>
+          <li><i class="fas fa-check"></i> Recovery Suite</li>
+          <li><i class="fas fa-check"></i> Progress Tracking</li>
+          <li class="no"><i class="fas fa-times"></i> Private Coaching</li>
+        </ul>
+        <a href="#" class="btn" style="width:100%;justify-content:center;background:var(--b);color:var(--y);font-family:var(--h);font-size:.88rem;font-weight:800;letter-spacing:1.5px;border-radius:var(--r1)">Join Elite</a>
+      </div>
+      <div class="mem-card" data-v>
+        <h4>Champion</h4><div class="mem-price">$169</div><div class="mem-period">per month</div>
+        <ul>
+          <li><i class="fas fa-check"></i> Everything in Elite</li>
+          <li><i class="fas fa-check"></i> 4 Private Sessions/mo</li>
+          <li><i class="fas fa-check"></i> Custom Programming</li>
+          <li><i class="fas fa-check"></i> Supplement Discount</li>
+          <li><i class="fas fa-check"></i> Priority Booking</li>
+          <li><i class="fas fa-check"></i> Guest Passes ×2</li>
+        </ul>
+        <a href="#" class="btn btn-y" style="width:100%;justify-content:center;font-family:var(--h);font-size:.88rem;font-weight:800;letter-spacing:1.5px">Go Champion</a>
+      </div>
+    </div>
+
+    <div class="ci-strip">
+      <div class="ci" data-v><div class="cii"><i class="fas fa-map-marker-alt"></i></div><h5>Location</h5><p>420 Iron Ave, Suite 1<br>Williamsburg, Brooklyn<br>NY 11211</p></div>
+      <div class="ci" data-v><div class="cii"><i class="fas fa-phone-alt"></i></div><h5>Call Us</h5><p><a href="tel:+17185559999">(718) 555-9999</a><br>Daily 5AM – 11PM</p></div>
+      <div class="ci" data-v><div class="cii"><i class="fas fa-envelope"></i></div><h5>Email</h5><p><a href="mailto:train@ironclad.com">train@ironclad.com</a><br>Reply within 1 hour</p></div>
+      <div class="ci" data-v><div class="cii"><i class="fas fa-clock"></i></div><h5>Hours</h5><p>Mon–Fri: 5AM–11PM<br>Sat: 6AM–9PM<br>Sun: 7AM–8PM</p></div>
+    </div>
+
+    <div class="cl">
+      <div class="cf" data-v="l">
+        <h3>GET STARTED</h3>
+        <form id="gf" onsubmit="subG(event)">
+          <div class="fr"><div class="fg"><label>Full Name *</label><input type="text" placeholder="John Smith" required></div><div class="fg"><label>Phone *</label><input type="tel" placeholder="(718) 000-0000" required></div></div>
+          <div class="fr"><div class="fg"><label>Email *</label><input type="email" placeholder="john@email.com" required></div><div class="fg"><label>Membership *</label><select required><option value="">Select Plan</option><option>Starter — $49/mo</option><option>Elite — $89/mo</option><option>Champion — $169/mo</option><option>Day Pass — $20</option></select></div></div>
+          <div class="fr"><div class="fg"><label>Goal *</label><select><option>Lose Weight</option><option>Build Muscle</option><option>Improve Strength</option><option>General Fitness</option><option>Athletic Performance</option></select></div><div class="fg"><label>Experience Level</label><select><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Elite / Competitive</option></select></div></div>
+          <div class="fg"><label>Message</label><textarea placeholder="Tell us about your goals..."></textarea></div>
+          <button type="submit" class="fsub" id="gBtn"><i class="fas fa-bolt"></i> &nbsp;CLAIM FREE WEEK</button>
+        </form>
+      </div>
+      <div class="cmap" data-v="r"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.5!2d-73.957!3d40.714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sWilliamsburg!5e0!3m2!1sen!2sus!4v1697000000000!5m2!1sen!2sus" loading="lazy"></iframe></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="ft">
+  <div class="ft-grid">
+    <div class="ft-br"><div class="ft-logo"><div class="ft-logo-ic"><i class="fas fa-dumbbell"></i></div><div class="ft-logo-nm">IRON<span>CLAD</span></div></div><p>Elite fitness facility in the heart of Brooklyn. Open 24/7 with world-class coaches, state-of-the-art equipment, and a community that pushes you to new limits every single day.</p><div class="fts"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-tiktok"></i></a><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-twitter"></i></a></div></div>
+    <div class="fc"><h5>Navigation</h5><ul><li><a href="#" onclick="go('home');return false">Home</a></li><li><a href="#" onclick="go('about');return false">About Us</a></li><li><a href="#" onclick="go('programs');return false">Programs</a></li><li><a href="#" onclick="go('trainers');return false">Coaches</a></li><li><a href="#" onclick="go('results');return false">Results</a></li><li><a href="#" onclick="go('contact');return false">Membership</a></li></ul></div>
+    <div class="fc"><h5>Programs</h5><ul><li><a href="#" onclick="go('programs');return false">Powerlifting</a></li><li><a href="#" onclick="go('programs');return false">HIIT Burn</a></li><li><a href="#" onclick="go('programs');return false">CrossFit</a></li><li><a href="#" onclick="go('programs');return false">Boxing</a></li><li><a href="#" onclick="go('programs');return false">Yoga & Mobility</a></li><li><a href="#" onclick="go('programs');return false">Personal Training</a></li></ul></div>
+    <div class="fc ft-nl"><h5>Newsletter</h5><p>Get workout tips, nutrition guides, and member-exclusive offers every week.</p><div class="ft-nlf"><input type="email" placeholder="Your email"><button onclick="this.textContent='✓'">JOIN</button></div></div>
+  </div>
+  <div class="ftb"><p>© 2025 IRONCLAD GYM. All rights reserved. <a href="#">NYC Fitness License #54321</a></p><div class="fbl"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Accessibility</a></div></div>
+</footer>
+
+<button id="top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
+
+<script>
+/* ═══ BARBELL PRELOADER (unchanged) ═══ */
+const plates=[
+  {id:'pl5a',mirror:'pr5a',weight:5,delay:0},
+  {id:'pl10a',mirror:'pr10a',weight:10,delay:180},
+  {id:'pl25a',mirror:'pr25a',weight:25,delay:360},
+  {id:'pl35a',mirror:'pr35a',weight:35,delay:540},
+  {id:'pl45a',mirror:'pr45a',weight:45,delay:720},
+];
+let totalWeight=45;
+const preWt=document.getElementById('preWt');
+const preRep=document.getElementById('preRep');
+const bbBar=document.getElementById('bbBar');
+const colL=document.getElementById('colL');
+const colR=document.getElementById('colR');
+setTimeout(()=>bbBar.classList.add('grow'),200);
+plates.forEach((p,i)=>{
+  setTimeout(()=>{
+    document.getElementById(p.id).classList.add('show');
+    document.getElementById(p.mirror).classList.add('show');
+    totalWeight+=p.weight*2;
+    preWt.textContent=totalWeight+' LBS';
+    preRep.classList.add('flash');
+    preRep.innerHTML=`${i+1} <span>/ ${plates.length}</span>`;
+    setTimeout(()=>preRep.classList.remove('flash'),150);
+  },400+p.delay);
+});
+setTimeout(()=>{colL.classList.add('show');colR.classList.add('show')},400+plates.length*180+200);
+setTimeout(()=>{
+  preRep.innerHTML=`<span style="color:var(--y)">LET'S GO!</span>`;
+  setTimeout(()=>{document.getElementById('pre').classList.add('done');initR()},400);
+},400+plates.length*180+700);
+
+/* ═══ PAGE TRANSITION — MINIMAL TOP BAR ═══ */
+let cur='home';
+const tBar=document.getElementById('trans-bar');
+
+function go(p){
+  if(p===cur)return;
+  closeMob();
+  /* 1 — shoot bar to 100% */
+  tBar.style.transition='width .22s cubic-bezier(.4,0,.2,1)';
+  tBar.style.width='100%';
+  setTimeout(()=>{
+    /* 2 — swap page (invisible, bar covers top) */
+    document.getElementById('pg-'+cur).classList.remove('active');
+    document.getElementById('pg-'+p).classList.add('active');
+    cur=p;
+    window.scrollTo({top:0,behavior:'instant'});
+    document.querySelectorAll('[data-p]').forEach(a=>a.classList.toggle('active',a.dataset.p===p));
+    setTimeout(initR,60);
+    /* 3 — retract bar */
+    tBar.style.transition='width .2s cubic-bezier(.4,0,.2,1)';
+    tBar.style.width='0%';
+  },240);
+}
+
+/* ═══ HAMBURGER ═══ */
+const hbEl=document.getElementById('hb'),mmEl=document.getElementById('mm');
+hbEl.addEventListener('click',()=>{
+  hbEl.classList.toggle('open');
+  mmEl.classList.toggle('open');
+  document.body.style.overflow=mmEl.classList.contains('open')?'hidden':'';
+});
+function closeMob(){hbEl.classList.remove('open');mmEl.classList.remove('open');document.body.style.overflow=''}
+
+/* ═══ SCROLL ═══ */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>40);
+  document.getElementById('top').classList.toggle('show',scrollY>300);
+});
+
+/* ═══ REVEAL ═══ */
+function initR(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){setTimeout(()=>e.target.classList.add('on'),i*40);obs.unobserve(e.target)}
+    });
+  },{threshold:.07,rootMargin:'0px 0px -15px 0px'});
+  document.querySelectorAll('.pg.active [data-v]').forEach(el=>{el.classList.remove('on');obs.observe(el)});
+}
+
+/* ═══ SNAP 3D TILT ═══ */
+document.querySelectorAll('.prog-card,.pr-card,.tr-card,.rv,.ci,.res-card,.aw,.mem-card,.sch-row').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    c.style.transform=`perspective(500px) rotateY(${x*5}deg) rotateX(${-y*5}deg) translateY(-8px)`;
+    c.style.transition='none';
+  });
+  c.addEventListener('mouseleave',()=>{
+    c.style.transform='';
+    c.style.transition='all .25s cubic-bezier(.34,1.56,.64,1)';
+  });
+});
+
+/* ═══ FORM ═══ */
+function subG(e){
+  e.preventDefault();
+  const b=document.getElementById('gBtn');
+  b.innerHTML='<i class="fas fa-check"></i> &nbsp;WELCOME TO IRONCLAD!';
+  b.style.background='var(--yd)';
+  setTimeout(()=>{b.innerHTML='<i class="fas fa-bolt"></i> &nbsp;CLAIM FREE WEEK';b.style.background='';e.target.reset()},2500);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sterling & Associates — Attorneys at Law</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════
+   DESIGN SYSTEM
+   ═══════════════════════════════════ */
+:root{
+  --black:#000000;--black2:#0A0A0A;--black3:#111111;--black4:#1A1A1A;
+  --gray1:#222;--gray2:#333;--gray3:#555;--gray4:#777;--gray5:#999;
+  --gray6:#BBB;--gray7:#DDD;--gray8:#ECECEC;--gray9:#F5F5F5;
+  --white:#FFFFFF;--offwhite:#FAFAFA;
+  --accent:#C8A97E;--accent-light:#D4BA94;--accent-dark:#A88B64;
+  --red-subtle:#8B0000;
+  --heading:'Cormorant Garamond',serif;
+  --body:'Inter',sans-serif;
+  --display:'Playfair Display',serif;
+  --ease:cubic-bezier(.25,.46,.45,.94);
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --nav-h:85px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--body);background:var(--white);color:var(--black);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+img{display:block;max-width:100%;object-fit:cover}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+button{cursor:pointer;border:none;outline:none;font-family:var(--body);background:none}
+::selection{background:var(--black);color:var(--white)}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--white)}
+::-webkit-scrollbar-thumb{background:var(--black);border-radius:10px}
+
+/* ═══════════════════════════════════
+   PRELOADER
+   ═══════════════════════════════════ */
+#preloader{
+  position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:30px;background:var(--black);
+  transition:opacity 1s ease,visibility 1s ease;
+}
+#preloader.done{opacity:0;visibility:hidden;pointer-events:none}
+.pre-logo{
+  font-family:var(--heading);font-size:2.2rem;font-weight:300;color:var(--white);
+  letter-spacing:12px;text-transform:uppercase;
+}
+.pre-logo span{color:var(--accent)}
+.pre-bar{width:200px;height:1px;background:var(--gray2);position:relative;overflow:hidden}
+.pre-bar::after{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:var(--white);animation:preLoad 1.5s ease-in-out infinite;
+}
+@keyframes preLoad{0%{left:-100%}100%{left:100%}}
+
+/* ═══════════════════════════════════
+   PAGE TRANSITION
+   ═══════════════════════════════════ */
+#pageTransition{
+  position:fixed;inset:0;z-index:99998;pointer-events:none;
+  display:flex;overflow:hidden;
+}
+#pageTransition .curtain{
+  flex:1;background:var(--black);transform:scaleY(0);transform-origin:top;
+}
+
+/* ═══════════════════════════════════
+   CURSOR (desktop only)
+   ═══════════════════════════════════ */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:999997;
+  border-radius:50%;transition:transform .15s ease;
+  mix-blend-mode:difference;
+}
+.cursor-dot{width:6px;height:6px;background:var(--white)}
+.cursor-ring{
+  width:40px;height:40px;border:1px solid rgba(255,255,255,.5);
+  transform:translate(-50%,-50%);transition:width .3s ease,height .3s ease,border-color .3s ease;
+}
+.cursor-ring.hover{width:60px;height:60px;border-color:var(--accent)}
+@media(max-width:1024px){.cursor-dot,.cursor-ring{display:none}}
+
+/* ═══════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════ */
+#navbar{
+  position:fixed;top:0;left:0;width:100%;height:var(--nav-h);z-index:9000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;transition:all .6s var(--ease);
+}
+#navbar.scrolled{
+  background:rgba(255,255,255,.95);backdrop-filter:blur(25px) saturate(180%);
+  box-shadow:0 1px 0 rgba(0,0,0,.06);height:72px;
+}
+#navbar.dark-mode{color:var(--white)}
+#navbar.dark-mode.scrolled{background:rgba(10,10,10,.95);box-shadow:0 1px 0 rgba(255,255,255,.05)}
+
+.nav-brand{display:flex;align-items:center;gap:15px}
+.nav-brand-icon{
+  width:42px;height:42px;border:1.5px solid currentColor;display:flex;
+  align-items:center;justify-content:center;font-family:var(--heading);
+  font-size:1.1rem;font-weight:600;letter-spacing:1px;
+  transition:all .4s ease;
+}
+#navbar.scrolled .nav-brand-icon,
+#navbar.dark-mode .nav-brand-icon{border-color:currentColor}
+.nav-brand-text{font-family:var(--heading);font-size:1.3rem;font-weight:400;letter-spacing:3px;text-transform:uppercase}
+.nav-brand-text span{font-weight:700}
+
+.nav-links{display:flex;align-items:center;gap:35px}
+.nav-links a{
+  font-size:.72rem;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;
+  color:inherit;position:relative;padding:5px 0;transition:all .3s ease;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:0;left:0;width:0;height:1px;
+  background:currentColor;transition:width .4s var(--ease-out);
+}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a.active{font-weight:700}
+
+.nav-cta-btn{
+  font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  padding:13px 30px;border:1.5px solid currentColor;
+  transition:all .4s ease;
+}
+.nav-cta-btn:hover{background:var(--black);color:var(--white);border-color:var(--black)}
+#navbar.dark-mode .nav-cta-btn:hover{background:var(--white);color:var(--black);border-color:var(--white)}
+
+/* Hamburger */
+.hamburger{display:none;width:28px;height:18px;position:relative;cursor:pointer;z-index:9001}
+.hamburger span{
+  position:absolute;left:0;width:100%;height:1.5px;background:currentColor;
+  transition:all .4s var(--ease);
+}
+.hamburger span:nth-child(1){top:0}
+.hamburger span:nth-child(2){top:8px;width:60%}
+.hamburger span:nth-child(3){top:16px;width:80%}
+.hamburger.open span:nth-child(1){top:8px;transform:rotate(45deg);width:100%}
+.hamburger.open span:nth-child(2){opacity:0;width:0}
+.hamburger.open span:nth-child(3){top:8px;transform:rotate(-45deg);width:100%}
+
+/* Full-screen mobile menu */
+.mobile-overlay{
+  position:fixed;inset:0;z-index:8999;background:var(--black);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  opacity:0;visibility:hidden;transition:all .5s var(--ease);
+}
+.mobile-overlay.open{opacity:1;visibility:visible}
+.mobile-overlay a{
+  font-family:var(--heading);font-size:3rem;font-weight:300;color:var(--white);
+  letter-spacing:5px;padding:6px 0;transition:all .3s ease;
+  opacity:.6;
+}
+.mobile-overlay a:hover,.mobile-overlay a.active{opacity:1;letter-spacing:10px}
+.mobile-overlay .mob-line{width:40px;height:1px;background:var(--gray3);margin:15px 0}
+
+/* ═══════════════════════════════════
+   PAGES
+   ═══════════════════════════════════ */
+.page{display:none;opacity:0;transform:translateY(30px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.page.active{display:block;opacity:1;transform:translateY(0)}
+
+/* ═══════════════════════════════════
+   COMMON
+   ═══════════════════════════════════ */
+.container{max-width:1280px;margin:0 auto;padding:0 5%}
+.container-sm{max-width:900px;margin:0 auto;padding:0 5%}
+
+/* Reveal */
+[data-r]{opacity:0;transform:translateY(45px);transition:all .9s var(--ease-out)}
+[data-r="left"]{transform:translateX(-50px)}
+[data-r="right"]{transform:translateX(50px)}
+[data-r="scale"]{transform:scale(.92);transform-origin:center}
+[data-r].vis{opacity:1;transform:translate(0) scale(1)}
+
+/* Section Headers */
+.sh{margin-bottom:65px}
+.sh-center{text-align:center}
+.sh .overline{
+  font-size:.68rem;font-weight:600;letter-spacing:5px;text-transform:uppercase;
+  color:var(--gray4);margin-bottom:14px;display:flex;align-items:center;gap:14px;
+}
+.sh-center .overline{justify-content:center}
+.sh .overline::before{content:'';width:30px;height:1px;background:var(--accent)}
+.sh h2{
+  font-family:var(--heading);font-size:3.6rem;font-weight:300;line-height:1.1;
+  letter-spacing:-0.5px;margin-bottom:18px;
+}
+.sh h2 strong{font-weight:700}
+.sh h2 em{font-style:italic;color:var(--accent)}
+.sh .desc{font-size:.92rem;line-height:1.85;color:var(--gray4);max-width:520px;font-weight:300}
+.sh-center .desc{margin:0 auto}
+.sh .sep{width:50px;height:1px;background:var(--black);margin:22px 0 0;display:block}
+.sh-center .sep{margin:22px auto 0}
+
+/* Dark sections */
+.dark-sec{background:var(--black);color:var(--white)}
+.dark-sec .sh .overline{color:var(--gray5)}
+.dark-sec .sh .desc{color:var(--gray5)}
+.dark-sec .sh .sep{background:var(--white)}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:.72rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;
+  padding:16px 40px;border:1.5px solid var(--black);color:var(--black);
+  position:relative;overflow:hidden;transition:color .4s ease;
+}
+.btn::before{
+  content:'';position:absolute;inset:0;background:var(--black);
+  transform:translateY(100%);transition:transform .5s var(--ease-out);z-index:0;
+}
+.btn:hover{color:var(--white)}
+.btn:hover::before{transform:translateY(0)}
+.btn span,.btn i{position:relative;z-index:1}
+
+.btn-white{border-color:var(--white);color:var(--white)}
+.btn-white::before{background:var(--white)}
+.btn-white:hover{color:var(--black)}
+
+.btn-filled{background:var(--black);color:var(--white);border-color:var(--black)}
+.btn-filled::before{background:var(--white)}
+.btn-filled:hover{color:var(--black)}
+
+.btn-accent{border-color:var(--accent);color:var(--accent)}
+.btn-accent::before{background:var(--accent)}
+.btn-accent:hover{color:var(--white)}
+
+/* ═══════════════════════════════════
+   PAGE 1: HOME
+   ═══════════════════════════════════ */
+.hero{
+  height:100vh;display:flex;position:relative;overflow:hidden;
+  background:var(--black);color:var(--white);
+}
+.hero-left{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  padding:0 5% 0 8%;position:relative;z-index:5;
+}
+.hero-right{
+  width:45%;position:relative;overflow:hidden;
+}
+.hero-right img{width:100%;height:100%;object-fit:cover;filter:grayscale(20%) brightness(.85)}
+.hero-right-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--black) 0%,transparent 35%);
+}
+.hero-tag{
+  font-size:.65rem;font-weight:500;letter-spacing:6px;text-transform:uppercase;
+  color:var(--gray5);margin-bottom:25px;display:flex;align-items:center;gap:14px;
+}
+.hero-tag::before{content:'';width:45px;height:1px;background:var(--accent)}
+.hero-title{
+  font-family:var(--display);font-size:5.8rem;font-weight:400;
+  line-height:.95;letter-spacing:-2px;margin-bottom:30px;
+}
+.hero-title strong{font-weight:900;display:block}
+.hero-title em{font-style:italic;color:var(--accent);font-weight:400}
+.hero-desc{
+  font-size:1rem;line-height:1.9;color:var(--gray5);max-width:420px;
+  margin-bottom:50px;font-weight:300;
+}
+.hero-actions{display:flex;gap:18px;flex-wrap:wrap}
+
+.hero-scroll{
+  position:absolute;bottom:40px;left:8%;z-index:10;
+  display:flex;align-items:center;gap:15px;
+}
+.hero-scroll-line{width:1px;height:55px;background:var(--gray2);position:relative;overflow:hidden}
+.hero-scroll-line::after{
+  content:'';position:absolute;top:-100%;width:100%;height:55px;
+  background:var(--white);animation:scrollAnim 2s ease-in-out infinite;
+}
+@keyframes scrollAnim{0%{top:-100%}100%{top:100%}}
+.hero-scroll span{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--gray4);writing-mode:vertical-rl}
+
+/* Hero stats strip */
+.hero-strip{
+  display:flex;border-top:1px solid rgba(255,255,255,.08);
+}
+.hero-strip-item{
+  flex:1;padding:50px 5%;border-right:1px solid rgba(255,255,255,.08);
+  text-align:center;background:var(--black2);
+  transition:background .4s ease;cursor:default;
+}
+.hero-strip-item:last-child{border-right:none}
+.hero-strip-item:hover{background:var(--black4)}
+.hero-strip-item .num{
+  font-family:var(--heading);font-size:3rem;font-weight:300;margin-bottom:5px;
+  color:var(--white);
+}
+.hero-strip-item .num span{color:var(--accent)}
+.hero-strip-item .label{font-size:.68rem;color:var(--gray5);letter-spacing:3px;text-transform:uppercase;font-weight:400}
+
+/* Intro Section */
+.intro-sec{padding:140px 0;overflow:hidden}
+.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
+.intro-img-wrap{position:relative}
+.intro-img{
+  width:100%;aspect-ratio:4/5;overflow:hidden;position:relative;
+}
+.intro-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 1s ease}
+.intro-img:hover img{filter:grayscale(0%)}
+.intro-img-border{
+  position:absolute;top:25px;left:25px;right:-25px;bottom:-25px;
+  border:1px solid var(--gray7);z-index:-1;
+}
+.intro-img-badge{
+  position:absolute;bottom:-20px;right:-20px;background:var(--black);color:var(--white);
+  padding:28px 32px;display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.intro-img-badge .num{font-family:var(--heading);font-size:2.8rem;font-weight:300}
+.intro-img-badge .txt{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--gray5)}
+.intro-text .overline{
+  font-size:.68rem;font-weight:600;letter-spacing:5px;text-transform:uppercase;
+  color:var(--gray4);margin-bottom:14px;display:flex;align-items:center;gap:14px;
+}
+.intro-text .overline::before{content:'';width:30px;height:1px;background:var(--accent)}
+.intro-text h3{font-family:var(--heading);font-size:2.8rem;font-weight:300;line-height:1.15;margin-bottom:25px}
+.intro-text h3 strong{font-weight:700}
+.intro-text p{font-size:.9rem;line-height:1.9;color:var(--gray3);margin-bottom:14px;font-weight:300}
+.intro-text .sig{
+  font-family:var(--heading);font-style:italic;font-size:1.8rem;color:var(--accent);
+  margin-top:25px;
+}
+
+/* Practice areas preview */
+.practice-preview{padding:120px 0;background:var(--gray9);border-top:1px solid var(--gray8);border-bottom:1px solid var(--gray8)}
+.practice-prev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.practice-prev-card{
+  padding:55px 40px;border-right:1px solid var(--gray7);
+  position:relative;overflow:hidden;transition:all .5s var(--ease);cursor:pointer;
+}
+.practice-prev-card:last-child{border-right:none}
+.practice-prev-card::before{
+  content:'';position:absolute;inset:0;background:var(--black);
+  transform:translateY(100%);transition:transform .6s var(--ease-out);z-index:0;
+}
+.practice-prev-card:hover::before{transform:translateY(0)}
+.practice-prev-card>*{position:relative;z-index:1;transition:color .4s ease}
+.practice-prev-card:hover{color:var(--white)}
+.practice-prev-card .num{
+  font-family:var(--heading);font-size:4rem;font-weight:300;color:var(--gray8);
+  margin-bottom:20px;transition:color .4s ease;
+}
+.practice-prev-card:hover .num{color:var(--gray2)}
+.practice-prev-card h4{font-family:var(--heading);font-size:1.6rem;font-weight:600;margin-bottom:12px}
+.practice-prev-card p{font-size:.82rem;line-height:1.75;color:var(--gray4);font-weight:300;margin-bottom:20px;transition:color .4s ease}
+.practice-prev-card:hover p{color:var(--gray5)}
+.practice-prev-card .arrow{
+  font-size:.7rem;letter-spacing:2px;text-transform:uppercase;font-weight:600;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:gap .3s ease,color .4s ease;
+}
+.practice-prev-card:hover .arrow{gap:14px;color:var(--accent)}
+
+/* CTA Band */
+.cta-band{
+  padding:80px 5%;background:var(--black);color:var(--white);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:30px;
+}
+.cta-band h3{font-family:var(--heading);font-size:2.2rem;font-weight:300;letter-spacing:1px}
+.cta-band h3 strong{font-weight:700}
+
+/* ═══════════════════════════════════
+   PAGE 2: ABOUT / THE FIRM
+   ═══════════════════════════════════ */
+/* Page Banners (shared) */
+.page-banner{
+  height:55vh;min-height:400px;display:flex;align-items:flex-end;
+  position:relative;overflow:hidden;background:var(--black);color:var(--white);
+}
+.page-banner-bg{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  filter:brightness(.25) grayscale(60%);
+}
+.page-banner-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 40%,var(--black) 100%);
+}
+.page-banner-content{
+  position:relative;z-index:2;padding:0 5% 60px;width:100%;
+}
+.page-banner-content h1{
+  font-family:var(--display);font-size:4.5rem;font-weight:400;
+  letter-spacing:-1px;margin-bottom:10px;
+}
+.page-banner-content h1 strong{font-weight:900}
+.breadcrumb{
+  display:flex;align-items:center;gap:10px;font-size:.72rem;
+  letter-spacing:2px;text-transform:uppercase;color:var(--gray5);
+}
+.breadcrumb a{color:var(--accent);transition:.3s}
+.breadcrumb a:hover{color:var(--white)}
+
+/* About story */
+.firm-story{padding:140px 0}
+.firm-story-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.firm-story-img{position:relative}
+.firm-story-img .main-img{
+  width:100%;aspect-ratio:3/4;overflow:hidden;
+  filter:grayscale(100%);transition:filter 1s ease;
+}
+.firm-story-img .main-img:hover{filter:grayscale(0%)}
+.firm-story-img .main-img img{width:100%;height:100%;object-fit:cover}
+.firm-story-img .accent-block{
+  position:absolute;bottom:-30px;left:-30px;width:140px;
+  padding:30px;background:var(--black);color:var(--white);text-align:center;
+}
+.firm-story-img .accent-block .num{font-family:var(--heading);font-size:2.6rem;font-weight:300}
+.firm-story-img .accent-block .txt{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--gray5);margin-top:4px}
+
+/* Philosophy */
+.philosophy{padding:120px 0;background:var(--black);color:var(--white)}
+.phil-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--gray2)}
+.phil-card{
+  padding:50px 40px;border-right:1px solid var(--gray2);
+  transition:all .5s ease;position:relative;overflow:hidden;
+}
+.phil-card:last-child{border-right:none}
+.phil-card::before{
+  content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;
+  background:var(--accent);transform:scaleX(0);transform-origin:left;
+  transition:transform .6s var(--ease-out);
+}
+.phil-card:hover::before{transform:scaleX(1)}
+.phil-card .icon{
+  font-size:1.6rem;color:var(--accent);margin-bottom:22px;
+  transition:transform .4s ease;
+}
+.phil-card:hover .icon{transform:translateY(-5px)}
+.phil-card h4{font-family:var(--heading);font-size:1.4rem;font-weight:600;margin-bottom:12px;letter-spacing:1px}
+.phil-card p{font-size:.82rem;line-height:1.8;color:var(--gray5);font-weight:300}
+
+/* Timeline */
+.timeline-sec{padding:140px 0}
+.timeline{position:relative;max-width:800px;margin:0 auto}
+.timeline::before{
+  content:'';position:absolute;top:0;left:50%;width:1px;height:100%;
+  background:var(--gray7);transform:translateX(-50%);
+}
+.tl-item{
+  display:flex;align-items:flex-start;margin-bottom:60px;position:relative;
+}
+.tl-item:nth-child(odd){flex-direction:row-reverse;text-align:right}
+.tl-item .tl-content{flex:1;padding:0 40px}
+.tl-item .tl-dot{
+  width:14px;height:14px;border-radius:50%;border:2px solid var(--black);
+  background:var(--white);position:relative;z-index:2;flex-shrink:0;
+  margin-top:5px;transition:all .3s ease;
+}
+.tl-item:hover .tl-dot{background:var(--black);transform:scale(1.3)}
+.tl-content .year{
+  font-family:var(--heading);font-size:2.2rem;font-weight:300;color:var(--accent);
+  margin-bottom:6px;
+}
+.tl-content h5{font-size:.9rem;font-weight:600;margin-bottom:6px;letter-spacing:1px}
+.tl-content p{font-size:.82rem;line-height:1.7;color:var(--gray4);font-weight:300}
+
+/* ═══════════════════════════════════
+   PAGE 3: PRACTICE AREAS
+   ═══════════════════════════════════ */
+.pa-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;border:1px solid var(--gray7);margin-bottom:120px;
+}
+.pa-card{
+  padding:50px 38px;border-right:1px solid var(--gray7);border-bottom:1px solid var(--gray7);
+  position:relative;overflow:hidden;transition:all .5s var(--ease);cursor:pointer;
+}
+.pa-card:nth-child(3n){border-right:none}
+.pa-card:nth-last-child(-n+3){border-bottom:none}
+.pa-card::before{
+  content:'';position:absolute;inset:0;background:var(--black);
+  transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease-out);z-index:0;
+}
+.pa-card:hover::before{transform:scaleX(1)}
+.pa-card>*{position:relative;z-index:1;transition:color .4s ease}
+.pa-card:hover{color:var(--white)}
+.pa-card .pa-icon{
+  font-size:1.8rem;color:var(--accent);margin-bottom:25px;
+  transition:transform .4s ease,color .4s ease;
+}
+.pa-card:hover .pa-icon{transform:scale(1.2)}
+.pa-card h4{font-family:var(--heading);font-size:1.5rem;font-weight:600;margin-bottom:12px;letter-spacing:.5px}
+.pa-card p{font-size:.82rem;line-height:1.8;color:var(--gray4);font-weight:300;margin-bottom:18px;transition:color .4s ease}
+.pa-card:hover p{color:var(--gray5)}
+.pa-card .pa-link{
+  font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:gap .3s ease,color .4s ease;
+}
+.pa-card:hover .pa-link{color:var(--accent);gap:14px}
+
+/* Why choose */
+.why-sec{padding:120px 0;background:var(--gray9);border-top:1px solid var(--gray8)}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px}
+.why-item{text-align:center}
+.why-item .why-num{
+  font-family:var(--heading);font-size:3.5rem;font-weight:300;color:var(--accent);
+  margin-bottom:8px;
+}
+.why-item .why-label{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gray4);font-weight:500}
+
+/* ═══════════════════════════════════
+   PAGE 4: ATTORNEYS
+   ═══════════════════════════════════ */
+.attorneys-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;padding-bottom:120px}
+.att-card{position:relative;overflow:hidden;cursor:pointer;transition:all .5s var(--ease)}
+.att-card:hover{transform:translateY(-8px)}
+.att-card-img{
+  width:100%;aspect-ratio:3/4;overflow:hidden;position:relative;
+  filter:grayscale(100%);transition:filter .6s ease;
+}
+.att-card:hover .att-card-img{filter:grayscale(0%)}
+.att-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.att-card:hover .att-card-img img{transform:scale(1.05)}
+.att-card-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 55%,var(--black));opacity:.7;
+}
+.att-card-body{
+  position:absolute;bottom:0;left:0;right:0;padding:30px;z-index:2;
+  color:var(--white);
+}
+.att-card-body h4{font-family:var(--heading);font-size:1.5rem;font-weight:600;margin-bottom:3px}
+.att-card-body .role{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:500}
+.att-card-body .att-social{
+  margin-top:15px;display:flex;gap:10px;opacity:0;transform:translateY(10px);
+  transition:all .4s ease;
+}
+.att-card:hover .att-card-body .att-social{opacity:1;transform:translateY(0)}
+.att-card-body .att-social a{
+  width:34px;height:34px;border:1px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;color:var(--white);transition:all .3s ease;
+}
+.att-card-body .att-social a:hover{background:var(--white);color:var(--black)}
+
+/* Attorney detail cards */
+.att-detail{
+  padding:80px 0;background:var(--black);color:var(--white);
+}
+.att-detail-grid{display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:center}
+.att-detail-img{width:100%;aspect-ratio:3/4;overflow:hidden;filter:grayscale(60%)}
+.att-detail-img img{width:100%;height:100%;object-fit:cover}
+.att-detail-text h3{font-family:var(--heading);font-size:2.4rem;font-weight:300;margin-bottom:5px}
+.att-detail-text .role{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;display:block}
+.att-detail-text p{font-size:.88rem;line-height:1.85;color:var(--gray5);font-weight:300;margin-bottom:14px}
+.att-detail-text .att-stats{display:flex;gap:40px;margin-top:30px;padding-top:25px;border-top:1px solid var(--gray2)}
+.att-detail-text .att-stat{text-align:center}
+.att-detail-text .att-stat .num{font-family:var(--heading);font-size:2rem;font-weight:300;display:block}
+.att-detail-text .att-stat .label{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--gray5)}
+
+/* ═══════════════════════════════════
+   PAGE 5: RESULTS & TESTIMONIALS
+   ═══════════════════════════════════ */
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--gray7);margin-bottom:120px}
+.result-card{
+  padding:50px 35px;border-right:1px solid var(--gray7);border-bottom:1px solid var(--gray7);
+  text-align:center;transition:all .5s ease;
+}
+.result-card:nth-child(3n){border-right:none}
+.result-card:nth-last-child(-n+3){border-bottom:none}
+.result-card:hover{background:var(--black);color:var(--white)}
+.result-card .amount{
+  font-family:var(--heading);font-size:2.8rem;font-weight:300;margin-bottom:8px;
+  transition:color .4s ease;
+}
+.result-card:hover .amount{color:var(--accent)}
+.result-card .case-type{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.result-card .case-desc{font-size:.82rem;line-height:1.7;color:var(--gray4);font-weight:300;transition:color .4s ease}
+.result-card:hover .case-desc{color:var(--gray5)}
+
+/* Testimonials */
+.testi-sec{padding:120px 0;background:var(--gray9);border-top:1px solid var(--gray8)}
+.testi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:30px}
+.testi-card{
+  padding:45px;background:var(--white);border:1px solid var(--gray8);
+  position:relative;transition:all .5s var(--ease);
+}
+.testi-card::before{
+  content:'\201C';position:absolute;top:20px;left:30px;
+  font-family:var(--display);font-size:6rem;color:var(--gray8);line-height:1;
+}
+.testi-card:hover{border-color:var(--black);box-shadow:0 15px 45px rgba(0,0,0,.08)}
+.testi-card .stars{color:var(--accent);font-size:.8rem;margin-bottom:18px}
+.testi-card .quote{font-size:.9rem;line-height:1.85;color:var(--gray3);font-weight:300;font-style:italic;margin-bottom:25px;position:relative;z-index:1}
+.testi-card .author{display:flex;align-items:center;gap:15px}
+.testi-card .author img{width:48px;height:48px;border-radius:50%;object-fit:cover;filter:grayscale(100%)}
+.testi-card .author-info .name{font-weight:600;font-size:.88rem}
+.testi-card .author-info .title{font-size:.72rem;color:var(--gray4);font-weight:300}
+
+/* ═══════════════════════════════════
+   PAGE 6: CONTACT
+   ═══════════════════════════════════ */
+.contact-info-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border:1px solid var(--gray7);margin-bottom:80px;
+}
+.ci-card{
+  padding:40px 30px;border-right:1px solid var(--gray7);text-align:center;
+  transition:all .5s ease;
+}
+.ci-card:last-child{border-right:none}
+.ci-card:hover{background:var(--black);color:var(--white)}
+.ci-card .ci-icon{font-size:1.3rem;color:var(--accent);margin-bottom:16px;transition:transform .4s ease}
+.ci-card:hover .ci-icon{transform:scale(1.2)}
+.ci-card h5{font-family:var(--heading);font-size:1.15rem;font-weight:600;margin-bottom:8px}
+.ci-card p{font-size:.82rem;line-height:1.7;color:var(--gray4);font-weight:300;transition:color .4s ease}
+.ci-card:hover p{color:var(--gray5)}
+.ci-card a{color:inherit;transition:.3s}
+.ci-card:hover a{color:var(--accent)}
+
+.contact-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:50px;margin-bottom:100px}
+.contact-form-box{padding:50px;background:var(--gray9);border:1px solid var(--gray8)}
+.contact-form-box h3{font-family:var(--heading);font-size:2rem;font-weight:600;margin-bottom:25px}
+.form-grid{display:grid;gap:18px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fg{display:flex;flex-direction:column;gap:7px}
+.fg label{font-size:.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray3)}
+.fg input,.fg select,.fg textarea{
+  padding:14px 18px;background:var(--white);border:1px solid var(--gray7);
+  font-family:var(--body);font-size:.88rem;color:var(--black);
+  transition:all .3s ease;outline:none;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--black);box-shadow:0 0 0 3px rgba(0,0,0,.04)}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--gray6)}
+.fg select{-webkit-appearance:none;appearance:none;cursor:pointer}
+.fg textarea{resize:none;min-height:110px}
+.form-submit{
+  width:100%;padding:17px;background:var(--black);color:var(--white);
+  font-size:.72rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;
+  transition:all .4s ease;margin-top:5px;
+}
+.form-submit:hover{background:var(--accent);transform:translateY(-2px)}
+
+.contact-map{border:1px solid var(--gray7);overflow:hidden;min-height:550px}
+.contact-map iframe{width:100%;height:100%;border:none;min-height:550px;filter:grayscale(100%) contrast(1.1)}
+
+/* ═══════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════ */
+.site-footer{
+  background:var(--black);color:var(--white);padding:80px 5% 30px;
+}
+.footer-main{
+  max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1.3fr;gap:50px;
+  padding-bottom:60px;border-bottom:1px solid var(--gray2);
+}
+.footer-brand p{font-size:.85rem;line-height:1.85;color:var(--gray5);margin-top:15px;font-weight:300}
+.f-social{display:flex;gap:10px;margin-top:20px}
+.f-social a{
+  width:36px;height:36px;border:1px solid var(--gray2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;color:var(--gray5);transition:all .3s ease;
+}
+.f-social a:hover{border-color:var(--white);color:var(--white);transform:translateY(-3px)}
+.footer-col h5{
+  font-family:var(--heading);font-size:1.1rem;font-weight:600;margin-bottom:22px;
+  letter-spacing:1px;position:relative;padding-bottom:12px;
+}
+.footer-col h5::after{content:'';position:absolute;bottom:0;left:0;width:20px;height:1px;background:var(--accent)}
+.footer-col li{margin-bottom:10px}
+.footer-col li a{font-size:.82rem;color:var(--gray5);font-weight:300;transition:all .3s ease;display:inline-flex;align-items:center;gap:0}
+.footer-col li a:hover{color:var(--white);gap:6px}
+.footer-col li a::before{content:'';width:0;height:1px;background:var(--accent);transition:width .3s ease}
+.footer-col li a:hover::before{width:12px}
+
+.footer-newsletter p{font-size:.82rem;color:var(--gray5);font-weight:300;line-height:1.7;margin-bottom:16px}
+.nl-form{display:flex;gap:0}
+.nl-form input{
+  flex:1;padding:13px 16px;background:var(--black4);border:1px solid var(--gray2);
+  border-right:none;color:var(--white);font-size:.82rem;font-family:var(--body);outline:none;
+  transition:.3s;
+}
+.nl-form input:focus{border-color:var(--gray5)}
+.nl-form button{
+  padding:13px 22px;background:var(--white);color:var(--black);
+  font-size:.7rem;font-weight:600;letter-spacing:1px;transition:.3s;
+}
+.nl-form button:hover{background:var(--accent)}
+
+.footer-bottom{
+  max-width:1280px;margin:0 auto;padding-top:30px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;
+}
+.footer-bottom p{font-size:.72rem;color:var(--gray5);font-weight:300;letter-spacing:1px}
+.footer-bottom-links{display:flex;gap:25px}
+.footer-bottom-links a{font-size:.68rem;color:var(--gray5);font-weight:300;letter-spacing:1px;transition:.3s}
+.footer-bottom-links a:hover{color:var(--white)}
+
+/* ═══════════════════════════════════
+   BACK TO TOP
+   ═══════════════════════════════════ */
+#topBtn{
+  position:fixed;bottom:30px;right:30px;z-index:8000;
+  width:46px;height:46px;background:var(--black);color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;box-shadow:0 4px 20px rgba(0,0,0,.15);
+  opacity:0;visibility:hidden;transform:translateY(15px);
+  transition:all .4s var(--ease);
+}
+#topBtn.show{opacity:1;visibility:visible;transform:translateY(0)}
+#topBtn:hover{background:var(--accent);transform:translateY(-4px)}
+
+/* ═══════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════ */
+@media(max-width:1024px){
+  .hamburger{display:block}
+  .nav-links,.nav-cta-btn{display:none}
+  .hero{flex-direction:column}
+  .hero-left{flex:none;padding:120px 5% 60px;width:100%;text-align:center}
+  .hero-right{width:100%;height:45vh}
+  .hero-right-overlay{background:linear-gradient(180deg,var(--black) 0%,transparent 30%)}
+  .hero-title{font-size:3.8rem}
+  .hero-desc{margin:0 auto 50px}
+  .hero-actions{justify-content:center}
+  .hero-scroll{display:none}
+  .hero-strip{flex-wrap:wrap}
+  .hero-strip-item{flex:1 1 50%;border-bottom:1px solid rgba(255,255,255,.08)}
+  .intro-grid,.firm-story-grid,.att-detail-grid{grid-template-columns:1fr;gap:50px}
+  .practice-prev-grid,.pa-grid,.phil-grid{grid-template-columns:1fr}
+  .practice-prev-card,.pa-card,.phil-card{border-right:none!important;border-bottom:1px solid var(--gray7)!important}
+  .attorneys-grid,.results-grid{grid-template-columns:1fr 1fr}
+  .result-card:nth-child(3n){border-right:1px solid var(--gray7)}
+  .result-card:nth-child(2n){border-right:none}
+  .why-grid{grid-template-columns:repeat(2,1fr)}
+  .contact-info-strip{grid-template-columns:1fr 1fr}
+  .ci-card:nth-child(2){border-right:none}
+  .ci-card{border-bottom:1px solid var(--gray7)}
+  .contact-layout{grid-template-columns:1fr}
+  .footer-main{grid-template-columns:1fr 1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .page-banner-content h1{font-size:3.2rem}
+}
+@media(max-width:768px){
+  .hero-title{font-size:2.8rem}
+  .sh h2{font-size:2.4rem}
+  .hero-strip-item{flex:1 1 100%}
+  .attorneys-grid,.results-grid{grid-template-columns:1fr}
+  .result-card{border-right:none!important}
+  .why-grid{grid-template-columns:1fr 1fr}
+  .contact-info-strip{grid-template-columns:1fr}
+  .ci-card{border-right:none!important}
+  .form-row{grid-template-columns:1fr}
+  .footer-main{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .cta-band{text-align:center;justify-content:center}
+  .tl-item,.tl-item:nth-child(odd){flex-direction:column;text-align:left}
+  .timeline::before{left:6px}
+  .tl-item .tl-content{padding:15px 0 0 30px}
+  .page-banner-content h1{font-size:2.5rem}
+}
+@media(max-width:480px){
+  .hero-title{font-size:2.2rem}
+  .hero-actions{flex-direction:column}
+  .hero-actions .btn{width:100%;justify-content:center}
+  .why-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ PRELOADER ═══ -->
+<div id="preloader">
+  <div class="pre-logo">STERLING<span>&</span></div>
+  <div class="pre-bar"></div>
+</div>
+
+<!-- ═══ PAGE TRANSITION ═══ -->
+<div id="pageTransition">
+  <div class="curtain"></div><div class="curtain"></div><div class="curtain"></div>
+  <div class="curtain"></div><div class="curtain"></div>
+</div>
+
+<!-- ═══ CUSTOM CURSOR ═══ -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav id="navbar" class="dark-mode">
+  <a href="#" class="nav-brand" onclick="go('home');return false">
+    <div class="nav-brand-icon">S&A</div>
+    <div class="nav-brand-text"><span>Sterling</span> & Associates</div>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#" data-p="home" class="active" onclick="go('home');return false">Home</a>
+    <a href="#" data-p="about" onclick="go('about');return false">The Firm</a>
+    <a href="#" data-p="practice" onclick="go('practice');return false">Practice Areas</a>
+    <a href="#" data-p="attorneys" onclick="go('attorneys');return false">Attorneys</a>
+    <a href="#" data-p="results" onclick="go('results');return false">Results</a>
+    <a href="#" data-p="contact" onclick="go('contact');return false">Contact</a>
+  </div>
+  <a href="#" class="nav-cta-btn" onclick="go('contact');return false">Free Consultation</a>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ═══ MOBILE MENU ═══ -->
+<div class="mobile-overlay" id="mobileMenu">
+  <a href="#" data-p="home" class="active" onclick="go('home');return false">Home</a>
+  <a href="#" data-p="about" onclick="go('about');return false">The Firm</a>
+  <div class="mob-line"></div>
+  <a href="#" data-p="practice" onclick="go('practice');return false">Practice Areas</a>
+  <a href="#" data-p="attorneys" onclick="go('attorneys');return false">Attorneys</a>
+  <div class="mob-line"></div>
+  <a href="#" data-p="results" onclick="go('results');return false">Results</a>
+  <a href="#" data-p="contact" onclick="go('contact');return false">Contact</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 1 — HOME
+     ═══════════════════════════════════════════════════ -->
+<div class="page active" id="pg-home" data-nav="dark">
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-tag" data-r>Attorneys at Law · Est. 1998</div>
+      <h1 class="hero-title" data-r>
+        Relentless<br>
+        <strong>Pursuit of <em>Justice</em></strong>
+      </h1>
+      <p class="hero-desc" data-r>
+        When the stakes are highest, Sterling & Associates delivers uncompromising legal representation. Decades of experience. Hundreds of victories. Your fight is our fight.
+      </p>
+      <div class="hero-actions" data-r>
+        <a href="#" class="btn btn-white" onclick="go('contact');return false"><span>Free Consultation</span> <i class="fas fa-arrow-right"></i></a>
+        <a href="#" class="btn btn-accent" onclick="go('practice');return false"><span>Our Practice</span> <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="hero-scroll">
+        <div class="hero-scroll-line"></div>
+        <span>Scroll</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&q=80" alt="Justice">
+      <div class="hero-right-overlay"></div>
+    </div>
+  </section>
+
+  <div class="hero-strip">
+    <div class="hero-strip-item" data-r><div class="num" data-count="500">0</div><div class="label">Cases Won</div></div>
+    <div class="hero-strip-item" data-r><div class="num">$<span data-count="2">0</span>B+</div><div class="label">Recovered</div></div>
+    <div class="hero-strip-item" data-r><div class="num" data-count="25">0</div><div class="label">Years Experience</div></div>
+    <div class="hero-strip-item" data-r><div class="num" data-count="98">0</div><div class="label">% Success Rate</div></div>
+  </div>
+
+  <!-- Intro -->
+  <section class="intro-sec">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-img-wrap" data-r="left">
+          <div class="intro-img">
+            <img src="https://images.unsplash.com/photo-1521791055366-0d553872125f?w=700&q=80" alt="Law Office">
+          </div>
+          <div class="intro-img-border"></div>
+          <div class="intro-img-badge"><div class="num">25+</div><div class="txt">Years</div></div>
+        </div>
+        <div class="intro-text" data-r="right">
+          <div class="overline">About the Firm</div>
+          <h3>A Legacy of<br><strong>Legal Excellence</strong></h3>
+          <p>For over two decades, Sterling & Associates has been the firm clients turn to when everything is on the line. We combine deep legal expertise with a relentless commitment to achieving the best possible outcome.</p>
+          <p>Our attorneys have been recognized by Super Lawyers, Best Lawyers in America, and the National Trial Lawyers Top 100. We don't just practice law — we fight for justice.</p>
+          <div style="margin-top:35px">
+            <a href="#" class="btn" onclick="go('about');return false"><span>Learn Our Story</span> <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Practice Preview -->
+  <section class="practice-preview">
+    <div class="container">
+      <div class="sh sh-center" data-r>
+        <div class="overline">What We Do</div>
+        <h2>Areas of <strong>Practice</strong></h2>
+        <span class="sep"></span>
+      </div>
+      <div class="practice-prev-grid">
+        <div class="practice-prev-card" data-r onclick="go('practice')">
+          <div class="num">01</div>
+          <h4>Corporate Law</h4>
+          <p>Strategic counsel for businesses of all sizes — from formation to mergers, acquisitions, and compliance.</p>
+          <span class="arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+        </div>
+        <div class="practice-prev-card" data-r onclick="go('practice')">
+          <div class="num">02</div>
+          <h4>Litigation</h4>
+          <p>Aggressive trial representation in complex commercial disputes, class actions, and high-stakes litigation.</p>
+          <span class="arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+        </div>
+        <div class="practice-prev-card" data-r onclick="go('practice')">
+          <div class="num">03</div>
+          <h4>Real Estate</h4>
+          <p>Comprehensive legal services for commercial and residential real estate transactions and disputes.</p>
+          <span class="arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Band -->
+  <div class="cta-band" data-r>
+    <h3>Need Legal <strong>Representation?</strong></h3>
+    <a href="#" class="btn btn-white" onclick="go('contact');return false"><span>Schedule a Consultation</span> <i class="fas fa-arrow-right"></i></a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 2 — THE FIRM (About)
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="pg-about" data-nav="dark">
+  <div class="page-banner">
+    <div class="page-banner-bg" style="background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80')"></div>
+    <div class="page-banner-overlay"></div>
+    <div class="page-banner-content" data-r>
+      <h1>The <strong>Firm</strong></h1>
+      <div class="breadcrumb"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.45rem"></i><span>About</span></div>
+    </div>
+  </div>
+
+  <section class="firm-story">
+    <div class="container">
+      <div class="firm-story-grid">
+        <div class="firm-story-img" data-r="left">
+          <div class="main-img"><img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=700&q=80" alt="Managing Partner"></div>
+          <div class="accent-block"><div class="num">1998</div><div class="txt">Founded</div></div>
+        </div>
+        <div data-r="right">
+          <div class="sh">
+            <div class="overline">Our Story</div>
+            <h2>Built on <strong>Integrity</strong>,<br>Driven by <em>Results</em></h2>
+            <span class="sep"></span>
+          </div>
+          <p style="font-size:.9rem;line-height:1.9;color:var(--gray3);font-weight:300;margin-bottom:14px">
+            Sterling & Associates was founded in 1998 by Jonathan Sterling with a simple mission: provide elite legal representation to those who need it most. From a small office in downtown Manhattan, we've grown into a nationally recognized firm with a reputation for winning.
+          </p>
+          <p style="font-size:.9rem;line-height:1.9;color:var(--gray3);font-weight:300;margin-bottom:14px">
+            Our team of 30+ attorneys brings collective expertise from the nation's top law schools and firms. We've represented Fortune 500 companies, government entities, and individuals in some of the most significant cases in recent history.
+          </p>
+          <p style="font-size:.9rem;line-height:1.9;color:var(--gray3);font-weight:300;margin-bottom:30px">
+            What sets us apart isn't just our track record — it's our approach. Every case receives the same level of dedication, strategic thinking, and aggressive advocacy, regardless of size.
+          </p>
+          <a href="#" class="btn" onclick="go('attorneys');return false"><span>Meet Our Team</span> <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="philosophy">
+    <div class="container">
+      <div class="sh sh-center" data-r>
+        <div class="overline">Our Foundation</div>
+        <h2>Core <strong>Values</strong></h2>
+        <span class="sep" style="background:var(--white)"></span>
+      </div>
+      <div class="phil-grid">
+        <div class="phil-card" data-r>
+          <div class="icon"><i class="fas fa-balance-scale"></i></div>
+          <h4>Integrity</h4>
+          <p>We uphold the highest ethical standards. Our word is our bond, and transparency guides every action we take on behalf of our clients.</p>
+        </div>
+        <div class="phil-card" data-r>
+          <div class="icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Tenacity</h4>
+          <p>We never back down from a challenge. Our attorneys are known for their relentless preparation and aggressive advocacy in the courtroom.</p>
+        </div>
+        <div class="phil-card" data-r>
+          <div class="icon"><i class="fas fa-handshake"></i></div>
+          <h4>Client First</h4>
+          <p>Your goals are our goals. We build deep relationships with our clients, providing personalized strategies tailored to each unique situation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="timeline-sec">
+    <div class="container">
+      <div class="sh sh-center" data-r>
+        <div class="overline">Our Journey</div>
+        <h2>Firm <strong>Milestones</strong></h2>
+        <span class="sep"></span>
+      </div>
+      <div class="timeline">
+        <div class="tl-item" data-r><div class="tl-dot"></div><div class="tl-content"><div class="year">1998</div><h5>Firm Founded</h5><p>Jonathan Sterling opens doors in downtown Manhattan with a vision for justice.</p></div></div>
+        <div class="tl-item" data-r><div class="tl-dot"></div><div class="tl-content"><div class="year">2005</div><h5>National Expansion</h5><p>Opened offices in Washington D.C. and Los Angeles to serve clients nationwide.</p></div></div>
+        <div class="tl-item" data-r><div class="tl-dot"></div><div class="tl-content"><div class="year">2012</div><h5>$500M Landmark Verdict</h5><p>Secured one of the largest verdicts in state history in a corporate fraud case.</p></div></div>
+        <div class="tl-item" data-r><div class="tl-dot"></div><div class="tl-content"><div class="year">2020</div><h5>Top 50 Law Firm</h5><p>Recognized by National Law Journal as a Top 50 law firm in America.</p></div></div>
+        <div class="tl-item" data-r><div class="tl-dot"></div><div class="tl-content"><div class="year">2024</div><h5>$2B in Recoveries</h5><p>Surpassed $2 billion in total client recoveries across all practice areas.</p></div></div>
+      </div>
+      <div style="text-align:center;margin-top:60px" data-r>
+        <a href="#" class="btn" onclick="go('results');return false"><span>View Case Results</span> <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 3 — PRACTICE AREAS
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="pg-practice" data-nav="dark">
+  <div class="page-banner">
+    <div class="page-banner-bg" style="background-image:url('https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=1600&q=80')"></div>
+    <div class="page-banner-overlay"></div>
+    <div class="page-banner-content" data-r>
+      <h1>Practice <strong>Areas</strong></h1>
+      <div class="breadcrumb"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.45rem"></i><span>Practice Areas</span></div>
+    </div>
+  </div>
+
+  <section style="padding:120px 0">
+    <div class="container">
+      <div class="sh sh-center" data-r>
+        <div class="overline">Legal Expertise</div>
+        <h2>Comprehensive <strong>Legal Services</strong></h2>
+        <p class="desc">We provide strategic counsel and aggressive representation across a wide range of practice areas.</p>
+        <span class="sep"></span>
+      </div>
+      <div class="pa-grid">
+        <div class="pa-card" data-r><div class="pa-icon"><i class="fas fa-building"></i></div><h4>Corporate Law</h4><p>M&A, corporate governance, securities, regulatory compliance, and business formation.</p><span class="pa-link">Explore <i class="fas fa-arrow-right"></i></span></div>
+        <div class="pa-card" data-r><div class="pa-icon"><i class="fas fa-gavel"></i></div><h4>Litigation & Trial</h4><p>Complex commercial disputes, class actions, appellate advocacy, and jury trial representation.</p><span class="pa-link">Explore <i class="fas fa-arrow-right"></i></span></div>
+        <div class="pa-card" data-r><div class="pa-icon"><i class="fas fa-home"></i></div><h4>Real Estate</h4><p>Commercial transactions, zoning, land use, construction disputes, and lease negotiations.</p><span class="pa-link">Explore <i class="fas fa-arrow-right"></i></span></div>
+        <div class="pa-card" data-r><div class="pa-icon"><i class="fas fa-user-shield"></i></div><h4>Personal Injury</h4><p>Catastrophic injuries, medical malpractice, wrongful death, and product liability claims.</p><span class="pa-link">Explore <i class="fas fa-arrow-right"></i></span></div>
+        <div class="pa-card" data-r><div class="pa-icon"><i class="fas fa-briefcase"></i></div><h4>Employment Law</h4><p>Discrimination, harassment, wrongful termination, wage disputes, and executive contracts.</p><span class="pa-link">Explore <i class="fas fa-arrow-right"></i></span></div>
+        <div class="pa-card" data-r><div class="pa-icon"><i class="fas fa-landmark"></i></div><h4>Government & Regulatory</h4><p>Government investigations, white-collar defense, compliance, and administrative law.</p><span class="pa-link">Explore <i class="fas fa-arrow-right"></i></span></div>
+        <div class="pa-card" data-r><div class="pa-icon"><i class="fas fa-file-contract"></i></div><h4>Intellectual Property</h4><p>Patent litigation, trademark protection, trade secrets, copyright, and IP licensing.</p><span class="pa-link">Explore <i class="fas fa-arrow-right"></i></span></div>
+        <div class="pa-card" data-r><div class="pa-icon"><i class="fas fa-users"></i></div><h4>Family Law</h4><p>Divorce, custody, prenuptial agreements, asset protection, and family disputes.</p><span class="pa-link">Explore <i class="fas fa-arrow-right"></i></span></div>
+        <div class="pa-card" data-r><div class="pa-icon"><i class="fas fa-globe"></i></div><h4>International Law</h4><p>Cross-border transactions, international arbitration, trade compliance, and immigration.</p><span class="pa-link">Explore <i class="fas fa-arrow-right"></i></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="why-sec">
+    <div class="container">
+      <div class="sh sh-center" data-r>
+        <div class="overline">By the Numbers</div>
+        <h2>Why Choose <strong>Sterling</strong></h2>
+        <span class="sep"></span>
+      </div>
+      <div class="why-grid">
+        <div class="why-item" data-r><div class="why-num">30+</div><div class="why-label">Attorneys</div></div>
+        <div class="why-item" data-r><div class="why-num">500+</div><div class="why-label">Cases Won</div></div>
+        <div class="why-item" data-r><div class="why-num">98%</div><div class="why-label">Success Rate</div></div>
+        <div class="why-item" data-r><div class="why-num">3</div><div class="why-label">Office Locations</div></div>
+      </div>
+      <div style="text-align:center;margin-top:50px" data-r>
+        <a href="#" class="btn" onclick="go('contact');return false"><span>Discuss Your Case</span> <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 4 — ATTORNEYS
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="pg-attorneys" data-nav="dark">
+  <div class="page-banner">
+    <div class="page-banner-bg" style="background-image:url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1600&q=80')"></div>
+    <div class="page-banner-overlay"></div>
+    <div class="page-banner-content" data-r>
+      <h1>Our <strong>Attorneys</strong></h1>
+      <div class="breadcrumb"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.45rem"></i><span>Attorneys</span></div>
+    </div>
+  </div>
+
+  <section style="padding:120px 0">
+    <div class="container">
+      <div class="sh sh-center" data-r>
+        <div class="overline">Our Team</div>
+        <h2>Meet the <strong>Partners</strong></h2>
+        <p class="desc">World-class attorneys with proven track records in the courtroom and the boardroom.</p>
+        <span class="sep"></span>
+      </div>
+
+      <div class="attorneys-grid">
+        <div class="att-card" data-r>
+          <div class="att-card-img"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80" alt="Jonathan Sterling"></div>
+          <div class="att-card-body">
+            <h4>Jonathan Sterling</h4><div class="role">Managing Partner</div>
+            <div class="att-social"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fas fa-envelope"></i></a></div>
+          </div>
+        </div>
+        <div class="att-card" data-r>
+          <div class="att-card-img"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80" alt="Victoria Chen"></div>
+          <div class="att-card-body">
+            <h4>Victoria Chen</h4><div class="role">Senior Partner</div>
+            <div class="att-social"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fas fa-envelope"></i></a></div>
+          </div>
+        </div>
+        <div class="att-card" data-r>
+          <div class="att-card-img"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=80" alt="Marcus Williams"></div>
+          <div class="att-card-body">
+            <h4>Marcus Williams</h4><div class="role">Partner, Litigation</div>
+            <div class="att-social"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fas fa-envelope"></i></a></div>
+          </div>
+        </div>
+        <div class="att-card" data-r>
+          <div class="att-card-img"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80" alt="Sarah Mitchell"></div>
+          <div class="att-card-body">
+            <h4>Sarah Mitchell</h4><div class="role">Partner, Corporate</div>
+            <div class="att-social"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fas fa-envelope"></i></a></div>
+          </div>
+        </div>
+        <div class="att-card" data-r>
+          <div class="att-card-img"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt="David Park"></div>
+          <div class="att-card-body">
+            <h4>David Park</h4><div class="role">Partner, Real Estate</div>
+            <div class="att-social"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fas fa-envelope"></i></a></div>
+          </div>
+        </div>
+        <div class="att-card" data-r>
+          <div class="att-card-img"><img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&q=80" alt="Elena Rodriguez"></div>
+          <div class="att-card-body">
+            <h4>Elena Rodriguez</h4><div class="role">Partner, Family Law</div>
+            <div class="att-social"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fas fa-envelope"></i></a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Attorney -->
+  <section class="att-detail">
+    <div class="container">
+      <div class="att-detail-grid">
+        <div class="att-detail-img" data-r="left"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80" alt="Jonathan Sterling"></div>
+        <div class="att-detail-text" data-r="right">
+          <div style="font-size:.68rem;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px">Managing Partner</div>
+          <h3>Jonathan Sterling</h3>
+          <span class="role">J.D., Harvard Law School</span>
+          <p>Jonathan Sterling has spent 25 years fighting for justice in courtrooms across America. A former federal prosecutor, he brings an unparalleled understanding of both sides of the legal system.</p>
+          <p>Named to the National Trial Lawyers Top 100 for 12 consecutive years, Jonathan has secured more than $1 billion in verdicts and settlements for his clients.</p>
+          <div class="att-stats">
+            <div class="att-stat"><span class="num">$1B+</span><span class="label">Recovered</span></div>
+            <div class="att-stat"><span class="num">300+</span><span class="label">Cases Won</span></div>
+            <div class="att-stat"><span class="num">25</span><span class="label">Years Exp.</span></div>
+            <div class="att-stat"><span class="num">12×</span><span class="label">Top 100</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-band" data-r>
+    <h3>Work With <strong>Elite Attorneys</strong></h3>
+    <a href="#" class="btn btn-white" onclick="go('contact');return false"><span>Schedule a Meeting</span> <i class="fas fa-arrow-right"></i></a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 5 — RESULTS & TESTIMONIALS
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="pg-results" data-nav="dark">
+  <div class="page-banner">
+    <div class="page-banner-bg" style="background-image:url('https://images.unsplash.com/photo-1589391886645-d51941baf7fb?w=1600&q=80')"></div>
+    <div class="page-banner-overlay"></div>
+    <div class="page-banner-content" data-r>
+      <h1>Case <strong>Results</strong></h1>
+      <div class="breadcrumb"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.45rem"></i><span>Results</span></div>
+    </div>
+  </div>
+
+  <section style="padding:120px 0">
+    <div class="container">
+      <div class="sh sh-center" data-r>
+        <div class="overline">Proven Results</div>
+        <h2>Notable <strong>Verdicts</strong> & <em>Settlements</em></h2>
+        <p class="desc">Our track record speaks for itself. Here are some of the significant results we've achieved for our clients.</p>
+        <span class="sep"></span>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-card" data-r><div class="amount">$500M</div><div class="case-type">Corporate Fraud</div><p class="case-desc">Landmark verdict in a Fortune 500 securities fraud class action case.</p></div>
+        <div class="result-card" data-r><div class="amount">$185M</div><div class="case-type">Medical Malpractice</div><p class="case-desc">Settlement for victims of negligent surgical procedures at a major hospital.</p></div>
+        <div class="result-card" data-r><div class="amount">$120M</div><div class="case-type">Product Liability</div><p class="case-desc">Jury verdict against an automotive manufacturer for defective safety systems.</p></div>
+        <div class="result-card" data-r><div class="amount">$95M</div><div class="case-type">Employment</div><p class="case-desc">Class action settlement for systemic workplace discrimination at a tech company.</p></div>
+        <div class="result-card" data-r><div class="amount">$72M</div><div class="case-type">Real Estate</div><p class="case-desc">Recovery in a commercial real estate fraud and breach of fiduciary duty case.</p></div>
+        <div class="result-card" data-r><div class="amount">$45M</div><div class="case-type">Personal Injury</div><p class="case-desc">Verdict for a catastrophic construction site injury resulting in permanent disability.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testi-sec">
+    <div class="container">
+      <div class="sh sh-center" data-r>
+        <div class="overline">Client Voices</div>
+        <h2>What Our <strong>Clients Say</strong></h2>
+        <span class="sep"></span>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card" data-r>
+          <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="quote">"Sterling & Associates turned our impossible situation into a $45 million victory. Their preparation was extraordinary, and their courtroom presence was commanding. I cannot recommend them highly enough."</p>
+          <div class="author"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80" alt="Client"><div class="author-info"><div class="name">Robert Thornton</div><div class="title">CEO, Thornton Industries</div></div></div>
+        </div>
+        <div class="testi-card" data-r>
+          <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="quote">"When my family faced the most difficult legal challenge of our lives, Victoria Chen was our rock. Her compassion matched only by her fierce advocacy. She delivered beyond all expectations."</p>
+          <div class="author"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" alt="Client"><div class="author-info"><div class="name">Margaret Lawson</div><div class="title">Private Client</div></div></div>
+        </div>
+        <div class="testi-card" data-r>
+          <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="quote">"The corporate legal team at Sterling guided our $2 billion merger flawlessly. Their strategic insight and attention to detail saved us months of potential complications. True professionals."</p>
+          <div class="author"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt="Client"><div class="author-info"><div class="name">James Whitfield</div><div class="title">CFO, Atlas Corporation</div></div></div>
+        </div>
+        <div class="testi-card" data-r>
+          <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+          <p class="quote">"After being wrongfully terminated, Marcus Williams took my case and fought relentlessly. The settlement changed my life. I finally felt like someone was truly in my corner."</p>
+          <div class="author"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Client"><div class="author-info"><div class="name">Diana Reeves</div><div class="title">Private Client</div></div></div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:60px" data-r>
+        <a href="#" class="btn" onclick="go('contact');return false"><span>Start Your Case</span> <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 6 — CONTACT
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="pg-contact" data-nav="dark">
+  <div class="page-banner">
+    <div class="page-banner-bg" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80')"></div>
+    <div class="page-banner-overlay"></div>
+    <div class="page-banner-content" data-r>
+      <h1>Contact <strong>Us</strong></h1>
+      <div class="breadcrumb"><a href="#" onclick="go('home');return false">Home</a><i class="fas fa-chevron-right" style="font-size:.45rem"></i><span>Contact</span></div>
+    </div>
+  </div>
+
+  <section style="padding:120px 0">
+    <div class="container">
+      <div class="sh sh-center" data-r>
+        <div class="overline">Get in Touch</div>
+        <h2>Schedule a <strong>Consultation</strong></h2>
+        <p class="desc">Your initial consultation is free and confidential. Let us review your case and discuss your legal options.</p>
+        <span class="sep"></span>
+      </div>
+
+      <div class="contact-info-strip">
+        <div class="ci-card" data-r><div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div><h5>New York</h5><p>401 Park Avenue, 14th Floor<br>New York, NY 10022</p></div>
+        <div class="ci-card" data-r><div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div><h5>Washington D.C.</h5><p>1200 K Street NW, Suite 800<br>Washington, DC 20005</p></div>
+        <div class="ci-card" data-r><div class="ci-icon"><i class="fas fa-phone-alt"></i></div><h5>Call Us</h5><p><a href="tel:+12125551234">(212) 555-1234</a><br>Mon–Fri, 8AM – 7PM ET</p></div>
+        <div class="ci-card" data-r><div class="ci-icon"><i class="fas fa-envelope"></i></div><h5>Email Us</h5><p><a href="mailto:info@sterlinglaw.com">info@sterlinglaw.com</a><br>We respond within 24 hours</p></div>
+      </div>
+
+      <div class="contact-layout">
+        <div class="contact-form-box" data-r="left">
+          <h3>Send Us a Message</h3>
+          <form class="form-grid" id="contactForm" onsubmit="submitForm(event)">
+            <div class="form-row">
+              <div class="fg"><label>Full Name *</label><input type="text" placeholder="John Doe" required></div>
+              <div class="fg"><label>Phone *</label><input type="tel" placeholder="(212) 000-0000" required></div>
+            </div>
+            <div class="form-row">
+              <div class="fg"><label>Email *</label><input type="email" placeholder="john@email.com" required></div>
+              <div class="fg"><label>Case Type *</label>
+                <select required>
+                  <option value="">Select Area</option>
+                  <option>Corporate Law</option><option>Litigation</option>
+                  <option>Real Estate</option><option>Personal Injury</option>
+                  <option>Employment Law</option><option>Family Law</option>
+                  <option>Intellectual Property</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg"><label>Briefly Describe Your Case *</label><textarea placeholder="Provide a brief overview of your legal matter..." required></textarea></div>
+            <div class="fg">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:300;font-size:.8rem;color:var(--gray3)">
+                <input type="checkbox" required style="width:16px;height:16px;accent-color:var(--black)">
+                I agree to the <a href="#" style="color:var(--black);text-decoration:underline;font-weight:500">privacy policy</a> and understand this form does not create an attorney-client relationship.
+              </label>
+            </div>
+            <button type="submit" class="form-submit" id="formSubmitBtn"><i class="fas fa-paper-plane"></i> &nbsp;Submit Inquiry</button>
+          </form>
+        </div>
+        <div class="contact-map" data-r="right">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215573291234!2d-73.97185468459418!3d40.75797594274506!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c258fecf664dad%3A0x33a4ce24e1b3504!2sPark%20Ave%2C%20New%20York%2C%20NY!5e0!3m2!1sen!2sus!4v1697000000000!5m2!1sen!2sus" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-band" data-r>
+    <h3>Urgent Legal <strong>Matter?</strong></h3>
+    <a href="tel:+12125551234" class="btn btn-white"><span>Call (212) 555-1234</span> <i class="fas fa-phone"></i></a>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer" id="siteFooter">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="nav-brand" style="color:#fff;margin-bottom:5px">
+        <div class="nav-brand-icon" style="border-color:var(--gray2)">S&A</div>
+        <div class="nav-brand-text"><span>Sterling</span> & Associates</div>
+      </div>
+      <p>A nationally recognized law firm committed to the relentless pursuit of justice. Three offices, 30+ attorneys, and a legacy of landmark victories.</p>
+      <div class="f-social">
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Navigation</h5>
+      <ul>
+        <li><a href="#" onclick="go('home');return false">Home</a></li>
+        <li><a href="#" onclick="go('about');return false">The Firm</a></li>
+        <li><a href="#" onclick="go('practice');return false">Practice Areas</a></li>
+        <li><a href="#" onclick="go('attorneys');return false">Attorneys</a></li>
+        <li><a href="#" onclick="go('results');return false">Case Results</a></li>
+        <li><a href="#" onclick="go('contact');return false">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Practice Areas</h5>
+      <ul>
+        <li><a href="#" onclick="go('practice');return false">Corporate Law</a></li>
+        <li><a href="#" onclick="go('practice');return false">Litigation</a></li>
+        <li><a href="#" onclick="go('practice');return false">Real Estate</a></li>
+        <li><a href="#" onclick="go('practice');return false">Personal Injury</a></li>
+        <li><a href="#" onclick="go('practice');return false">Employment Law</a></li>
+        <li><a href="#" onclick="go('practice');return false">Family Law</a></li>
+      </ul>
+    </div>
+    <div class="footer-col footer-newsletter">
+      <h5>Legal Updates</h5>
+      <p>Subscribe to receive legal insights, firm news, and industry developments.</p>
+      <div class="nl-form">
+        <input type="email" placeholder="Your email">
+        <button onclick="this.textContent='✓'">Subscribe</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Sterling & Associates LLP. All rights reserved.</p>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Disclaimer</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ BACK TO TOP ═══ -->
+<button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════ -->
+<script>
+// ═══ PRELOADER ═══
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('preloader').classList.add('done');initReveals()},1500)});
+
+// ═══ CUSTOM CURSOR ═══
+const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx-3+'px';dot.style.top=my-3+'px'});
+function animCursor(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx-20+'px';ring.style.top=ry-20+'px';requestAnimationFrame(animCursor)}
+animCursor();
+document.querySelectorAll('a,button,.practice-prev-card,.pa-card,.att-card,.result-card,.ci-card,.testi-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+});
+
+// ═══ NAVIGATION ═══
+let currentPg='home';
+function go(page){
+  if(page===currentPg)return;
+  // Close mobile
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.body.style.overflow='';
+
+  // Transition
+  const cols=document.querySelectorAll('#pageTransition .curtain');
+  cols.forEach((c,i)=>{c.style.transition=`transform .45s ${i*.05}s cubic-bezier(.86,0,.07,1)`;c.style.transformOrigin='bottom';c.style.transform='scaleY(1)'});
+
+  setTimeout(()=>{
+    document.getElementById('pg-'+currentPg).classList.remove('active');
+    document.getElementById('pg-'+page).classList.add('active');
+    currentPg=page;
+    window.scrollTo({top:0,behavior:'instant'});
+
+    // Update nav
+    document.querySelectorAll('[data-p]').forEach(a=>a.classList.toggle('active',a.dataset.p===page));
+
+    // Nav color mode
+    const navMode=document.getElementById('pg-'+page).dataset.nav;
+    document.getElementById('navbar').classList.toggle('dark-mode',navMode==='dark');
+
+    setTimeout(initReveals,150);
+    cols.forEach((c,i)=>{c.style.transition=`transform .45s ${i*.05}s cubic-bezier(.86,0,.07,1)`;c.style.transformOrigin='top';c.style.transform='scaleY(0)'});
+    setTimeout(()=>cols.forEach(c=>{c.style.transformOrigin='bottom'}),700);
+  },580);
+}
+
+// ═══ HAMBURGER ═══
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('open');
+  const m=document.getElementById('mobileMenu');m.classList.toggle('open');
+  document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+});
+
+// ═══ SCROLL EFFECTS ═══
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',scrollY>50);
+  document.getElementById('topBtn').classList.toggle('show',scrollY>400);
+});
+
+// ═══ REVEAL ON SCROLL ═══
+function initReveals(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}});
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.page.active [data-r]').forEach(el=>{el.classList.remove('vis');obs.observe(el)});
+}
+
+// ═══ COUNTER ═══
+let counted=false;
+window.addEventListener('scroll',()=>{
+  if(counted||currentPg!=='home')return;
+  const strip=document.querySelector('.hero-strip');
+  if(!strip)return;
+  if(strip.getBoundingClientRect().top<window.innerHeight){
+    counted=true;
+    document.querySelectorAll('[data-count]').forEach(el=>{
+      const t=+el.dataset.count;let n=0;
+      const step=Math.max(1,Math.floor(t/50));
+      const iv=setInterval(()=>{n+=step;if(n>=t){n=t;clearInterval(iv)}
+        let suffix='';
+        if(t===500)suffix='+';else if(t===25)suffix='+';else if(t===98)suffix='%';else if(t===2)suffix='';
+        el.textContent=n+suffix;
+      },30);
+    });
+  }
+});
+
+// ═══ 3D TILT ═══
+document.querySelectorAll('.practice-prev-card,.pa-card,.att-card,.value-card,.ci-card,.result-card,.testi-card').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    c.style.transform=`perspective(600px) rotateY(${x*6}deg) rotateX(${-y*6}deg) translateY(-8px)`;
+    c.style.transition='none';
+  });
+  c.addEventListener('mouseleave',()=>{
+    c.style.transform='';c.style.transition='all .5s cubic-bezier(.23,1,.32,1)';
+  });
+});
+
+// ═══ CONTACT FORM ═══
+function submitForm(e){
+  e.preventDefault();
+  const btn=document.getElementById('formSubmitBtn');
+  btn.innerHTML='<i class="fas fa-check"></i> &nbsp;Inquiry Submitted Successfully';
+  btn.style.background='var(--accent)';
+  setTimeout(()=>{btn.innerHTML='<i class="fas fa-paper-plane"></i> &nbsp;Submit Inquiry';btn.style.background='';e.target.reset()},3500);
+}
+</script>
+</body>
+</html>
